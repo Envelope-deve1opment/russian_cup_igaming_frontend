@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <meta content="scale" name="text-scale"/>
+    <script>
+        (function () {
+            try {
+                var k = "vip_igaming_theme";
+                var t = localStorage.getItem(k);
+                if (
+                    t === "vip-dark" ||
+                    t === "vip-gold" ||
+                    t === "midnight-blue" ||
+                    t === "vip-light"
+                ) {
+                    document.documentElement.dataset.theme = t;
+                } else {
+                    document.documentElement.dataset.theme = "vip-dark";
+                }
+            } catch (e) {
+                document.documentElement.dataset.theme = "vip-dark";
+            }
+        })();
+    </script>
+    %sveltekit.head%
+</head>
+<body data-sveltekit-preload-data="hover">
+<div style="display: contents">%sveltekit.body%</div>
+</body>
+</html>

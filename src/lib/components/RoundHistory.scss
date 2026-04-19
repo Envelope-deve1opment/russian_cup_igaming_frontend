@@ -1,0 +1,108 @@
+@use '../../styles/variables.scss' as *;
+
+.history {
+	max-width: 1040px;
+	margin: 0 auto;
+	padding: 1.75rem 1.1rem 2.5rem;
+	color: $color-text;
+}
+
+.head {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	gap: 1rem;
+	align-items: flex-end;
+	margin-bottom: 1rem;
+}
+
+.title {
+	margin: 0;
+	font-family: $font-display;
+	font-size: clamp(1.35rem, 2vw, 1.75rem);
+	color: $color-text;
+}
+
+.search input {
+	min-width: min(100%, 320px);
+	padding: 0.55rem 0.75rem;
+	border-radius: $radius-sm;
+	border: 1px solid $color-border;
+	background: $color-surface-elevated;
+	color: $color-text;
+	transition:
+		border-color $transition-fast,
+		box-shadow $transition-fast;
+}
+
+.search input:focus {
+	outline: none;
+	border-color: $color-border-strong;
+	box-shadow: 0 0 0 3px $color-accent-soft;
+}
+
+.srOnly {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	border: 0;
+}
+
+.tableWrap {
+	overflow: auto;
+	border-radius: $radius-lg;
+	border: 1px solid $color-border;
+	box-shadow: $shadow-card;
+	background: $color-surface;
+	transition: box-shadow $transition-med;
+}
+
+.table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.9rem;
+}
+
+th,
+td {
+	padding: 0.65rem 0.75rem;
+	text-align: left;
+	border-bottom: 1px solid $color-border;
+	vertical-align: top;
+	color: $color-text;
+}
+
+th {
+	font-size: 0.72rem;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	color: $color-text-muted;
+	background: rgba(255, 255, 255, 0.02);
+}
+
+tr:hover td {
+	background: rgba(255, 255, 255, 0.02);
+}
+
+.room {
+	font-weight: 600;
+}
+
+.muted {
+	color: $color-text-muted;
+	font-size: 0.78rem;
+}
+
+.mono {
+	font-variant-numeric: tabular-nums;
+}
+
+.empty {
+	text-align: center;
+	color: $color-text-muted;
+	padding: 1.5rem 0.75rem;
+}

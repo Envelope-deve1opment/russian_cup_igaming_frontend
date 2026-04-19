@@ -1,0 +1,132 @@
+@use '../../styles/variables.scss' as *;
+
+.admin {
+	max-width: 720px;
+	margin: 0 auto;
+	padding: 1.75rem 1.1rem 2.5rem;
+	color: $color-text;
+}
+
+.head {
+	margin-bottom: 1.25rem;
+}
+
+.title {
+	margin: 0 0 0.35rem;
+	font-family: $font-display;
+	font-size: clamp(1.35rem, 2vw, 1.75rem);
+	color: $color-text;
+}
+
+.sub {
+	margin: 0;
+	color: $color-text-muted;
+	line-height: 1.5;
+	max-width: 52ch;
+}
+
+.grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+	gap: 1rem;
+	margin-bottom: 1.25rem;
+}
+
+.field {
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+	padding: 0.9rem 1rem;
+	background: $color-surface;
+	border: 1px solid $color-border;
+	border-radius: $radius-lg;
+	box-shadow: $shadow-card;
+	font-size: 0.78rem;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	color: $color-text-muted;
+
+	input[type='number'] {
+		padding: 0.45rem 0.55rem;
+		border-radius: $radius-sm;
+		border: 1px solid $color-border;
+		background: $color-surface-elevated;
+		color: $color-text;
+	}
+
+	input[type='range'] {
+		width: 100%;
+		accent-color: $color-accent;
+	}
+
+	output {
+		font-size: 0.9rem;
+		color: $color-text;
+		text-transform: none;
+		letter-spacing: 0;
+	}
+}
+
+.meter {
+	padding: 1.1rem 1.15rem;
+	border-radius: $radius-lg;
+	border: 1px solid $color-border;
+	background: linear-gradient(160deg, $color-surface-elevated, $color-surface);
+	box-shadow: $shadow-card;
+}
+
+.meterTop {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	margin-bottom: 0.5rem;
+	font-size: 0.85rem;
+	color: $color-text-muted;
+}
+
+.meterVal {
+	font-weight: 700;
+	color: $color-accent;
+	font-variant-numeric: tabular-nums;
+}
+
+.bar {
+	height: 10px;
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.06);
+	overflow: hidden;
+	border: 1px solid $color-border;
+}
+
+.barFill {
+	height: 100%;
+	border-radius: inherit;
+	background: linear-gradient(90deg, $color-success-faint, $color-accent);
+	transition: width $transition-med;
+}
+
+.checks {
+	margin: 0.75rem 0 0;
+	padding-left: 1.1rem;
+	color: $color-text-muted;
+	font-size: 0.85rem;
+	line-height: 1.45;
+}
+
+.checks li[data-ok='true'] {
+	color: $color-success;
+}
+
+.warn {
+	margin-top: 1rem;
+	padding: 0.75rem 0.9rem;
+	border-radius: $radius-md;
+	border: 1px solid $color-danger-border;
+	background: $color-danger-bg;
+	color: $color-danger;
+	font-size: 0.9rem;
+}
+
+.warn p {
+	margin: 0.15rem 0;
+}

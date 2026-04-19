@@ -1,0 +1,77 @@
+@use '../../styles/variables.scss' as *;
+
+.round {
+	max-width: 640px;
+	margin: 0 auto;
+	padding: 2rem 1.1rem;
+	text-align: center;
+	color: $color-text;
+}
+
+.title {
+	font-family: $font-display;
+	margin: 0 0 1rem;
+	font-size: clamp(1.4rem, 2.2vw, 1.85rem);
+	color: $color-text;
+}
+
+.winner {
+	font-size: 1.1rem;
+	margin: 0 0 0.35rem;
+	color: $color-text-muted;
+}
+
+.accent {
+	color: $color-accent;
+	font-weight: 700;
+}
+
+.prize {
+	margin: 0 0 1.75rem;
+	font-weight: 600;
+	color: $color-text;
+}
+
+.cta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.6rem;
+	justify-content: center;
+	margin-bottom: 1.25rem;
+}
+
+.btn {
+	cursor: pointer;
+	border-radius: 999px;
+	border: 1px solid $color-border;
+	padding: 0.55rem 1.1rem;
+	font-weight: 600;
+	background: $color-surface-elevated;
+	color: $color-text;
+	transition:
+		transform $transition-fast,
+		border-color $transition-fast,
+		background $transition-fast;
+}
+
+.btn.primary {
+	background: linear-gradient(120deg, $color-accent, $color-accent-highlight);
+	color: $color-on-accent;
+	border-color: transparent;
+}
+
+.btn.danger {
+	border-color: $color-danger-border-strong;
+	color: $color-danger;
+}
+
+.btn:hover {
+	transform: translateY(-1px);
+	border-color: $color-border-strong;
+}
+
+.hint {
+	margin: 0;
+	font-size: 0.82rem;
+	color: $color-text-muted;
+}
