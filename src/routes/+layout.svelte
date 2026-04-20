@@ -9,6 +9,7 @@
     import {authStore} from "$lib/stores/authStore";
     import {THEME_STORAGE_KEY, themeStore} from "$lib/stores/themeStore";
     import {userStore} from "$lib/stores/userStore";
+    import {userService} from "$lib/api/userService";
 
     let {children} = $props();
 
@@ -30,14 +31,14 @@
 
         try {
             localStorage.setItem(THEME_STORAGE_KEY, id);
-        } catch {
-            /* ignore */
-        }
+        } catch {}
     });
 
-    onMount(() => {
+    onMount(async () => {
         void restoreSession();
         void startMockUpdates();
+
+        console.log(await userService.getAll())
     });
 
     onDestroy(() => {
