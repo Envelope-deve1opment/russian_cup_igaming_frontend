@@ -1,6 +1,6 @@
-// Мета-класс сервиса для классической архитектуры REST
 import {ClientAPI} from "$lib/api/baseAPI";
 
+// Мета-класс сервиса для классической архитектуры REST
 export class JSONServiceBase<T> {
     public serviceAPIURLBase: string
 
@@ -61,6 +61,7 @@ export class JSONServiceBase<T> {
 
 export class ServiceBaseWithGetAll<T> extends JSONServiceBase<T> {
     async getAll(): Promise<T[]> {
+        console.log(ClientAPI.client.options)
         return await ClientAPI.get<"JSON", T[]>(
             `${this.serviceAPIURLBase}`,
             {

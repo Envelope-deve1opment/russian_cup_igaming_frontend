@@ -4,12 +4,10 @@
     import {onDestroy, onMount} from "svelte";
     import favicon from "$lib/assets/favicon.svg";
     import ThemeSwitcher from "$lib/components/ThemeSwitcher.svelte";
-    import {clearAuth, restoreSession} from "$lib/services/authApi";
-    import {startMockUpdates, stopMockUpdates} from "$lib/services/mockRealtime";
+    import {clearAuth} from "$lib/services/authApi";
     import {authStore} from "$lib/stores/authStore";
     import {THEME_STORAGE_KEY, themeStore} from "$lib/stores/themeStore";
     import {userStore} from "$lib/stores/userStore";
-    import {userService} from "$lib/api/userService";
 
     let {children} = $props();
 
@@ -31,20 +29,20 @@
 
         try {
             localStorage.setItem(THEME_STORAGE_KEY, id);
-        } catch {}
+        } catch {
+        }
     });
 
     onMount(async () => {
-        void restoreSession();
-        void startMockUpdates();
-
-        console.log(await userService.getAll())
+        // void restoreSession();
+        // void startMockUpdates();
     });
 
     onDestroy(() => {
-        stopMockUpdates();
+        // stopMockUpdates();
     });
 </script>
+
 
 <svelte:head>
     <link href={favicon} rel="icon"/>
@@ -57,13 +55,20 @@
     <title>VIP Quick Rooms</title>
 </svelte:head>
 
+
+<style lang="scss">
+  @import "./+layout.scss";
+</style>
+
+
 <div class="shell">
     <header class="topbar">
         <div class="topbarInner">
             <div class="topbarMain">
                 <a class="brand" href="/lobby">
                     <span aria-hidden="true" class="brandMark">
-                        <svg fill="currentColor" height="22" viewBox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg">
+                        <svg fill="currentColor" height="22" viewBox="0 0 24 24" width="22"
+                             xmlns="http://www.w3.org/2000/svg">
                             <path d="M12 3.2 20.5 12 12 20.8 3.5 12 12 3.2z" opacity="0.95"/>
                         </svg>
                     </span>
@@ -117,7 +122,3 @@
         {@render children()}
     </main>
 </div>
-
-<style lang="scss">
-    @import "./+layout.scss";
-</style>

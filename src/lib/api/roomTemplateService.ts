@@ -1,6 +1,6 @@
 import {ServiceBaseWithGetAll} from "$lib/api/JSONServiceBase";
 
-const RoomTemplatesBaseAPI: string = "/technical/users" as const;
+const RoomTemplatesBaseAPI: string = "/api/technical/users" as const;
 
 export interface RoomTemplateDTO {
     id: string

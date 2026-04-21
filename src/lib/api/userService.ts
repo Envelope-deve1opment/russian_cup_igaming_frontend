@@ -1,6 +1,6 @@
 import {ServiceBaseWithGetAll} from "$lib/api/JSONServiceBase";
 
-const UsersBaseAPI: string = "/technical/users" as const;
+const UsersBaseAPI: string = "/api/technical/users" as const;
 
 export interface UserDTO {
     id: string,

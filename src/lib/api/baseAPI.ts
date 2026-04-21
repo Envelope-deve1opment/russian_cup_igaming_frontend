@@ -1,6 +1,6 @@
 import {BestFetch} from "bestfetch-g";
 
-const curAPIBase: string = "http://localhost:8080/api";
+const curAPIBase: string = "http://localhost:8080/";
 
 // Используем свою библиотеку запросов со строгой типизацией (она open-source, есть на npm и github)
 // По необходимости можно заменить на свой класс
