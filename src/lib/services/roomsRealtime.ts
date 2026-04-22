@@ -5,6 +5,10 @@ import {setRooms, updateRoom} from "$lib/stores/roomsStore";
 import {get} from "svelte/store";
 import {userStore} from "$lib/stores/userStore";
 import {mapRoomDetails, mapRoomListItem} from "$lib/services/roomMappers";
+import {lobbyService} from "$lib/api/lobbyService";
+import {setLobbyItems} from "$lib/stores/lobbyStore";
+import {mapLobbyItemToRoom} from "$lib/services/lobbyMappers";
+import type {LobbyItemDto, RoomDetailsDto} from "$lib/api/dto";
 
 let lobbyAbortController: AbortController | null = null;
 let roomAbortController: AbortController | null = null;
@@ -29,7 +33,11 @@ function buildSseHeaders(): HeadersInit {
     return headers;
 }
 
-async function openSseStream(path: string, signal: AbortSignal, onEvent: () => void): Promise<void> {
+interface SseParsedData<T> {
+    data: T;
+}
+
+async function openSseStream<T>(path: string, signal: AbortSignal, onData: (data: T) => void): Promise<void> {
     const response = await fetch(`${apiBaseURL}${path}`, {
         method: "GET",
         headers: buildSseHeaders(),
@@ -55,23 +63,41 @@ async function openSseStream(path: string, signal: AbortSignal, onEvent: () => v
             const eventChunk = buffer.slice(0, boundaryIndex).trim();
             buffer = buffer.slice(boundaryIndex + 2);
             if (eventChunk) {
-                onEvent();
+                parseSseEvent<T>(eventChunk, onData);
             }
             boundaryIndex = buffer.indexOf("\n\n");
         }
     }
 }
 
-function startSseLoop(path: string, setController: (controller: AbortController | null) => void, onEvent: () => void): void {
+function parseSseEvent<T>(raw: string, onData: (data: T) => void): void {
+    const lines = raw.split("\n");
+    let dataStr = "";
+    for (const line of lines) {
+        if (line.startsWith("data:")) {
+            dataStr = line.slice(5).trim();
+        }
+    }
+    if (dataStr) {
+        try {
+            const parsed = JSON.parse(dataStr);
+            onData(parsed as T);
+        } catch {
+            // ignore parse errors
+        }
+    }
+}
+
+function startSseLoop<T>(path: string, setController: (controller: AbortController | null) => void, onData: (data: T) => void): void {
     const controller = new AbortController();
     setController(controller);
     const run = async (): Promise<void> => {
         while (!controller.signal.aborted) {
             try {
-                await openSseStream(path, controller.signal, onEvent);
+                await openSseStream<T>(path, controller.signal, onData);
             } catch {
                 if (!controller.signal.aborted) {
-                    onEvent();
+                    onData(null as unknown as T);
                     await new Promise((resolve) => setTimeout(resolve, 1500));
                 }
             }
@@ -85,15 +111,25 @@ async function refreshLobby(): Promise<void> {
     setRooms(rooms.map(mapRoomListItem));
 }
 
+async function refreshLobbySse(): Promise<void> {
+    const items = await lobbyService.getLobby();
+    setLobbyItems(items);
+    setRooms(items.map(mapLobbyItemToRoom));
+}
+
 export async function startRoomsRealtime(): Promise<void> {
     if (!browser) return;
     await refreshLobby();
+    await refreshLobbySse();
 
     lobbyAbortController?.abort();
-    startSseLoop("/lobby/events", (controller) => {
+    startSseLoop<LobbyItemDto[]>("/lobby/events", (controller) => {
         lobbyAbortController = controller;
-    }, () => {
-        void refreshLobby();
+    }, (items) => {
+        if (items && Array.isArray(items)) {
+            setLobbyItems(items);
+            setRooms(items.map(mapLobbyItemToRoom));
+        }
     });
 }
 
@@ -122,10 +158,12 @@ export async function watchCurrentRoom(roomId: string): Promise<void> {
     subscribedRoomId = roomId;
     await refreshRoom(roomId);
 
-    startSseLoop(`/room/events/${roomId}`, (controller) => {
+    startSseLoop<RoomDetailsDto>(`/room/events/${roomId}`, (controller) => {
         roomAbortController = controller;
-    }, () => {
-        void refreshRoom(roomId);
+    }, (dto) => {
+        if (dto) {
+            void refreshRoom(roomId);
+        }
     });
 }
 

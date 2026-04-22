@@ -55,6 +55,7 @@ export function mapRoomDetails(dto: RoomDetailsDto, currentUserId?: string): Roo
         .sort((a, b) => a.seatNum - b.seatNum)
         .map((seat) => mapParticipantDto(seat, currentUserId));
 
+    console.log(123, dto)
     return {
         id: dto.id,
         name: dto.templateName,

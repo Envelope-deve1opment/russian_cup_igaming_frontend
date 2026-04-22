@@ -2,6 +2,7 @@
     import {ROOM_STATUS_LABEL, type RoomStatus} from "$lib/constants/roomStatus";
     import {roomsStore} from "$lib/stores/roomsStore";
     import type {Room} from "$lib/types";
+    import {lobbyService} from "$lib/api/lobbyService";
 
     let minPrice: number = $state(0);
     let maxPrice: number = $state(50_000);
