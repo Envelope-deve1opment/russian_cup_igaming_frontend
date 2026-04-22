@@ -1,129 +1,128 @@
 @use '../../styles/variables.scss' as *;
 
 .page {
-	max-width: 420px;
-	margin: 0 auto;
-	padding: 2rem 1.1rem 3rem;
-	color: $color-text;
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 2rem 1.1rem 3rem;
+  color: $color-text;
 }
 
 .title {
-	margin: 0 0 0.35rem;
-	font-family: $font-display;
-	font-size: clamp(1.35rem, 2vw, 1.75rem);
+  margin: 0 0 0.35rem;
+  font-family: $font-display;
+  font-size: clamp(1.35rem, 2vw, 1.75rem);
 }
 
 .lead {
-	margin: 0 0 1.25rem;
-	color: $color-text-muted;
-	line-height: 1.55;
-	font-size: 0.95rem;
+  margin: 0 0 1.25rem;
+  color: $color-text-muted;
+  line-height: 1.55;
+  font-size: 0.95rem;
 
-	code {
-		font-size: 0.9em;
-		padding: 0.1em 0.35em;
-		border-radius: 4px;
-		background: rgba(255, 255, 255, 0.06);
-		color: $color-accent;
-	}
+  code {
+    font-size: 0.9em;
+    padding: 0.1em 0.35em;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.06);
+    color: $color-accent;
+  }
 }
 
 .form {
-	display: flex;
-	flex-direction: column;
-	gap: 1rem;
-	padding: 1.2rem 1.25rem;
-	background: $color-surface;
-	border: 1px solid $color-border;
-	border-radius: $radius-lg;
-	box-shadow: $shadow-card;
-	transition: box-shadow $transition-med;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.2rem 1.25rem;
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+  transition: box-shadow $transition-med;
 }
 
 .label {
-	display: flex;
-	flex-direction: column;
-	gap: 0.4rem;
-	font-size: 0.78rem;
-	text-transform: uppercase;
-	letter-spacing: 0.06em;
-	color: $color-text-muted;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: $color-text-muted;
 }
 
 .tokenInput {
-	padding: 0.6rem 0.75rem;
-	border-radius: $radius-sm;
-	border: 1px solid $color-border;
-	background: $color-surface-elevated;
-	color: $color-text;
-	font-size: 0.95rem;
-	font-family: ui-monospace, monospace;
-	transition:
-		border-color $transition-fast,
-		box-shadow $transition-fast;
+  padding: 0.6rem 0.75rem;
+  border-radius: $radius-sm;
+  border: 1px solid $color-border;
+  background: $color-surface-elevated;
+  color: $color-text;
+  font-size: 0.95rem;
+  font-family: ui-monospace, monospace;
+  transition: border-color $transition-fast,
+  box-shadow $transition-fast;
 }
 
 .tokenInput:focus {
-	outline: none;
-	border-color: $color-border-strong;
-	box-shadow: 0 0 0 3px $color-accent-soft;
+  outline: none;
+  border-color: $color-border-strong;
+  box-shadow: 0 0 0 3px $color-accent-soft;
 }
 
 .hint {
-	margin: 0;
-	font-size: 0.82rem;
-	color: $color-text-muted;
-	line-height: 1.45;
+  margin: 0;
+  font-size: 0.82rem;
+  color: $color-text-muted;
+  line-height: 1.45;
 
-	code {
-		font-size: 0.88em;
-		color: $color-text;
-	}
+  code {
+    font-size: 0.88em;
+    color: $color-text;
+  }
 }
 
 .error {
-	margin: 0;
-	padding: 0.55rem 0.65rem;
-	border-radius: $radius-sm;
-	background: $color-danger-bg;
-	border: 1px solid $color-danger-border;
-	color: $color-danger;
-	font-size: 0.88rem;
+  margin: 0;
+  padding: 0.55rem 0.65rem;
+  border-radius: $radius-sm;
+  background: $color-danger-bg;
+  border: 1px solid $color-danger-border;
+  color: $color-danger;
+  font-size: 0.88rem;
 }
 
 .actions {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 0.6rem;
-	align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
 }
 
 .submit {
-	cursor: pointer;
-	border: none;
-	border-radius: 999px;
-	padding: 0.55rem 1.25rem;
-	font-weight: 650;
-	background: linear-gradient(120deg, $color-accent, $color-accent-highlight);
-	color: $color-on-accent;
-	transition: opacity $transition-fast, transform $transition-fast;
+  cursor: pointer;
+  border: none;
+  border-radius: 999px;
+  padding: 0.55rem 1.25rem;
+  font-weight: 650;
+  background: linear-gradient(120deg, $color-accent, $color-accent-highlight);
+  color: $color-on-accent;
+  transition: opacity $transition-fast, transform $transition-fast;
 }
 
 .submit:disabled {
-	opacity: 0.55;
-	cursor: not-allowed;
-	transform: none;
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .submit:not(:disabled):hover {
-	transform: translateY(-1px);
+  transform: translateY(-1px);
 }
 
 .back {
-	font-size: 0.9rem;
-	color: $color-text-muted;
+  font-size: 0.9rem;
+  color: $color-text-muted;
 }
 
 .back:hover {
-	color: $color-accent;
+  color: $color-accent;
 }

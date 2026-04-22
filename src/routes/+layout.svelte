@@ -4,7 +4,8 @@
     import {onDestroy, onMount} from "svelte";
     import favicon from "$lib/assets/favicon.svg";
     import ThemeSwitcher from "$lib/components/ThemeSwitcher.svelte";
-    import {clearAuth} from "$lib/services/authApi";
+    import {clearAuth, restoreSession} from "$lib/services/authApi";
+    import {startRoomsRealtime, stopRoomsRealtime} from "$lib/services/roomsRealtime";
     import {authStore} from "$lib/stores/authStore";
     import {THEME_STORAGE_KEY, themeStore} from "$lib/stores/themeStore";
     import {userStore} from "$lib/stores/userStore";
@@ -34,15 +35,14 @@
     });
 
     onMount(async () => {
-        // void restoreSession();
-        // void startMockUpdates();
+        void restoreSession();
+        void startRoomsRealtime();
     });
 
     onDestroy(() => {
-        // stopMockUpdates();
+        stopRoomsRealtime();
     });
 </script>
-
 
 <svelte:head>
     <link href={favicon} rel="icon"/>
@@ -54,12 +54,6 @@
     />
     <title>VIP Quick Rooms</title>
 </svelte:head>
-
-
-<style lang="scss">
-  @import "./+layout.scss";
-</style>
-
 
 <div class="shell">
     <header class="topbar">
@@ -90,19 +84,21 @@
                             data-sveltekit-preload-data="hover"
                             href="/history"
                     >Журнал</a>
-                    <a
-                            aria-current={navActive("/admin", $page.url.pathname) ? "page" : undefined}
-                            class:active={navActive("/admin", $page.url.pathname)}
-                            data-sveltekit-preload-data="hover"
-                            href="/admin"
-                    >Админ</a>
+                    {#if $userStore.role === "ADMIN"}
+                        <a
+                                aria-current={navActive("/admin", $page.url.pathname) ? "page" : undefined}
+                                class:active={navActive("/admin", $page.url.pathname)}
+                                data-sveltekit-preload-data="hover"
+                                href="/admin"
+                        >Админ</a>
+                    {/if}
                 </nav>
             </div>
             <div class="topbarRight">
                 <ThemeSwitcher/>
                 <div class="userBar">
                     {#if $authStore.status === "loading"}
-                        <span class="userMeta">…</span>
+                        <span class="userMeta">...</span>
                     {:else if $authStore.status === "authenticated"}
                         <span class="userMeta" title={$userStore.name}>{$userStore.name}</span>
                         <span class="balancePill">
@@ -122,3 +118,7 @@
         {@render children()}
     </main>
 </div>
+
+<style lang="scss">
+  @import "./+layout.scss";
+</style>

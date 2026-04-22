@@ -72,5 +72,5 @@
 </section>
 
 <style lang="scss">
-    @import "./RoundHistory.scss";
+  @import "./RoundHistory.scss";
 </style>

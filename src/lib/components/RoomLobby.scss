@@ -1,268 +1,265 @@
 @use '../../styles/variables.scss' as *;
 
 .lobby {
-	max-width: 960px;
-	margin: 0 auto;
-	padding: 1.5rem 1.1rem 2.5rem;
-	color: $color-text;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1.5rem 1.1rem 2.5rem;
+  color: $color-text;
 }
 
 .top {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: space-between;
-	gap: 1rem;
-	margin-bottom: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .title {
-	margin: 0 0 0.35rem;
-	font-family: $font-display;
-	font-size: clamp(1.35rem, 2vw, 1.75rem);
-	color: $color-text;
+  margin: 0 0 0.35rem;
+  font-family: $font-display;
+  font-size: clamp(1.35rem, 2vw, 1.75rem);
+  color: $color-text;
 }
 
 .meta {
-	margin: 0;
-	color: $color-text-muted;
-	line-height: 1.5;
+  margin: 0;
+  color: $color-text-muted;
+  line-height: 1.5;
 }
 
 .timer {
-	min-width: 140px;
-	padding: 0.75rem 1rem;
-	border-radius: $radius-md;
-	background: $color-surface;
-	border: 1px solid $color-border;
-	box-shadow: $shadow-card;
-	text-align: right;
+  min-width: 140px;
+  padding: 0.75rem 1rem;
+  border-radius: $radius-md;
+  background: $color-surface;
+  border: 1px solid $color-border;
+  box-shadow: $shadow-card;
+  text-align: right;
 }
 
 .timerLabel {
-	display: block;
-	font-size: 0.72rem;
-	text-transform: uppercase;
-	letter-spacing: 0.08em;
-	color: $color-text-muted;
+  display: block;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: $color-text-muted;
 }
 
 .timerValue {
-	font-size: 1.6rem;
-	font-weight: 700;
-	font-variant-numeric: tabular-nums;
-	color: $color-accent;
-	transition: color $transition-fast;
+  font-size: 1.6rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: $color-accent;
+  transition: color $transition-fast;
 }
 
 .layout {
-	display: grid;
-	grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-	gap: 1rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 1rem;
 }
 
 .panel {
-	background: $color-surface;
-	border: 1px solid $color-border;
-	border-radius: $radius-lg;
-	padding: 1.1rem 1.2rem;
-	box-shadow: $shadow-card;
-	transition:
-		border-color $transition-fast,
-		box-shadow $transition-med;
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  padding: 1.1rem 1.2rem;
+  box-shadow: $shadow-card;
+  transition: border-color $transition-fast,
+  box-shadow $transition-med;
 }
 
 .h2 {
-	margin: 0 0 0.75rem;
-	font-size: 0.95rem;
-	font-weight: 650;
-	color: $color-text-muted;
-	text-transform: uppercase;
-	letter-spacing: 0.06em;
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 650;
+  color: $color-text-muted;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 .seats {
-	display: grid;
-	grid-template-columns: repeat(var(--cols, 5), minmax(0, 1fr));
-	gap: 0.5rem;
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 5), minmax(0, 1fr));
+  gap: 0.5rem;
 }
 
 .seat {
-	min-height: 72px;
-	border-radius: $radius-sm;
-	border: 1px dashed $color-border;
-	padding: 0.45rem 0.5rem;
-	display: flex;
-	flex-direction: column;
-	gap: 0.25rem;
-	justify-content: center;
-	align-items: flex-start;
-	background: rgba(255, 255, 255, 0.02);
-	transition:
-		border-color $transition-fast,
-		transform $transition-fast,
-		background $transition-fast;
+  min-height: 72px;
+  border-radius: $radius-sm;
+  border: 1px dashed $color-border;
+  padding: 0.45rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  justify-content: center;
+  align-items: flex-start;
+  background: rgba(255, 255, 255, 0.02);
+  transition: border-color $transition-fast,
+  transform $transition-fast,
+  background $transition-fast;
 }
 
 /* Значения совпадают с SeatSlotState ($lib/constants/seatSlotState) */
 .seat[data-state='you'] {
-	border-style: solid;
-	border-color: $color-border-strong;
-	box-shadow: inset 0 0 0 1px $color-accent-soft;
+  border-style: solid;
+  border-color: $color-border-strong;
+  box-shadow: inset 0 0 0 1px $color-accent-soft;
 }
 
 .seat[data-state='bot'] {
-	border-color: $color-bot-border;
+  border-color: $color-bot-border;
 }
 
 .seat[data-state='human'] {
-	border-style: solid;
+  border-style: solid;
 }
 
 .seat:hover {
-	transform: translateY(-1px);
+  transform: translateY(-1px);
 }
 
 .seatName {
-	font-size: 0.82rem;
-	font-weight: 600;
-	line-height: 1.2;
-	word-break: break-word;
-	color: $color-text;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.2;
+  word-break: break-word;
+  color: $color-text;
 }
 
 .free {
-	font-size: 0.78rem;
-	color: $color-text-muted;
+  font-size: 0.78rem;
+  color: $color-text-muted;
 }
 
 .botTag,
 .boostTag {
-	font-size: 0.62rem;
-	font-weight: 700;
-	padding: 0.1rem 0.3rem;
-	border-radius: 4px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 0.1rem 0.3rem;
+  border-radius: 4px;
 }
 
 .botTag {
-	background: $color-bot-bg;
-	color: $color-bot;
+  background: $color-bot-bg;
+  color: $color-bot;
 }
 
 .boostTag {
-	background: $color-accent-soft;
-	color: $color-accent;
+  background: $color-accent-soft;
+  color: $color-accent;
 }
 
 .boostRow {
-	margin-top: 1rem;
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	gap: 0.35rem;
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
 }
 
 .btn {
-	cursor: pointer;
-	border-radius: 999px;
-	border: 1px solid $color-border;
-	padding: 0.55rem 1.1rem;
-	font-weight: 600;
-	background: $color-surface-elevated;
-	color: $color-text;
-	transition:
-		background $transition-fast,
-		border-color $transition-fast,
-		transform $transition-fast;
+  cursor: pointer;
+  border-radius: 999px;
+  border: 1px solid $color-border;
+  padding: 0.55rem 1.1rem;
+  font-weight: 600;
+  background: $color-surface-elevated;
+  color: $color-text;
+  transition: background $transition-fast,
+  border-color $transition-fast,
+  transform $transition-fast;
 }
 
 .btn.primary {
-	background: linear-gradient(120deg, $color-accent, $color-accent-highlight);
-	color: $color-on-accent;
-	border-color: transparent;
+  background: linear-gradient(120deg, $color-accent, $color-accent-highlight);
+  color: $color-on-accent;
+  border-color: transparent;
 }
 
 .btn:disabled {
-	opacity: 0.45;
-	cursor: not-allowed;
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .btn:not(:disabled):hover {
-	transform: translateY(-1px);
+  transform: translateY(-1px);
 }
 
 .msg {
-	margin: 0;
-	font-size: 0.85rem;
-	color: $color-text-muted;
+  margin: 0;
+  font-size: 0.85rem;
+  color: $color-text-muted;
 }
 
 .list {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-	display: flex;
-	flex-direction: column;
-	gap: 0.45rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
 }
 
 .row {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	gap: 0.5rem;
-	padding: 0.45rem 0.5rem;
-	border-radius: $radius-sm;
-	background: rgba(255, 255, 255, 0.02);
-	border: 1px solid $color-border;
-	transition: border-color $transition-fast;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.5rem;
+  border-radius: $radius-sm;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid $color-border;
+  transition: border-color $transition-fast;
 }
 
 .row:hover {
-	border-color: $color-border-strong;
+  border-color: $color-border-strong;
 }
 
 .name {
-	font-weight: 600;
-	font-size: 0.9rem;
-	color: $color-text;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: $color-text;
 }
 
 .badges {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 0.25rem;
-	justify-content: flex-end;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  justify-content: flex-end;
 }
 
 .chip {
-	font-size: 0.65rem;
-	padding: 0.12rem 0.35rem;
-	border-radius: 999px;
-	border: 1px solid $color-border;
-	color: $color-text-muted;
+  font-size: 0.65rem;
+  padding: 0.12rem 0.35rem;
+  border-radius: 999px;
+  border: 1px solid $color-border;
+  color: $color-text-muted;
 }
 
 .chip.bot {
-	color: $color-bot;
-	border-color: $color-bot-border;
+  color: $color-bot;
+  border-color: $color-bot-border;
 }
 
 .chip.you {
-	color: $color-accent;
-	border-color: $color-border-strong;
+  color: $color-accent;
+  border-color: $color-border-strong;
 }
 
 .chip.boost {
-	color: $color-success;
-	border-color: $color-success-border;
+  color: $color-success;
+  border-color: $color-success-border;
 }
 
 @media (max-width: 820px) {
-	.layout {
-		grid-template-columns: 1fr;
-	}
+  .layout {
+    grid-template-columns: 1fr;
+  }
 
-	.seats {
-		grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-	}
+  .seats {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
 }

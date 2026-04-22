@@ -39,8 +39,7 @@
 <div class="page">
     <h1 class="title">Вход по токену</h1>
     <p class="lead">
-        Мок авторизации: токен отправляется на «бэкенд», в ответ приходит профиль и баланс. Для ошибки введите
-        <code>invalid</code>.
+        Токен отправляется в API, после чего загружается профиль текущего пользователя.
     </p>
 
     <form class="form" onsubmit={onsubmit}>
@@ -56,11 +55,6 @@
             />
         </label>
 
-        <p class="hint">
-            После появления реального API замените вызов в <code>authApi.ts</code> на <code>fetch</code> с заголовком
-            <code>Authorization: Bearer …</code>.
-        </p>
-
         {#if $authStore.errorMessage}
             <p class="error" role="alert">{$authStore.errorMessage}</p>
         {/if}
@@ -75,5 +69,5 @@
 </div>
 
 <style lang="scss">
-    @import "./Login.scss";
+  @import "./Login.scss";
 </style>

@@ -1,18 +1,15 @@
 import {writable} from "svelte/store";
 import type {User} from "$lib/types";
 
-/** Профиль до входа или после выхода. */
+// Профиль до входа или после выхода
 export const GUEST_USER: User = {
     id: "guest",
     name: "Гость",
+    role: "USER",
     bonusBalance: 0
 };
 
 export const userStore = writable<User>(GUEST_USER);
-
-export function setUser(user: User): void {
-    userStore.set(user);
-}
 
 export function debit(amount: number): boolean {
     if (amount <= 0) return true;

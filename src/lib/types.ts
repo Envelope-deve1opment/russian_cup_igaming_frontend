@@ -4,6 +4,7 @@ import type {RoomStatus} from "$lib/constants/roomStatus";
 export type Participant = {
     id: string;
     name: string;
+    seatNum?: number;
     isBot: boolean;
     isCurrentUser?: boolean;
     hasBoost?: boolean;
@@ -26,10 +27,11 @@ export type Room = {
 export type User = {
     id: string;
     name: string;
+    role: "ADMIN" | "USER";
     bonusBalance: number;
 };
 
-/** Ответ бэкенда на проверку токена (мок / будущий POST /auth или GET /me). */
+/** Ответ после авторизации и получения текущего пользователя. */
 export type AuthLoginResponse = {
     accessToken: string;
     tokenType: string;

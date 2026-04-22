@@ -7,20 +7,29 @@
     import GameRound from "$lib/components/GameRound.svelte";
     import {currentRoomStore, setCurrentRoomId} from "$lib/stores/currentRoomStore";
     import {gameLogStore} from "$lib/stores/gameLogStore";
-    import {roomsStore, updateRoom} from "$lib/stores/roomsStore";
+    import {roomsStore} from "$lib/stores/roomsStore";
     import {userStore} from "$lib/stores/userStore";
+    import {roomParticipantService} from "$lib/api/roomParticipantService";
+    import {refreshCurrentRoom, stopCurrentRoomRealtime, watchCurrentRoom} from "$lib/services/roomsRealtime";
 
-    let roomId = $derived($page.params.id ?? "");
+    let roomId: string = $derived($page.params.id ?? "");
 
-    function ensureCurrentUserSeat(id: string): void {
+    async function ensureCurrentUserSeat(id: string): Promise<void> {
         const r = get(roomsStore).find((x) => x.id === id);
         if (!r) return;
         if (r.participants.some((p) => p.isCurrentUser)) return;
         if (r.participants.length >= r.maxSeats) return;
         const u = get(userStore);
-        updateRoom(id, {
-            participants: [...r.participants, {id: u.id, name: u.name, isBot: false, isCurrentUser: true}]
-        });
+        if (u.id === "guest") return;
+        const occupied = new Set(
+            r.participants
+                .map((p) => p.seatNum)
+                .filter((seatNum): seatNum is number => seatNum != null)
+        );
+        const firstFreeSeat = Array.from({length: r.maxSeats}, (_, i) => i).find((i) => !occupied.has(i));
+        if (firstFreeSeat == null) return;
+        await roomParticipantService.occupySeat(id, firstFreeSeat);
+        await refreshCurrentRoom(id);
     }
 
     $effect(() => {
@@ -30,11 +39,13 @@
             return;
         }
         setCurrentRoomId(id);
-        queueMicrotask(() => ensureCurrentUserSeat(id));
+        void watchCurrentRoom(id);
+        queueMicrotask(() => void ensureCurrentUserSeat(id));
     });
 
     onDestroy(() => {
         setCurrentRoomId(null);
+        stopCurrentRoomRealtime();
     });
 
     let room = $derived($currentRoomStore);
@@ -61,5 +72,5 @@
 {/if}
 
 <style lang="scss">
-    @import "./+page.scss";
+  @import "./+page.scss";
 </style>

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {setTheme, THEMES, themeStore, type ThemeId} from "$lib/stores/themeStore";
+    import {setTheme, type ThemeId, THEMES, themeStore} from "$lib/stores/themeStore";
 
     function onchange(e: Event): void {
         const v = (e.currentTarget as HTMLSelectElement).value;
@@ -25,5 +25,5 @@
 </div>
 
 <style lang="scss">
-    @import "./ThemeSwitcher.scss";
+  @import "./ThemeSwitcher.scss";
 </style>

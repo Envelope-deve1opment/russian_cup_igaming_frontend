@@ -113,5 +113,5 @@
 
 
 <style lang="scss">
-    @import "./RoomList.scss";
+  @import "./RoomList.scss";
 </style>

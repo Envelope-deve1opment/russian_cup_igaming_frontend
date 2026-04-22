@@ -88,5 +88,5 @@
 
 
 <style lang="scss">
-    @import "./AdminConfigurator.scss";
+  @import "./AdminConfigurator.scss";
 </style>

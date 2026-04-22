@@ -86,5 +86,5 @@
 
 
 <style lang="scss">
-    @import "./GameRound.scss";
+  @import "./GameRound.scss";
 </style>
