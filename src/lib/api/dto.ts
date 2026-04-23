@@ -1,6 +1,4 @@
-export type MockLoginRequest = {
-    username: string;
-};
+import type {RoomGameId} from "$lib/constants";
 
 export type MockLoginResponse = {
     token: string;
@@ -16,6 +14,25 @@ export type TechnicalUserDto = {
     username: string;
     role: "ADMIN" | "USER";
     userPrivilegeStatus?: "DEFAULT" | "VIP";
+};
+
+export type RoomTemplateCreateDto = {
+    templateName: string;
+};
+
+export type RoomTemplateDto = {
+    id: string;
+    templateName: string;
+    entryFee?: number;
+    commissionPercentage?: number;
+    gameType?: RoomGameId;
+    participantsCount?: number;
+    active?: boolean;
+    boostEnabled?: boolean;
+    boostCost?: number;
+    countdownSeconds?: number;
+    createdAt?: string;
+    updatedAt?: string;
 };
 
 export type LobbyItemDto = {
@@ -36,6 +53,7 @@ export type RoomListItemDto = {
     templateId: string;
     templateName: string;
     entryFee: number;
+    gameType: RoomGameId;
     participantsLimit: number;
     occupiedSeatsCount: number;
     status: string;
@@ -65,6 +83,7 @@ export type RoomDetailsDto = {
     participantsLimit: number;
     occupiedSeatsCount: number;
     status: string;
+    gameType: RoomGameId;
     countdownStartedAt?: string;
     countdownSeconds?: number;
     boostEnabled?: boolean;

@@ -1,11 +1,14 @@
 <script lang="ts">
+    import {goto} from "$app/navigation";
     import {SeatSlotState} from "$lib/constants/seatSlotState";
     import {RoomStatus} from "$lib/constants/roomStatus";
     import {onDestroy, onMount} from "svelte";
     import type {Participant, Room} from "$lib/types";
     import {roomService} from "$lib/api/roomService";
     import {roomParticipantService} from "$lib/api/roomParticipantService";
-    import {refreshCurrentRoom} from "$lib/services/roomsRealtime";
+    import {refreshCurrentRoom, stopCurrentRoomRealtime} from "$lib/services/roomsRealtime";
+    import {refreshBalance} from "$lib/services/balanceService";
+    import {setCurrentRoomId} from "$lib/stores/currentRoomStore";
 
     let {room}: { room: Room } = $props();
 
@@ -112,6 +115,7 @@
             buyingBoost = true;
             await roomService.buyBoost(room.id);
             await refreshCurrentRoom(room.id);
+            await refreshBalance();
             boostMessage = "Буст куплен";
         } catch {
             boostMessage = "Не удалось купить буст";
@@ -134,11 +138,13 @@
             if (seat == null) {
                 await roomParticipantService.occupySeat(room.id, index);
                 await refreshCurrentRoom(room.id);
+                await refreshBalance();
                 return;
             }
 
             await roomParticipantService.releaseSeat(room.id, index);
             await refreshCurrentRoom(room.id);
+            await refreshBalance();
         } catch {
             boostMessage = seat == null ? "Не удалось занять место" : "Не удалось освободить место";
         } finally {
@@ -157,10 +163,39 @@
         try {
             leavingRoomPending = true;
             await roomParticipantService.leaveRoom(room.id);
-            await refreshCurrentRoom(room.id);
+            await refreshBalance();
             boostMessage = "Вы вышли из комнаты";
+            setCurrentRoomId(null);
+            stopCurrentRoomRealtime();
+            await goto("/lobby");
         } catch {
             boostMessage = "Не удалось выйти из комнаты";
+        } finally {
+            leavingRoomPending = false;
+        }
+    }
+
+    async function sellSeat(): Promise<void> {
+        boostMessage = null;
+
+        if (!canManageSeats) {
+            boostMessage = "Вернуть билет можно только до старта раунда";
+            return;
+        }
+
+        if (!currentUserParticipant || currentUserParticipant.seatNum == null) {
+            boostMessage = "У вас нет занятого места";
+            return;
+        }
+
+        try {
+            leavingRoomPending = true;
+            await roomParticipantService.releaseSeat(room.id, currentUserParticipant.seatNum);
+            await refreshCurrentRoom(room.id);
+            await refreshBalance();
+            boostMessage = `Билет возвращён. +${room.entryPrice.toLocaleString("ru-RU")}`;
+        } catch {
+            boostMessage = "Не удалось вернуть билет";
         } finally {
             leavingRoomPending = false;
         }
@@ -174,7 +209,7 @@
             <h1 class="title" id="lobby-title">{room.name}</h1>
             <p class="meta">
                 Вход <strong>{room.entryPrice.toLocaleString("ru-RU")}</strong> · Фонд
-                <strong>{room.prizeFund.toLocaleString("ru-RU")}</strong>
+                <strong>{room.prizeFund.toLocaleString("ru-RU")}</strong> · Мест <strong>{room.seatsTaken}/{room.maxSeats}</strong>
             </p>
         </div>
         <div aria-live="polite" class="timer" role="timer">
@@ -187,7 +222,7 @@
         <div class="panel">
             <h2 class="h2">Места за столом</h2>
             <p class="msg" role="status">
-                Места игроков заняты по-настоящему. Слоты с AI — только визуал, их можно занимать.
+                Слоты с AI декоративные. Реально заняты только места живых игроков
             </p>
             <div class="seats" style:--cols={Math.min(room.maxSeats, 5)}>
                 {#each Array(room.maxSeats) as _, i (i)}
@@ -231,6 +266,14 @@
                 </button>
                 <button
                         class="btn"
+                        disabled={!canManageSeats || !currentUserParticipant || leavingRoomPending}
+                        onclick={sellSeat}
+                        type="button"
+                >
+                    Вернуть билет (+{room.entryPrice.toLocaleString("ru-RU")})
+                </button>
+                <button
+                        class="btn"
                         disabled={!canManageSeats || leavingRoomPending}
                         onclick={leaveRoom}
                         type="button"
@@ -246,7 +289,7 @@
         <div class="panel">
             <h2 class="h2">Участники</h2>
             {#if room.participants.length === 0}
-                <p class="msg">За столом пока нет реальных участников.</p>
+                <p class="msg">Стол свободен. Первый игрок задаёт темп комнаты.</p>
             {:else}
                 <ul class="list">
                     {#each room.participants as p (`${p.id}:${p.seatNum ?? "no-seat"}`)}

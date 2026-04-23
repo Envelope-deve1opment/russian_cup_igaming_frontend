@@ -1,9 +1,13 @@
 @use '../../../styles/variables.scss' as *;
 
 .state {
-  max-width: 560px;
+  max-width: 620px;
   margin: 2rem auto;
-  padding: 0 1rem;
+  padding: 1.15rem 1.2rem;
+  border-radius: 26px;
+  border: 1px solid color-mix(in srgb, var(--color-border) 88%, transparent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface-elevated) 94%, transparent), color-mix(in srgb, var(--color-surface) 90%, transparent));
+  box-shadow: $shadow-card;
   color: $color-text-muted;
   text-align: center;
   line-height: 1.5;

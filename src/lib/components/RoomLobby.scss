@@ -1,154 +1,172 @@
 @use '../../styles/variables.scss' as *;
 
 .lobby {
-  max-width: 900px;
+  max-width: 1080px;
   margin: 0 auto;
-  padding: 1.5rem 1rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.top,
+.panel {
+  border-radius: 30px;
+  border: 1px solid color-mix(in srgb, var(--color-border) 88%, transparent);
+  background:
+    radial-gradient(circle at top right, color-mix(in srgb, var(--color-accent) 10%, transparent), transparent 38%),
+    linear-gradient(180deg, color-mix(in srgb, var(--color-surface-elevated) 94%, transparent), color-mix(in srgb, var(--color-surface) 90%, transparent));
+  box-shadow: $shadow-card;
 }
 
 .top {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: start;
   gap: 1rem;
-  margin-bottom: 1.5rem;
+  padding: 1.35rem;
 }
 
 .title {
-  font-size: 1.35rem;
-  font-weight: 700;
-  margin: 0 0 0.25rem;
+  margin: 0;
+  font-size: clamp(1.7rem, 3vw, 2.6rem);
 }
 
 .meta {
-  margin: 0;
+  margin: 0.55rem 0 0;
   color: $color-text-muted;
-  font-size: 0.9rem;
+  font-size: 0.94rem;
 }
 
 .timer {
-  padding: 0.5rem 1rem;
-  background: $color-surface;
-  border: 1px solid $color-border;
-  border-radius: $radius-md;
+  min-width: 150px;
+  padding: 0.8rem 0.95rem;
+  border-radius: 24px;
+  border: 1px solid color-mix(in srgb, var(--color-border) 84%, transparent);
+  background: color-mix(in srgb, var(--color-surface) 90%, transparent);
   text-align: right;
 }
 
 .timerLabel {
   display: block;
-  font-size: 0.7rem;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
   color: $color-text-muted;
   text-transform: uppercase;
 }
 
 .timerValue {
-  font-size: 1.4rem;
-  font-weight: 700;
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 1.7rem;
+  font-weight: 800;
   color: $color-accent;
   font-variant-numeric: tabular-nums;
 }
 
 .layout {
   display: grid;
-  grid-template-columns: 1.5fr 1fr;
+  grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.86fr);
   gap: 1rem;
 }
 
 .panel {
-  background: $color-surface;
-  border: 1px solid $color-border;
-  border-radius: $radius-md;
-  padding: 1rem;
+  padding: 1.15rem;
 }
 
 .h2 {
-  margin: 0 0 0.75rem;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: $color-text-muted;
+  margin: 0 0 0.7rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: $color-accent;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.18em;
 }
 
 .msg {
-  margin: 0 0 0.5rem;
-  font-size: 0.8rem;
+  margin: 0 0 0.9rem;
+  font-size: 0.88rem;
   color: $color-text-muted;
+  line-height: 1.5;
 }
 
 .seats {
   display: grid;
   grid-template-columns: repeat(var(--cols, 5), 1fr);
-  gap: 0.5rem;
+  gap: 0.65rem;
   margin-bottom: 1rem;
 }
 
 .seat {
-  min-height: 60px;
+  min-height: 88px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 0.25rem;
-  border: 1px dashed $color-border;
-  border-radius: $radius-sm;
-  background: transparent;
-  transition: border-color $transition-fast, transform $transition-fast;
+  gap: 0.3rem;
+  padding: 0.65rem 0.5rem;
+  border: 1px dashed color-mix(in srgb, var(--color-border) 84%, transparent);
+  border-radius: 24px;
+  background: color-mix(in srgb, var(--color-surface) 76%, transparent);
+  transition: border-color $transition-fast,
+  transform $transition-fast,
+  background $transition-fast,
+  box-shadow $transition-fast;
   cursor: pointer;
+}
 
-  &:hover {
-    transform: translateY(-1px);
-  }
+.seat:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 26px rgba(0, 0, 0, 0.18);
+}
 
-  &:disabled {
-    cursor: not-allowed;
-  }
+.seat:disabled {
+  cursor: not-allowed;
+}
 
-  &:disabled:hover {
-    transform: none;
-  }
+.seat:disabled:hover {
+  transform: none;
+}
 
-  &[data-state='you'] {
-    border-style: solid;
-    border-color: $color-accent;
-    background: $color-accent-soft;
-  }
+.seat[data-state='you'] {
+  border-style: solid;
+  border-color: color-mix(in srgb, var(--color-accent) 88%, white 8%);
+  background: color-mix(in srgb, var(--color-accent) 14%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-accent) 18%, transparent), 0 18px 32px color-mix(in srgb, var(--color-accent) 16%, transparent);
+}
 
-  &[data-state='bot'] {
-    border-color: $color-bot-border;
-    opacity: 0.8;
-  }
+.seat[data-state='bot'] {
+  border-color: $color-bot-border;
+  background: color-mix(in srgb, var(--color-bot-bg) 72%, var(--color-surface));
+}
 
-  &[data-state='human'] {
-    border-style: solid;
-  }
+.seat[data-state='human'] {
+  border-style: solid;
+  background: color-mix(in srgb, var(--color-surface-elevated) 82%, transparent);
+}
 
-  &[data-state='human']:disabled {
-    opacity: 0.75;
-  }
+.seat[data-state='human']:disabled {
+  opacity: 0.8;
 }
 
 .seatName {
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-align: center;
 }
 
-.seatHint {
-  font-size: 0.65rem;
-  color: $color-text-muted;
-}
-
+.seatHint,
 .free {
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   color: $color-text-muted;
 }
 
 .botTag,
 .boostTag {
-  font-size: 0.6rem;
-  padding: 0.1rem 0.25rem;
-  border-radius: 4px;
-  font-weight: 700;
+  font-size: 0.62rem;
+  padding: 0.16rem 0.35rem;
+  border-radius: 999px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
 }
 
 .botTag {
@@ -163,36 +181,43 @@
 
 .boostRow {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.65rem;
   flex-wrap: wrap;
   align-items: center;
 }
 
 .btn {
-  padding: 0.5rem 1rem;
+  min-height: 3rem;
+  padding: 0.65rem 1.1rem;
   border-radius: 999px;
-  border: 1px solid $color-border;
-  background: $color-surface-elevated;
+  border: 1px solid color-mix(in srgb, var(--color-border) 88%, transparent);
+  background: color-mix(in srgb, var(--color-surface-elevated) 86%, transparent);
   color: $color-text;
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: 0.84rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
   cursor: pointer;
-  transition: border-color $transition-fast, transform $transition-fast;
+  transition: transform $transition-fast,
+  border-color $transition-fast,
+  background $transition-fast,
+  box-shadow $transition-fast;
+}
 
-  &:hover:not(:disabled) {
-    transform: translateY(-1px);
-  }
+.btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  border-color: $color-border-strong;
+}
 
-  &:disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
-  }
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
 
-  &.primary {
-    background: $color-accent;
-    color: $color-on-accent;
-    border-color: transparent;
-  }
+.btn.primary {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--color-accent-highlight) 20%, var(--color-accent)), var(--color-accent));
+  color: $color-on-accent;
+  border-color: transparent;
+  box-shadow: 0 12px 24px color-mix(in srgb, var(--color-accent) 18%, transparent);
 }
 
 .list {
@@ -201,38 +226,37 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.55rem;
 }
 
 .row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.4rem 0.6rem;
-  border-radius: $radius-sm;
-  background: $color-surface-elevated;
+  gap: 0.75rem;
+  padding: 0.85rem 0.9rem;
+  border-radius: 20px;
+  border: 1px solid color-mix(in srgb, var(--color-border) 78%, transparent);
+  background: color-mix(in srgb, var(--color-surface) 88%, transparent);
 }
 
 .name {
-  font-weight: 600;
-  font-size: 0.85rem;
+  font-weight: 700;
+  font-size: 0.92rem;
 }
 
 .badges {
   display: flex;
-  gap: 0.25rem;
+  gap: 0.35rem;
+  flex-wrap: wrap;
 }
 
 .chip {
-  font-size: 0.65rem;
-  padding: 0.1rem 0.35rem;
+  font-size: 0.64rem;
+  padding: 0.16rem 0.4rem;
   border-radius: 999px;
-  font-weight: 500;
-
-  &.bot {
-    background: $color-bot-bg;
-    color: $color-bot;
-  }
+  font-weight: 800;
+  letter-spacing: 0.08em;
 
   &.you {
     background: $color-accent-soft;
@@ -245,8 +269,23 @@
   }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 860px) {
   .layout {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .top {
+    flex-direction: column;
+  }
+
+  .timer {
+    width: 100%;
+    text-align: left;
+  }
+
+  .seats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

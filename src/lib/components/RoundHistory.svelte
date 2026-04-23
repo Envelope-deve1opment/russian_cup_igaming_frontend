@@ -31,7 +31,7 @@
     <header class="hero">
         <div class="heroCopy">
             <p class="eyebrow">Archive</p>
-            <h1 class="title" id="hist-title">История завершённых розыгрышей.</h1>
+            <h1 class="title" id="hist-title">История завершённых розыгрышей</h1>
         </div>
         <div class="heroStats">
             <div class="stat">

@@ -6,6 +6,7 @@
     import ThemeSwitcher from "$lib/components/ThemeSwitcher.svelte";
     import {clearAuth, restoreSession} from "$lib/services/authApi";
     import {startRoomsRealtime, stopRoomsRealtime} from "$lib/services/roomsRealtime";
+    import {startBalanceRefresh, stopBalanceRefresh} from "$lib/services/balanceService";
     import {authStore} from "$lib/stores/authStore";
     import {THEME_STORAGE_KEY, themeStore} from "$lib/stores/themeStore";
     import {userStore} from "$lib/stores/userStore";
@@ -37,10 +38,12 @@
     onMount(async () => {
         void restoreSession();
         void startRoomsRealtime();
+        startBalanceRefresh(10);
     });
 
     onDestroy(() => {
         stopRoomsRealtime();
+        stopBalanceRefresh();
     });
 </script>
 
@@ -88,36 +91,6 @@
                             data-sveltekit-preload-data="hover"
                             href="/history"
                     >Журнал</a>
-                    <a
-                            aria-current={navActive("/wheel", $page.url.pathname) ? "page" : undefined}
-                            class:active={navActive("/wheel", $page.url.pathname)}
-                            data-sveltekit-preload-data="hover"
-                            href="/wheel"
-                    >Колесо</a>
-                    <a
-                            aria-current={navActive("/races", $page.url.pathname) ? "page" : undefined}
-                            class:active={navActive("/races", $page.url.pathname)}
-                            data-sveltekit-preload-data="hover"
-                            href="/races"
-                    >Гонки</a>
-                    <a
-                            aria-current={navActive("/roulette", $page.url.pathname) ? "page" : undefined}
-                            class:active={navActive("/roulette", $page.url.pathname)}
-                            data-sveltekit-preload-data="hover"
-                            href="/roulette"
-                    >Рулетка</a>
-                    <a
-                            aria-current={navActive("/battle", $page.url.pathname) ? "page" : undefined}
-                            class:active={navActive("/battle", $page.url.pathname)}
-                            data-sveltekit-preload-data="hover"
-                            href="/battle"
-                    >Битва</a>
-                    <a
-                            aria-current={navActive("/dynamite", $page.url.pathname) ? "page" : undefined}
-                            class:active={navActive("/dynamite", $page.url.pathname)}
-                            data-sveltekit-preload-data="hover"
-                            href="/dynamite"
-                    >Динамит</a>
                     {#if $userStore.role === "ADMIN"}
                         <a
                                 aria-current={navActive("/admin", $page.url.pathname) ? "page" : undefined}
@@ -138,6 +111,10 @@
                         <span class="balancePill">
                             <span class="balanceLabel">банк</span>
                             <span class="userBalance">{$userStore.bonusBalance.toLocaleString("ru-RU")}</span>
+                        </span>
+                        <span class="balancePill">
+                            <span class="balanceLabel">зарезервировано</span>
+                            <span class="userBalance">{$userStore.reservedAmount.toLocaleString("ru-RU")}</span>
                         </span>
                         <button class="logout" onclick={() => clearAuth()} type="button">Выйти</button>
                     {:else}

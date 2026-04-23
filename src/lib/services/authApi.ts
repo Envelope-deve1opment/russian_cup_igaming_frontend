@@ -12,7 +12,8 @@ function mapCurrentUser(data: CurrentUserResponse): User {
         id: data.userId,
         name: data.username,
         role: "USER",
-        bonusBalance: 0
+        bonusBalance: 0,
+        reservedAmount: 0
     };
 }
 
@@ -63,7 +64,9 @@ export async function loginWithBearerToken(rawToken: string): Promise<AuthLoginR
         });
         const me = await loadMe(login.token);
 
-        const balanceInfo = await requestJSON<{balance: number}>("/wallets/me", {
+        const balanceInfo = await requestJSON<
+            {balance: number, reservedAmount: number}
+        >("/wallets/me", {
             "method": "GET",
             withAuth: true,
             token: login.token
@@ -71,7 +74,8 @@ export async function loginWithBearerToken(rawToken: string): Promise<AuthLoginR
 
         const user: User = {
             ...await enrichRole(mapCurrentUser(me)),
-            bonusBalance: balanceInfo.balance
+            bonusBalance: balanceInfo.balance,
+            reservedAmount: balanceInfo.reservedAmount
         };
         return {
             accessToken: login.token,

@@ -1,4 +1,4 @@
-// Жизненный цикл комнаты (согласован с будущим API)
+// Жизненный цикл комнаты (согласован с API)
 export const RoomStatus = {
     Waiting: "waiting",
     Starting: "starting",

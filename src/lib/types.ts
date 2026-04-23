@@ -1,10 +1,13 @@
 import type {RoomStatus} from "$lib/constants/roomStatus";
+import type {RoomGameId} from "$lib/constants/roomGame";
 
 // ПРЕДВАРИТЕЛЬНЫЕ ТИПЫ, ВРЕМЕННЫЕ ЗАГЛУШКИ (РЕАЛЬНЫХ DTO ЕЩЁ НЕТ)
 export type Participant = {
     id: string;
+    participantId?: string;
     name: string;
     seatNum?: number;
+    weight?: number;
     isBot: boolean;
     isVisualOnly?: boolean;
     isCurrentUser?: boolean;
@@ -13,6 +16,7 @@ export type Participant = {
 
 export type Room = {
     id: string;
+    gameId: RoomGameId;
     name: string;
     entryPrice: number;
     maxSeats: number;
@@ -33,6 +37,7 @@ export type User = {
     name: string;
     role: "ADMIN" | "USER";
     bonusBalance: number;
+    reservedAmount: number;
 };
 
 /** Ответ после авторизации и получения текущего пользователя. */

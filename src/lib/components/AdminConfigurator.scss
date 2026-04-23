@@ -1,132 +1,434 @@
 @use '../../styles/variables.scss' as *;
 
 .admin {
-  max-width: 720px;
+  max-width: 1240px;
   margin: 0 auto;
-  padding: 1.75rem 1.1rem 2.5rem;
+  display: grid;
+  gap: 1rem;
   color: $color-text;
 }
 
-.head {
-  margin-bottom: 1.25rem;
+.hero,
+.card,
+.feedback {
+  border-radius: 30px;
+  border: 1px solid color-mix(in srgb, var(--color-border) 88%, transparent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface-elevated) 94%, transparent), color-mix(in srgb, var(--color-surface) 90%, transparent));
+  box-shadow: $shadow-card;
+}
+
+.hero {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 1.35rem;
+}
+
+.heroCopy {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: $color-accent;
+}
+
+.eyebrow.small {
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
 }
 
 .title {
-  margin: 0 0 0.35rem;
-  font-family: $font-display;
-  font-size: clamp(1.35rem, 2vw, 1.75rem);
-  color: $color-text;
+  margin: 0;
+  font-size: clamp(1.7rem, 3vw, 2.8rem);
 }
 
 .sub {
   margin: 0;
+  max-width: 42ch;
   color: $color-text-muted;
-  line-height: 1.5;
-  max-width: 52ch;
 }
 
-.grid {
+.heroStats {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.statCard {
+  min-width: 160px;
+  padding: 0.95rem 1rem;
+  border-radius: 22px;
+  border: 1px solid color-mix(in srgb, var(--color-border) 84%, transparent);
+  background: color-mix(in srgb, var(--color-surface) 90%, transparent);
+}
+
+.statCard span {
+  display: block;
+  color: $color-text-muted;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.statCard strong {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+.workspace {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: minmax(320px, 0.92fr) minmax(0, 1.5fr);
   gap: 1rem;
-  margin-bottom: 1.25rem;
+}
+
+.sidebar {
+  display: grid;
+  gap: 1rem;
+}
+
+.card {
+  padding: 1.1rem;
+}
+
+.sectionHead {
+  margin-bottom: 0.9rem;
+}
+
+.sectionHead h2,
+.editorHead h2,
+.emptyEditor h2 {
+  margin: 0;
+  font-size: 1.18rem;
+}
+
+.sectionHead p,
+.emptyEditor p {
+  margin: 0.35rem 0 0;
+  color: $color-text-muted;
+}
+
+.createRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.65rem;
+}
+
+.textInput {
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.72rem 0.9rem;
+  border-radius: 18px;
+  font-size: 0.94rem;
+  font-weight: 600;
+}
+
+.templateList {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.templateItem {
+  width: 100%;
+  padding: 0.9rem 0.95rem;
+  border-radius: 22px;
+  border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  background: color-mix(in srgb, var(--color-surface) 88%, transparent);
+  color: $color-text;
+  text-align: left;
+  cursor: pointer;
+  transition: transform $transition-fast,
+  border-color $transition-fast,
+  box-shadow $transition-fast,
+  background $transition-fast;
+}
+
+.templateItem:hover {
+  transform: translateY(-1px);
+  border-color: $color-border-strong;
+}
+
+.templateItem.selected {
+  border-color: color-mix(in srgb, var(--color-accent) 62%, transparent);
+  background: color-mix(in srgb, var(--color-accent) 9%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-accent) 18%, transparent);
+}
+
+.templateTop {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: start;
+}
+
+.templateTop strong {
+  font-size: 0.96rem;
+}
+
+.templateMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.7rem;
+  margin-top: 0.45rem;
+  color: $color-text-muted;
+  font-size: 0.78rem;
+}
+
+.statusPill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 4.35rem;
+  min-height: 2rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 999px;
+  background: $color-success-faint;
+  color: $color-success;
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.statusPill.off {
+  background: color-mix(in srgb, var(--color-border) 65%, transparent);
+  color: $color-text-muted;
+}
+
+.editorCard {
+  display: grid;
+  gap: 1rem;
+}
+
+.emptyEditor {
+  min-height: 320px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+
+.editorHead {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.9rem;
+  align-items: start;
+  flex-wrap: wrap;
+}
+
+.editorActions {
+  display: flex;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.field,
+.toggleField,
+.meter,
+.warn {
+  border-radius: 24px;
+  border: 1px solid color-mix(in srgb, var(--color-border) 82%, transparent);
+  background: color-mix(in srgb, var(--color-surface) 88%, transparent);
 }
 
 .field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  padding: 0.9rem 1rem;
-  background: $color-surface;
-  border: 1px solid $color-border;
-  border-radius: $radius-lg;
-  box-shadow: $shadow-card;
-  font-size: 0.78rem;
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.95rem;
+}
+
+.field.wide {
+  grid-column: 1 / -1;
+}
+
+.field span {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
   color: $color-text-muted;
+}
 
-  input[type='number'] {
-    padding: 0.45rem 0.55rem;
-    border-radius: $radius-sm;
-    border: 1px solid $color-border;
-    background: $color-surface-elevated;
-    color: $color-text;
-  }
+.toggleField {
+  display: flex;
+  gap: 0.75rem;
+  align-items: start;
+  padding: 1rem;
+  cursor: pointer;
+}
 
-  input[type='range'] {
-    width: 100%;
-    accent-color: $color-accent;
-  }
+.toggleField input {
+  width: 1.05rem;
+  height: 1.05rem;
+  margin-top: 0.15rem;
+  accent-color: $color-accent;
+}
 
-  output {
-    font-size: 0.9rem;
-    color: $color-text;
-    text-transform: none;
-    letter-spacing: 0;
-  }
+.toggleField strong {
+  display: block;
+  font-size: 0.95rem;
+}
+
+.toggleField small {
+  display: block;
+  margin-top: 0.25rem;
+  color: $color-text-muted;
+  line-height: 1.45;
 }
 
 .meter {
   padding: 1.1rem 1.15rem;
-  border-radius: $radius-lg;
-  border: 1px solid $color-border;
-  background: linear-gradient(160deg, $color-surface-elevated, $color-surface);
-  box-shadow: $shadow-card;
 }
 
 .meterTop {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  margin-bottom: 0.5rem;
-  font-size: 0.85rem;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
   color: $color-text-muted;
 }
 
 .meterVal {
-  font-weight: 700;
+  font-weight: 800;
   color: $color-accent;
   font-variant-numeric: tabular-nums;
 }
 
 .bar {
-  height: 10px;
+  height: 12px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.06);
+  background: color-mix(in srgb, var(--color-border) 55%, transparent);
   overflow: hidden;
-  border: 1px solid $color-border;
+  border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
 }
 
 .barFill {
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, $color-success-faint, $color-accent);
+  background: linear-gradient(90deg, $color-success, $color-accent);
   transition: width $transition-med;
 }
 
 .checks {
-  margin: 0.75rem 0 0;
+  margin: 0.9rem 0 0;
   padding-left: 1.1rem;
   color: $color-text-muted;
-  font-size: 0.85rem;
-  line-height: 1.45;
+  font-size: 0.88rem;
+  line-height: 1.5;
 }
 
 .checks li[data-ok='true'] {
   color: $color-success;
 }
 
-.warn {
-  margin-top: 1rem;
-  padding: 0.75rem 0.9rem;
-  border-radius: $radius-md;
-  border: 1px solid $color-danger-border;
-  background: $color-danger-bg;
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1rem;
+  color: $color-text-muted;
+  font-size: 0.8rem;
+}
+
+.warn,
+.feedback {
+  padding: 0.95rem 1rem;
   color: $color-danger;
-  font-size: 0.9rem;
 }
 
 .warn p {
-  margin: 0.15rem 0;
+  margin: 0.2rem 0;
+}
+
+.feedback {
+  border-color: $color-danger-border;
+  background: $color-danger-bg;
+}
+
+.feedback.success {
+  color: $color-success;
+  border-color: $color-success-border;
+  background: $color-success-faint;
+}
+
+.primaryBtn,
+.ghostBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0.7rem 1.05rem;
+  border-radius: 999px;
+  font-size: 0.84rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: transform $transition-fast,
+  border-color $transition-fast,
+  background $transition-fast,
+  box-shadow $transition-fast;
+}
+
+.primaryBtn {
+  border: 1px solid color-mix(in srgb, var(--color-accent) 66%, transparent);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--color-accent-highlight) 20%, var(--color-accent)), var(--color-accent));
+  color: $color-on-accent;
+  box-shadow: 0 14px 28px color-mix(in srgb, var(--color-accent) 18%, transparent);
+}
+
+.ghostBtn {
+  border: 1px solid color-mix(in srgb, var(--color-border) 84%, transparent);
+  background: color-mix(in srgb, var(--color-surface) 88%, transparent);
+  color: $color-text;
+}
+
+.primaryBtn:hover:not(:disabled),
+.ghostBtn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.primaryBtn:disabled,
+.ghostBtn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.placeholder {
+  margin: 0;
+  color: $color-text-muted;
+}
+
+@media (max-width: 980px) {
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .createRow {
+    grid-template-columns: 1fr;
+  }
+
+  .editorHead {
+    flex-direction: column;
+  }
 }

@@ -51,8 +51,8 @@
             joinError = error instanceof APIError
                 ? error.message
                 : mode === "fast"
-                    ? "Не удалось подобрать быстрый матч."
-                    : "Не удалось открыть комнату.";
+                    ? "Не удалось подобрать быстрый матч"
+                    : "Не удалось открыть комнату";
         } finally {
             pendingTemplateId = null;
             pendingMode = null;

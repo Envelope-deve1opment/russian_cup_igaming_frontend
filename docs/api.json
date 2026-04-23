@@ -1,0 +1,1193 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "API Documentation for igaming service",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": ""
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/api/technical/users": {
+      "get": {
+        "tags": [
+          "user-controller"
+        ],
+        "operationId": "getAll",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "user-controller"
+        ],
+        "operationId": "update",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "user-controller"
+        ],
+        "operationId": "create",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserCreateDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/roomTemplate": {
+      "get": {
+        "tags": [
+          "room-template-controller"
+        ],
+        "operationId": "getAll_1",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RoomTemplateDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "room-template-controller"
+        ],
+        "operationId": "update_1",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RoomTemplateDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoomTemplateDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "room-template-controller"
+        ],
+        "operationId": "create_1",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RoomTemplateCreateDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoomTemplateDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/wallets/me/replenishment": {
+      "post": {
+        "tags": [
+          "wallet-controller"
+        ],
+        "operationId": "replenishMyWallet",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WalletReplenishmentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserWalletDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/roomParticipant/rooms/{roomId}/seats/{seatNum}": {
+      "post": {
+        "tags": [
+          "room-participant-controller"
+        ],
+        "operationId": "occupySeat",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "seatNum",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoomParticipantDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "room-participant-controller"
+        ],
+        "operationId": "releaseSeat",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "seatNum",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoomParticipantDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/room/{roomId}/boost": {
+      "post": {
+        "tags": [
+          "room-controller"
+        ],
+        "operationId": "buyBoost",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/BoostStateDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/room/manual": {
+      "post": {
+        "tags": [
+          "room-controller"
+        ],
+        "operationId": "createManual",
+        "parameters": [
+          {
+            "name": "templateId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoomDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/room/fastJoin": {
+      "post": {
+        "tags": [
+          "room-controller"
+        ],
+        "operationId": "joinToRoom",
+        "parameters": [
+          {
+            "name": "templateId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoomDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/mock-login": {
+      "post": {
+        "tags": [
+          "auth-controller"
+        ],
+        "operationId": "mockLogin",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MockLoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MockLoginResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/wallets/me": {
+      "get": {
+        "tags": [
+          "wallet-controller"
+        ],
+        "operationId": "getMyWallet",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserWalletDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/me": {
+      "get": {
+        "tags": [
+          "current-user-controller"
+        ],
+        "operationId": "me",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/technical/users/{id}": {
+      "get": {
+        "tags": [
+          "user-controller"
+        ],
+        "operationId": "getById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "user-controller"
+        ],
+        "operationId": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/api/roomTemplate/{id}": {
+      "get": {
+        "tags": [
+          "room-template-controller"
+        ],
+        "operationId": "getById_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoomTemplateDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "room-template-controller"
+        ],
+        "operationId": "delete_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/api/roomParticipant/byRoomId": {
+      "get": {
+        "tags": [
+          "room-participant-controller"
+        ],
+        "operationId": "getByRoomId",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RoomParticipantDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/room/{roomId}": {
+      "get": {
+        "tags": [
+          "room-controller"
+        ],
+        "operationId": "getDetails",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoomDetailsDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/room/events/{roomId}": {
+      "get": {
+        "tags": [
+          "room-controller"
+        ],
+        "operationId": "subscribe",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "$ref": "#/components/schemas/SseEmitter"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/room/active": {
+      "get": {
+        "tags": [
+          "room-controller"
+        ],
+        "operationId": "getActiveRooms",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RoomListItemDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lobby": {
+      "get": {
+        "tags": [
+          "lobby-controller"
+        ],
+        "operationId": "getLobby",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LobbyItemDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lobby/events": {
+      "get": {
+        "tags": [
+          "lobby-controller"
+        ],
+        "operationId": "subscribe_1",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "$ref": "#/components/schemas/SseEmitter"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/roomParticipant/rooms/{roomId}/users/me": {
+      "delete": {
+        "tags": [
+          "room-participant-controller"
+        ],
+        "operationId": "leaveRoom",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RoomParticipantDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UserDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "username": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "ADMIN",
+              "USER"
+            ]
+          },
+          "userPrivilegeStatus": {
+            "type": "string",
+            "enum": [
+              "DEFAULT",
+              "VIP"
+            ]
+          }
+        }
+      },
+      "RoomTemplateDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "templateName": {
+            "type": "string"
+          },
+          "entryFee": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "commissionPercentage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "gameType": {
+            "type": "string",
+            "enum": [
+              "WHEEL",
+              "ROULETTE",
+              "RACE",
+              "DYNAMITE",
+              "BATTLE"
+            ]
+          },
+          "participantsCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "boostEnabled": {
+            "type": "boolean"
+          },
+          "boostCost": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "countdownSeconds": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "WalletReplenishmentRequest": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "UserWalletDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "balance": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "reservedAmount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "UserCreateDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "ADMIN",
+              "USER"
+            ]
+          },
+          "userPrivilegeStatus": {
+            "type": "string",
+            "enum": [
+              "DEFAULT",
+              "VIP"
+            ]
+          }
+        }
+      },
+      "RoomTemplateCreateDto": {
+        "type": "object",
+        "properties": {
+          "templateName": {
+            "type": "string"
+          }
+        }
+      },
+      "RoomParticipantDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "roomId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "bot": {
+            "type": "boolean"
+          },
+          "weightSnapshot": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "username": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "seatNum": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "joinedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "leftAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "BoostStateDto": {
+        "type": "object",
+        "properties": {
+          "roomId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "boostApplied": {
+            "type": "boolean"
+          }
+        }
+      },
+      "RoomDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "templateId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "roundStartedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "countdownStartedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "participantsLimit": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "activeParticipants": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "status": {
+            "type": "string"
+          },
+          "seed": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "winnerParticipantId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "resultPayloadJson": {
+            "type": "object",
+            "additionalProperties": {
+
+            }
+          }
+        }
+      },
+      "MockLoginRequest": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          }
+        }
+      },
+      "MockLoginResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          }
+        }
+      },
+      "RoomDetailsDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "templateId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "templateName": {
+            "type": "string"
+          },
+          "entryFee": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "participantsLimit": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "occupiedSeatsCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "status": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "roundStartedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "countdownStartedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "seed": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "winnerParticipantId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "resultPayloadJson": {
+            "type": "object",
+            "additionalProperties": {
+
+            }
+          },
+          "seats": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RoomParticipantDto"
+            }
+          }
+        }
+      },
+      "SseEmitter": {
+        "type": "object",
+        "properties": {
+          "timeout": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "RoomListItemDto": {
+        "type": "object",
+        "properties": {
+          "roomId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "templateId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "templateName": {
+            "type": "string"
+          },
+          "entryFee": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "participantsLimit": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "occupiedSeatsCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "status": {
+            "type": "string"
+          },
+          "countdownStartedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "countdownSeconds": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "boostEnabled": {
+            "type": "boolean"
+          },
+          "boostCost": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "LobbyItemDto": {
+        "type": "object",
+        "properties": {
+          "templateId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "templateName": {
+            "type": "string"
+          },
+          "entryFee": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "participantsCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "boostEnabled": {
+            "type": "boolean"
+          },
+          "boostCost": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "countdownSeconds": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "activeRoomsCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "joinableRoomsCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "waitingPlayersCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "name": "bearerAuth",
+        "scheme": "bearer",
+        "bearerFormat": "mock-token"
+      }
+    }
+  }
+}

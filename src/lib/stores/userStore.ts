@@ -6,7 +6,8 @@ export const GUEST_USER: User = {
     id: "guest",
     name: "Гость",
     role: "USER",
-    bonusBalance: 0
+    bonusBalance: 0,
+    reservedAmount: 0
 };
 
 export const userStore = writable<User>(GUEST_USER);

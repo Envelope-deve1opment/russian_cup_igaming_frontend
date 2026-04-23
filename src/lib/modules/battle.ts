@@ -35,28 +35,92 @@ export type BattleViewState = {
 };
 
 const FACTIONS: BattleFaction[] = [
-    {id: "place-2", place: 2, title: "Место 2", codename: "Glass Jackals", accent: "#ff9d57", accentSoft: "rgba(255,157,87,0.2)"},
-    {id: "place-3", place: 3, title: "Место 3", codename: "North Halo", accent: "#61d0ff", accentSoft: "rgba(97,208,255,0.2)"},
-    {id: "place-4", place: 4, title: "Место 4", codename: "Ash Comets", accent: "#d084ff", accentSoft: "rgba(208,132,255,0.2)"},
-    {id: "place-5", place: 5, title: "Место 5", codename: "Steel Vipers", accent: "#80f0b6", accentSoft: "rgba(128,240,182,0.2)"},
-    {id: "place-6", place: 6, title: "Место 6", codename: "Rift Wolves", accent: "#ffd36e", accentSoft: "rgba(255,211,110,0.2)"},
-    {id: "place-7", place: 7, title: "Место 7", codename: "Delta Shade", accent: "#ff739f", accentSoft: "rgba(255,115,159,0.2)"},
-    {id: "place-8", place: 8, title: "Место 8", codename: "Ion Lance", accent: "#7cf1ff", accentSoft: "rgba(124,241,255,0.2)"},
-    {id: "place-9", place: 9, title: "Место 9", codename: "Frost Aegis", accent: "#8a98ff", accentSoft: "rgba(138,152,255,0.2)"},
-    {id: "place-10", place: 10, title: "Место 10", codename: "Scarlet Orbit", accent: "#ff8b6b", accentSoft: "rgba(255,139,107,0.2)"}
+    {
+        id: "place-2",
+        place: 2,
+        title: "Место 2",
+        codename: "Glass Jackals",
+        accent: "#ff9d57",
+        accentSoft: "rgba(255,157,87,0.2)"
+    },
+    {
+        id: "place-3",
+        place: 3,
+        title: "Место 3",
+        codename: "North Halo",
+        accent: "#61d0ff",
+        accentSoft: "rgba(97,208,255,0.2)"
+    },
+    {
+        id: "place-4",
+        place: 4,
+        title: "Место 4",
+        codename: "Ash Comets",
+        accent: "#d084ff",
+        accentSoft: "rgba(208,132,255,0.2)"
+    },
+    {
+        id: "place-5",
+        place: 5,
+        title: "Место 5",
+        codename: "Steel Vipers",
+        accent: "#80f0b6",
+        accentSoft: "rgba(128,240,182,0.2)"
+    },
+    {
+        id: "place-6",
+        place: 6,
+        title: "Место 6",
+        codename: "Rift Wolves",
+        accent: "#ffd36e",
+        accentSoft: "rgba(255,211,110,0.2)"
+    },
+    {
+        id: "place-7",
+        place: 7,
+        title: "Место 7",
+        codename: "Delta Shade",
+        accent: "#ff739f",
+        accentSoft: "rgba(255,115,159,0.2)"
+    },
+    {
+        id: "place-8",
+        place: 8,
+        title: "Место 8",
+        codename: "Ion Lance",
+        accent: "#7cf1ff",
+        accentSoft: "rgba(124,241,255,0.2)"
+    },
+    {
+        id: "place-9",
+        place: 9,
+        title: "Место 9",
+        codename: "Frost Aegis",
+        accent: "#8a98ff",
+        accentSoft: "rgba(138,152,255,0.2)"
+    },
+    {
+        id: "place-10",
+        place: 10,
+        title: "Место 10",
+        codename: "Scarlet Orbit",
+        accent: "#ff8b6b",
+        accentSoft: "rgba(255,139,107,0.2)"
+    }
 ];
 
 const ATTACK_LABELS: string[] = [
-    "прошил очередь",
-    "выбил укрытие",
-    "накрыл залпом",
-    "срезал фланг",
-    "поймал в прицел",
-    "разорвал строй"
+    "Прошил очередь",
+    "Выбил укрытие",
+    "Накрыл залпом",
+    "Срезал фланг",
+    "Поймал в прицел",
+    "Разорвал строй"
 ];
 
 type Rng = () => number;
 
+// Псевдорандом, да
 function createRng(seed: number): Rng {
     let state = seed >>> 0;
 

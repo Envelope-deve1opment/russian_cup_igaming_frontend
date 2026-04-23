@@ -12,16 +12,17 @@
     );
 </script>
 
+
 <div class="lobbyPage">
     <section class="heroPanel">
         <div class="heroCopy">
             <p class="eyebrow">Realtime lobby</p>
             <h1 class="heroTitle">Живые комнаты для быстрого входа и точного контроля темпа.</h1>
             <p class="heroText">
-                Выбирайте стол вручную или отдавайте подбор системе. Всё обновляется на лету, без перегрузки интерфейса.
+                Выбирайте стол вручную или отдавайте подбор системе. Визуальный розыгрыш теперь вшит прямо в комнату и стартует по серверному исходу.
             </p>
             <div class="heroActions">
-                <a class="cta primary" href="/wheel">Открыть модуль выбора</a>
+                <a class="cta primary" href="#rooms">Открытые комнаты</a>
                 <a class="cta secondary" href="/history">История раундов</a>
             </div>
         </div>
@@ -60,10 +61,11 @@
         <article class="featureCard">
             <span class="featureTag">flow</span>
             <h2>Сценарии розыгрыша</h2>
-            <p>Колесо, гонки, рулетка и другие визуальные режимы уже под рукой.</p>
+            <p>Колесо, гонки, рулетка и другие сцены запускаются внутри комнаты после countdown.</p>
         </article>
     </section>
 
+    <div id="rooms"></div>
     <RoomList/>
 </div>
 

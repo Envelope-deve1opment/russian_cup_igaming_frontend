@@ -78,10 +78,8 @@
     <div class="cta">
         <button class="btn primary" onclick={() => goto("/lobby")} type="button">Играть снова</button>
         <button class="btn" onclick={goSimilar} type="button">Похожая комната</button>
-        <button class="btn danger" onclick={goRisk} type="button">Рискнуть</button>
+        <button class="btn danger" onclick={goRisk} type="button">В лобби</button>
     </div>
-
-    <p class="hint">Анимация раунда будет добавлена позже — экран готов к подключению сцены</p>
 </section>
 
 

@@ -1,22 +1,28 @@
 <script lang="ts">
     import {goto} from "$app/navigation";
-    import {RoomStatus} from "$lib/constants/roomStatus";
+    import {tick} from "svelte";
     import {onDestroy} from "svelte";
     import {page} from "$app/stores";
     import RoomLobby from "$lib/components/RoomLobby.svelte";
     import GameRound from "$lib/components/GameRound.svelte";
+    import RoomGameStage from "$lib/components/RoomGameStage.svelte";
     import {currentRoomStore, setCurrentRoomId} from "$lib/stores/currentRoomStore";
     import {gameLogStore} from "$lib/stores/gameLogStore";
     import {roomsStore} from "$lib/stores/roomsStore";
     import {roomService} from "$lib/api/roomService";
     import {lobbyStore} from "$lib/stores/lobbyStore";
     import {stopCurrentRoomRealtime, watchCurrentRoom} from "$lib/services/roomsRealtime";
+    import {setAnimationPlaying} from "$lib/stores/gameAnimationStore";
     import {get} from "svelte/store";
+    import type {Participant, RoundResult} from "$lib/types";
 
     let routeId: string = $derived($page.params.id ?? "");
     let roomId: string = $state("");
     let resolvingRoom: boolean = $state(false);
     let resolveError: string = $state("");
+    let animationCompletedKey: string | null = $state(null);
+    let startedAnimationKey: string | null = $state(null);
+    let stageRef: { start: () => void } | null = $state(null);
 
     async function resolveRoomId(id: string): Promise<string> {
         const existingRoom = get(roomsStore).find((room) => room.id === id);
@@ -78,6 +84,13 @@
         };
     });
 
+    $effect(() => {
+        roomId;
+        animationCompletedKey = null;
+        startedAnimationKey = null;
+        stageRef = null;
+    });
+
     onDestroy(() => {
         setCurrentRoomId(null);
         stopCurrentRoomRealtime();
@@ -85,9 +98,81 @@
 
     let room = $derived($currentRoomStore);
 
-    let latestResult = $derived.by(() => {
+    function resolveWinnerID(fallbackWinnerId: string | undefined, participants: Participant[]): string | null {
+        if (!fallbackWinnerId) {
+            return null;
+        }
+
+        const byParticipantId = participants.find((participant) => participant.participantId === fallbackWinnerId);
+        if (byParticipantId) {
+            return byParticipantId.id;
+        }
+
+        const byUserId = participants.find((participant) => participant.id === fallbackWinnerId);
+        return byUserId?.id ?? fallbackWinnerId;
+    }
+
+    let latestResult = $derived.by<RoundResult | null>(() => {
         if (!roomId) return null;
-        return $gameLogStore.find((e) => e.roomId === roomId)?.result ?? room?.roundResult ?? null;
+
+        const logResult = $gameLogStore.find((entry) => entry.roomId === roomId)?.result ?? null;
+        if (logResult) {
+            return logResult;
+        }
+
+        if (room?.roundResult) {
+            return room.roundResult;
+        }
+
+        if (!room) {
+            return null;
+        }
+
+        const winnerID = resolveWinnerID(room.winnerParticipantId, room.participants);
+        if (!winnerID) {
+            return null;
+        }
+
+        return {
+            winnerID,
+            prizeAmount: room.prizeFund,
+            participants: room.participants
+        };
+    });
+
+    let latestOutcomeKey = $derived.by(() => {
+        if (!room || !latestResult) {
+            return null;
+        }
+
+        const participantKey = latestResult.participants
+            .map((participant) => `${participant.id}:${participant.weight ?? 1}`)
+            .join("|");
+
+        return `${room.id}:${room.gameId}:${room.timerEndsAt ?? "no-timer"}:${latestResult.winnerID}:${participantKey}:${latestResult.prizeAmount}`;
+    });
+
+    let shouldShowAnimation = $derived(!!room && !!latestResult && latestOutcomeKey !== animationCompletedKey);
+
+    $effect(() => {
+        setAnimationPlaying(shouldShowAnimation);
+    });
+
+    $effect(() => {
+        if (!shouldShowAnimation || !latestOutcomeKey) {
+            return;
+        }
+
+        if (startedAnimationKey === latestOutcomeKey) {
+            return;
+        }
+
+        startedAnimationKey = latestOutcomeKey;
+        animationCompletedKey = null;
+
+        void tick().then(() => {
+            stageRef?.start();
+        });
     });
 </script>
 
@@ -99,7 +184,19 @@
     <p class="state">Подключаем к комнате…</p>
 {:else if !room}
     <p class="state">Комната не найдена или ещё загружается…</p>
-{:else if room.status === RoomStatus.Finished && latestResult}
+{:else if shouldShowAnimation && latestResult}
+    <RoomGameStage
+            bind:this={stageRef}
+            participants={latestResult.participants}
+            {room}
+            winnerID={latestResult.winnerID}
+            onComplete={() => {
+                if (latestOutcomeKey) {
+                    animationCompletedKey = latestOutcomeKey;
+                }
+            }}
+    />
+{:else if latestResult}
     <GameRound
             roomId={room.id}
             winnerID={latestResult.winnerID}

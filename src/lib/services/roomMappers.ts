@@ -1,4 +1,5 @@
 import type {RoomDetailsDto, RoomListItemDto, RoomParticipantDto} from "$lib/api/dto";
+import {getMockRoomGameId} from "$lib/constants/roomGame";
 import {RoomStatus, type RoomStatus as RoomStatusType} from "$lib/constants/roomStatus";
 import type {Participant, Room, RoundResult} from "$lib/types";
 
@@ -43,6 +44,24 @@ function asString(value: unknown): string | undefined {
     return typeof value === "string" && value.length > 0 ? value : undefined;
 }
 
+function resolveWinnerUserId(rawWinnerId: string | undefined, participants: Participant[]): string | undefined {
+    if (!rawWinnerId) {
+        return undefined;
+    }
+
+    const byParticipantId = participants.find((participant) => participant.participantId === rawWinnerId);
+    if (byParticipantId) {
+        return byParticipantId.id;
+    }
+
+    const byUserId = participants.find((participant) => participant.id === rawWinnerId);
+    if (byUserId) {
+        return byUserId.id;
+    }
+
+    return rawWinnerId;
+}
+
 function mapResultParticipant(raw: unknown, currentUserId?: string): Participant | null {
     if (typeof raw !== "object" || raw == null) {
         return null;
@@ -59,6 +78,7 @@ function mapResultParticipant(raw: unknown, currentUserId?: string): Participant
 
     return {
         id: userId,
+        participantId: asString(record.participantId) ?? asString(record.id),
         name: asString(record.name) ?? toParticipantName({
             id: userId,
             roomId: "",
@@ -67,6 +87,7 @@ function mapResultParticipant(raw: unknown, currentUserId?: string): Participant
             seatNum: seatNum ?? 0
         }),
         seatNum,
+        weight: asFiniteNumber(record.weightSnapshot) ?? asFiniteNumber(record.weight) ?? 1,
         isBot: bot,
         isVisualOnly: false,
         isCurrentUser: currentUserId != null && userId === currentUserId,
@@ -76,10 +97,10 @@ function mapResultParticipant(raw: unknown, currentUserId?: string): Participant
 
 function mapRoomResult(dto: RoomDetailsDto, participants: Participant[], currentUserId?: string): RoundResult | undefined {
     const payload = dto.resultPayloadJson;
-    const payloadWinnerId = payload == null
+    const payloadWinnerIdRaw = payload == null
         ? undefined
         : asString(payload.winnerID) ?? asString(payload.winnerId) ?? asString(payload.winnerParticipantId);
-    const winnerID = payloadWinnerId ?? dto.winnerParticipantId;
+    const winnerID = resolveWinnerUserId(payloadWinnerIdRaw ?? dto.winnerParticipantId, participants);
 
     if (!winnerID) {
         return undefined;
@@ -103,8 +124,10 @@ export function mapParticipantDto(dto: RoomParticipantDto, currentUserId?: strin
     const status = dto.status?.toLowerCase() ?? "";
     return {
         id: dto.userId,
+        participantId: dto.id,
         name: toParticipantName(dto),
         seatNum: dto.seatNum,
+        weight: dto.weightSnapshot ?? 1,
         isBot: dto.bot,
         isVisualOnly: options?.visualOnly ?? false,
         isCurrentUser,
@@ -115,6 +138,7 @@ export function mapParticipantDto(dto: RoomParticipantDto, currentUserId?: strin
 export function mapRoomListItem(dto: RoomListItemDto): Room {
     return {
         id: dto.roomId,
+        gameId: dto.gameType,
         name: dto.templateName,
         entryPrice: dto.entryFee,
         maxSeats: dto.participantsLimit,
@@ -143,6 +167,7 @@ export function mapRoomDetails(dto: RoomDetailsDto, currentUserId?: string): Roo
 
     return {
         id: dto.id,
+        gameId: dto.gameType,
         name: dto.templateName,
         entryPrice: dto.entryFee,
         maxSeats: dto.participantsLimit,
