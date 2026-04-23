@@ -1,0 +1,404 @@
+@use '../../styles/variables.scss' as *;
+
+.wheelSection {
+  width: min(1200px, 100%);
+  margin: 0 auto;
+  display: grid;
+  gap: 1.5rem;
+  animation: page-enter 0.7s cubic-bezier(.2, .8, .2, 1);
+}
+
+.wheelHero,
+.wheelCard {
+  position: relative;
+  overflow: hidden;
+  border-radius: 28px;
+  border: 1px solid $color-border;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--color-surface-elevated) 92%, transparent), color-mix(in srgb, var(--color-surface) 96%, transparent)),
+    radial-gradient(circle at top left, color-mix(in srgb, var(--color-accent) 16%, transparent), transparent 45%);
+  box-shadow: $shadow-card;
+}
+
+.wheelHero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(280px, 0.9fr);
+  gap: 1.5rem;
+  padding: 1.75rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.65rem;
+  color: $color-accent;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.heroCopy h1,
+.controls h2 {
+  margin: 0;
+  font-size: clamp(2rem, 3vw, 3.2rem);
+  line-height: 0.96;
+  letter-spacing: -0.04em;
+}
+
+.heroText,
+.panelText {
+  margin: 1rem 0 0;
+  color: $color-text-muted;
+  max-width: 56ch;
+}
+
+.heroStats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+  align-self: end;
+}
+
+.heroStats div,
+.resultBox {
+  padding: 1rem;
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--color-border) 85%, transparent);
+  background: color-mix(in srgb, var(--color-surface) 90%, transparent);
+}
+
+.statLabel,
+.resultLabel {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: $color-text-muted;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.heroStats strong,
+.resultBox strong {
+  font-size: 1.35rem;
+  color: $color-text;
+}
+
+.wheelLayout {
+  display: grid;
+  grid-template-columns: minmax(320px, 1.2fr) minmax(280px, 0.92fr);
+  gap: 1.5rem;
+}
+
+.wheelCard {
+  padding: 1.5rem;
+}
+
+.stage {
+  display: grid;
+  place-items: center;
+  min-height: 640px;
+}
+
+.pointer {
+  position: absolute;
+  top: 1.5rem;
+  left: 50%;
+  z-index: 3;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 18px solid transparent;
+  border-right: 18px solid transparent;
+  border-top: 34px solid $color-accent;
+  filter: drop-shadow(0 10px 18px color-mix(in srgb, var(--color-accent) 42%, transparent));
+}
+
+.wheel {
+  position: relative;
+  width: min(100%, 540px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 14px solid color-mix(in srgb, var(--color-surface-elevated) 58%, var(--color-accent) 42%);
+  box-shadow:
+    inset 0 0 0 12px rgba(255, 255, 255, 0.05),
+    0 38px 80px rgba(0, 0, 0, 0.28);
+  transition-property: transform;
+  transition-timing-function: cubic-bezier(.08, .84, .13, 1);
+}
+
+.wheel.spinning {
+  filter: saturate(1.08) brightness(1.02);
+}
+
+.segmentLabel {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 20%;
+  display: grid;
+  place-items: start center;
+  transform-origin: center center;
+}
+
+.segmentLabel span {
+  display: inline-grid;
+  place-items: center;
+  width: 5.7rem;
+  min-height: 4.4rem;
+  padding: 0.45rem 0.55rem;
+  border-radius: 1.2rem;
+  background: rgba(12, 12, 16, 0.15);
+  color: white;
+  font-weight: 800;
+  font-size: 0.95rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(6px);
+  gap: 4px;
+  text-align: center;
+}
+
+.segmentLabel small {
+  font-size: 0.64rem;
+  line-height: 1.1;
+  opacity: 0.88;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.segmentLabel strong {
+  font-size: 0.94rem;
+  line-height: 1.15;
+}
+
+.hub {
+  position: absolute;
+  inset: 50%;
+  transform: translate(-50%, -50%);
+  width: 23%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--color-accent-highlight) 65%, white), var(--color-accent));
+  color: $color-on-accent;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  box-shadow:
+    0 0 0 10px rgba(0, 0, 0, 0.12),
+    0 16px 38px color-mix(in srgb, var(--color-accent) 26%, transparent);
+}
+
+.motionTrail {
+  position: absolute;
+  inset: auto 7% 12% 7%;
+  height: 140px;
+  border-radius: 999px;
+  background: radial-gradient(circle at center, color-mix(in srgb, var(--color-accent) 18%, transparent), transparent 68%);
+  filter: blur(20px);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.controls {
+  display: grid;
+  align-content: start;
+  gap: 1.2rem;
+}
+
+.weightsPanel {
+  display: grid;
+  gap: 0.8rem;
+  padding: 1rem;
+  border-radius: 20px;
+  border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  background: color-mix(in srgb, var(--color-surface) 88%, transparent);
+}
+
+.weightsHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  color: $color-text-muted;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.resetBtn {
+  min-height: 2.4rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid $color-border;
+  background: transparent;
+  cursor: pointer;
+}
+
+.weightsList {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.weightRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 110px;
+  gap: 0.8rem;
+  align-items: center;
+  padding: 0.7rem 0.8rem;
+  border-radius: 16px;
+  border: 1px solid transparent;
+  transition: border-color $transition-fast, background-color $transition-fast, transform $transition-fast;
+}
+
+.weightRow.selected {
+  border-color: color-mix(in srgb, var(--color-accent) 44%, transparent);
+  background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+}
+
+.slotMeta {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.slotMeta strong {
+  font-size: 1rem;
+}
+
+.slotMeta small {
+  color: $color-text-muted;
+}
+
+.weightRow input {
+  width: 100%;
+  min-height: 2.8rem;
+  border-radius: 14px;
+  border: 1px solid $color-border;
+  background: color-mix(in srgb, var(--color-surface-elevated) 88%, transparent);
+  padding: 0.6rem 0.75rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.slotPicker {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.slotBtn,
+.spinBtn {
+  border: 1px solid $color-border;
+  cursor: pointer;
+  transition:
+    transform $transition-fast,
+    border-color $transition-fast,
+    background-color $transition-fast,
+    box-shadow $transition-med;
+}
+
+.slotBtn {
+  min-height: 3.2rem;
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--color-surface-elevated) 88%, transparent);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.slotBtn:hover:not(:disabled),
+.spinBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.slotBtn.selected {
+  border-color: color-mix(in srgb, var(--color-accent) 65%, transparent);
+  background: color-mix(in srgb, var(--color-accent) 16%, var(--color-surface-elevated));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-accent) 18%, transparent);
+}
+
+.spinBtn {
+  min-height: 3.4rem;
+  border-radius: 18px;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--color-accent) 92%, white 8%), var(--color-accent));
+  color: $color-on-accent;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  box-shadow: 0 18px 32px color-mix(in srgb, var(--color-accent) 24%, transparent);
+}
+
+.spinBtn:disabled,
+.slotBtn:disabled {
+  cursor: wait;
+  opacity: 0.75;
+}
+
+.resultBox {
+  transition: transform $transition-med, border-color $transition-med, box-shadow $transition-med;
+}
+
+.resultBox[data-active='true'] {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--color-accent) 58%, transparent);
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--color-accent) 14%, transparent);
+}
+
+.resultBox p {
+  margin: 0.5rem 0 0;
+  color: $color-text-muted;
+}
+
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 960px) {
+  .wheelHero,
+  .wheelLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .stage {
+    min-height: 520px;
+  }
+}
+
+@media (max-width: 640px) {
+  .wheelHero,
+  .wheelCard {
+    padding: 1.1rem;
+    border-radius: 22px;
+  }
+
+  .heroStats {
+    grid-template-columns: 1fr;
+  }
+
+  .weightRow {
+    grid-template-columns: 1fr;
+  }
+
+  .stage {
+    min-height: 420px;
+  }
+
+  .segmentLabel span {
+    width: 4.4rem;
+    min-height: 3.6rem;
+    padding: 0.35rem 0.4rem;
+  }
+
+  .segmentLabel small {
+    font-size: 0.54rem;
+  }
+
+  .segmentLabel strong {
+    font-size: 0.8rem;
+  }
+}

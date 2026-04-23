@@ -3,6 +3,7 @@
 
 :global(html) {
   box-sizing: border-box;
+  scroll-behavior: smooth;
 }
 
 :global(*),
@@ -16,17 +17,43 @@
   min-height: 100vh;
   font-family: $font-sans;
   line-height: 1.55;
-  letter-spacing: 0.01em;
-  background: radial-gradient(ellipse 900px 480px at 50% -12%, $color-gradient-hero, transparent 60%),
-  radial-gradient(1200px 600px at 18% -8%, $color-gradient-hero, transparent 55%),
-  radial-gradient(800px 500px at 92% 0%, $color-gradient-hero, transparent 45%),
-  linear-gradient(175deg, $color-bg-deep 0%, $color-bg 42%, $color-bg-end 100%);
+  letter-spacing: 0.005em;
+  background:
+    radial-gradient(circle at 18% 18%, color-mix(in srgb, var(--color-gradient-hero) 95%, transparent), transparent 32%),
+    radial-gradient(circle at 82% 0%, color-mix(in srgb, var(--color-bot) 12%, transparent), transparent 26%),
+    radial-gradient(circle at 50% 120%, color-mix(in srgb, var(--color-accent) 8%, transparent), transparent 38%),
+    linear-gradient(165deg, $color-bg-deep 0%, $color-bg 46%, $color-bg-end 100%);
   background-attachment: fixed;
   color: $color-text;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transition: background 0.4s ease,
+  transition: background 0.45s ease,
   color 0.3s ease;
+  overflow-x: hidden;
+}
+
+:global(body)::before,
+:global(body)::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+:global(body)::before {
+  opacity: 0.34;
+  background:
+    linear-gradient(transparent 0 32px, color-mix(in srgb, var(--color-border) 35%, transparent) 32px 33px),
+    linear-gradient(90deg, transparent 0 32px, color-mix(in srgb, var(--color-border) 35%, transparent) 32px 33px);
+  background-size: 33px 33px;
+  mask-image: radial-gradient(circle at center, black 18%, transparent 78%);
+}
+
+:global(body)::after {
+  background:
+    radial-gradient(circle at center, transparent 54%, rgba(0, 0, 0, 0.35) 100%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 24%, transparent 78%, rgba(0, 0, 0, 0.14));
 }
 
 :global(a) {
@@ -38,9 +65,22 @@
   color: $color-accent;
 }
 
+:global(::selection) {
+  background: color-mix(in srgb, var(--color-accent) 30%, transparent);
+  color: $color-text;
+}
+
 :global(:focus-visible) {
-  outline: 2px solid $color-accent;
+  outline: 2px solid color-mix(in srgb, var(--color-accent) 88%, white 12%);
   outline-offset: 3px;
+}
+
+:global(h1),
+:global(h2),
+:global(h3),
+:global(h4) {
+  font-family: $font-display;
+  letter-spacing: -0.045em;
 }
 
 :global(input),
@@ -49,6 +89,29 @@
 :global(button) {
   color: $color-text;
   font-family: inherit;
+}
+
+:global(input),
+:global(textarea),
+:global(select) {
+  border: 1px solid $color-border;
+  background: color-mix(in srgb, var(--color-surface-elevated) 95%, transparent);
+  transition: border-color $transition-fast,
+  box-shadow $transition-fast,
+  background $transition-fast,
+  transform $transition-fast;
+}
+
+:global(input:focus),
+:global(textarea:focus),
+:global(select:focus) {
+  outline: none;
+  border-color: $color-border-strong;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent) 12%, transparent);
+}
+
+:global(button) {
+  -webkit-tap-highlight-color: transparent;
 }
 
 :global(input::placeholder),

@@ -34,16 +34,30 @@
 
 
 <section aria-labelledby="admin-title" class="admin">
-    <header class="head">
-        <h1 class="title" id="admin-title">Конфигуратор комнаты</h1>
-        <p class="sub">Черновые параметры стола для администратора. Расчёты только на клиенте</p>
+    <header class="hero">
+        <div class="heroCopy">
+            <p class="eyebrow">Control room</p>
+            <h1 class="title" id="admin-title">Сборка параметров стола.</h1>
+            <p class="sub">Рабочая панель для прикидки экономики комнаты без лишних сервисных деталей.</p>
+        </div>
+
+        <div class="heroStats">
+            <div class="statCard">
+                <span>Фонд</span>
+                <strong>{prizeFund.toLocaleString("ru-RU")}</strong>
+            </div>
+            <div class="statCard">
+                <span>Выгодность</span>
+                <strong>{attractiveness.score}%</strong>
+            </div>
+        </div>
     </header>
 
     <div class="grid">
-        <label class="field">
-            <span>Места (2–10)</span>
+        <label class="field range">
+            <span>Места</span>
+            <strong>{seats}</strong>
             <input bind:value={seats} max="10" min="2" step="1" type="range"/>
-            <output>{seats}</output>
         </label>
 
         <label class="field">
@@ -51,29 +65,30 @@
             <input bind:value={entryPrice} min="1" step="50" type="number"/>
         </label>
 
-        <label class="field">
-            <span>Призовой фонд, % от «пула»</span>
+        <label class="field range">
+            <span>Призовой фонд</span>
+            <strong>{prizePercent}%</strong>
             <input bind:value={prizePercent} max="100" min="0" step="1" type="range"/>
-            <output>{prizePercent}% → {prizeFund.toLocaleString("ru-RU")}</output>
+            <small>{prizeFund.toLocaleString("ru-RU")} в пуле</small>
         </label>
 
         <label class="field">
-            <span>Стоимость буста</span>
+            <span>Boost</span>
             <input bind:value={boostCost} min="0" step="25" type="number"/>
         </label>
     </div>
 
     <div aria-label="Привлекательность конфигурации" class="meter">
         <div class="meterTop">
-            <span>Привлекательность / выгодность</span>
+            <span>Оценка конфигурации</span>
             <span class="meterVal">{attractiveness.score}%</span>
         </div>
         <div aria-valuemax="100" aria-valuemin="0" aria-valuenow={attractiveness.score} class="bar" role="progressbar">
             <div class="barFill" style={`width:${attractiveness.score}%`}></div>
         </div>
         <ul class="checks">
-            <li data-ok={attractiveness.ratioOk}>prizeFund / entryPrice &gt; 2</li>
-            <li data-ok={attractiveness.priceOk}>entryPrice &lt; баланс / 2</li>
+            <li data-ok={attractiveness.ratioOk}>Фонд минимум в 2 раза выше входа</li>
+            <li data-ok={attractiveness.priceOk}>Вход не съедает больше половины баланса игрока</li>
         </ul>
     </div>
 

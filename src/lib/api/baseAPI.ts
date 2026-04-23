@@ -19,6 +19,7 @@ type RequestOptions = Omit<RequestInit, "body"> & {
     body?: unknown;
     withAuth?: boolean;
     timeoutMs?: number;
+    token?: string
 };
 
 function readToken(): string | null {
@@ -47,7 +48,7 @@ export async function requestJSON<T>(path: string, options: RequestOptions = {})
         requestHeaders.set("Content-Type", "application/json");
     }
     if (withAuth) {
-        const token = readToken();
+        const token = options.token ?? readToken();
         if (token) {
             requestHeaders.set("Authorization", `Bearer ${token}`);
         }

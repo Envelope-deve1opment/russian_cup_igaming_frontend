@@ -1,5 +1,6 @@
 <script lang="ts">
     import {SeatSlotState} from "$lib/constants/seatSlotState";
+    import {RoomStatus} from "$lib/constants/roomStatus";
     import {onDestroy, onMount} from "svelte";
     import type {Participant, Room} from "$lib/types";
     import {roomService} from "$lib/api/roomService";
@@ -10,6 +11,9 @@
 
     let now: number = $state(Date.now());
     let boostMessage: string | null = $state<string | null>(null);
+    let pendingSeatIndex: number | null = $state<number | null>(null);
+    let buyingBoost: boolean = $state(false);
+    let leavingRoomPending: boolean = $state(false);
 
     const tickMs: number = 250;
     let handle: ReturnType<typeof setInterval> | null = null;
@@ -28,22 +32,39 @@
         Math.max(0, Math.ceil(((room.timerEndsAt ?? now) - now) / 1000))
     );
 
+    let canManageSeats = $derived(room.status === RoomStatus.Waiting || room.status === RoomStatus.Starting);
     let currentUserParticipant = $derived(room.participants.find((p) => p.isCurrentUser));
 
-    function slotParticipant(index: number): Participant | null {
+    function occupiedSeat(index: number): Participant | null {
         return room.participants.find((participant) => participant.seatNum === index) ?? null;
     }
 
-    function slotState(p: Participant | null): SeatSlotState {
-        if (!p) return SeatSlotState.Free;
-        if (p.isBot) return SeatSlotState.Bot;
-        if (p.isCurrentUser) return SeatSlotState.You;
+    function visualSeat(index: number): Participant | null {
+        return room.seatDecorations.find((participant) => participant.seatNum === index) ?? null;
+    }
+
+    function displayedSeat(index: number): Participant | null {
+        return occupiedSeat(index) ?? visualSeat(index);
+    }
+
+    function slotState(index: number): SeatSlotState {
+        const seat = occupiedSeat(index);
+        if (!seat) {
+            return visualSeat(index) ? SeatSlotState.Bot : SeatSlotState.Free;
+        }
+        if (seat.isCurrentUser) return SeatSlotState.You;
         return SeatSlotState.Human;
     }
 
     function seatTitle(index: number): string {
-        const seat = slotParticipant(index);
+        const seat = occupiedSeat(index);
+        if (!canManageSeats) {
+            return "Рассадка закрыта для текущей стадии комнаты";
+        }
         if (!seat) {
+            if (visualSeat(index)) {
+                return "Бот показан только как визуал. Нажмите, чтобы занять место";
+            }
             return "Нажмите, чтобы занять место";
         }
         if (seat.isCurrentUser) {
@@ -52,9 +73,22 @@
         return "Место занято другим участником";
     }
 
+    function seatDisabled(index: number): boolean {
+        if (!canManageSeats || pendingSeatIndex != null) {
+            return true;
+        }
+
+        const seat = occupiedSeat(index);
+        return seat != null && !seat.isCurrentUser;
+    }
+
     async function buyBoost(): Promise<void> {
         boostMessage = null;
 
+        if (!canManageSeats) {
+            boostMessage = "Буст недоступен после старта комнаты";
+            return;
+        }
         if (!room.boostEnabled) {
             boostMessage = "В этой комнате буст недоступен";
             return;
@@ -75,43 +109,60 @@
         }
 
         try {
+            buyingBoost = true;
             await roomService.buyBoost(room.id);
             await refreshCurrentRoom(room.id);
             boostMessage = "Буст куплен";
         } catch {
             boostMessage = "Не удалось купить буст";
+        } finally {
+            buyingBoost = false;
         }
     }
 
     async function toggleSeat(index: number): Promise<void> {
-        const seat = slotParticipant(index);
-        if (seat == null) {
-            try {
+        if (seatDisabled(index)) {
+            return;
+        }
+
+        boostMessage = null;
+        const seat = occupiedSeat(index);
+
+        try {
+            pendingSeatIndex = index;
+
+            if (seat == null) {
                 await roomParticipantService.occupySeat(room.id, index);
                 await refreshCurrentRoom(room.id);
-            } catch {
-                boostMessage = "Не удалось занять место";
+                return;
             }
-            return;
-        }
-        if (!seat.isCurrentUser) {
-            return;
-        }
-        try {
+
             await roomParticipantService.releaseSeat(room.id, index);
             await refreshCurrentRoom(room.id);
         } catch {
-            boostMessage = "Не удалось освободить место";
+            boostMessage = seat == null ? "Не удалось занять место" : "Не удалось освободить место";
+        } finally {
+            pendingSeatIndex = null;
         }
     }
 
     async function leaveRoom(): Promise<void> {
+        boostMessage = null;
+
+        if (!canManageSeats) {
+            boostMessage = "Покинуть комнату можно только до старта раунда";
+            return;
+        }
+
         try {
+            leavingRoomPending = true;
             await roomParticipantService.leaveRoom(room.id);
             await refreshCurrentRoom(room.id);
             boostMessage = "Вы вышли из комнаты";
         } catch {
             boostMessage = "Не удалось выйти из комнаты";
+        } finally {
+            leavingRoomPending = false;
         }
     }
 </script>
@@ -135,26 +186,32 @@
     <div class="layout">
         <div class="panel">
             <h2 class="h2">Места за столом</h2>
-            <p class="msg" role="status">Свободное место можно занять кликом. Своё место можно освободить повторным
-                кликом.</p>
+            <p class="msg" role="status">
+                Места игроков заняты по-настоящему. Слоты с AI — только визуал, их можно занимать.
+            </p>
             <div class="seats" style:--cols={Math.min(room.maxSeats, 5)}>
                 {#each Array(room.maxSeats) as _, i (i)}
-                    {@const p = slotParticipant(i)}
+                    {@const actualSeat = occupiedSeat(i)}
+                    {@const shownSeat = displayedSeat(i)}
                     <button
                             aria-label={seatTitle(i)}
                             class="seat"
-                            data-state={slotState(p)}
+                            data-state={slotState(i)}
+                            disabled={seatDisabled(i)}
                             onclick={() => toggleSeat(i)}
                             title={seatTitle(i)}
                             type="button"
                     >
-                        {#if p}
-                            <span class="seatName">{p.name}</span>
-                            {#if p.isBot}
+                        {#if shownSeat}
+                            <span class="seatName">{shownSeat.name}</span>
+                            {#if shownSeat.isBot}
                                 <span class="botTag" title="Бот">AI</span>
                             {/if}
-                            {#if p.hasBoost}
+                            {#if actualSeat?.hasBoost}
                                 <span class="boostTag">BOOST</span>
+                            {/if}
+                            {#if shownSeat.isVisualOnly}
+                                <span class="seatHint">Можно занять</span>
                             {/if}
                         {:else}
                             <span class="free">Свободно</span>
@@ -164,10 +221,20 @@
             </div>
 
             <div class="boostRow">
-                <button class="btn primary" disabled={!room.boostEnabled} onclick={buyBoost} type="button">
+                <button
+                        class="btn primary"
+                        disabled={!room.boostEnabled || !currentUserParticipant || !canManageSeats || buyingBoost}
+                        onclick={buyBoost}
+                        type="button"
+                >
                     Купить буст
                 </button>
-                <button class="btn" disabled={!currentUserParticipant} onclick={leaveRoom} type="button">
+                <button
+                        class="btn"
+                        disabled={!canManageSeats || leavingRoomPending}
+                        onclick={leaveRoom}
+                        type="button"
+                >
                     Покинуть комнату
                 </button>
                 {#if boostMessage}
@@ -178,24 +245,25 @@
 
         <div class="panel">
             <h2 class="h2">Участники</h2>
-            <ul class="list">
-                {#each room.participants as p (p.id)}
-                    <li class="row">
-                        <span class="name">{p.name}</span>
-                        <span class="badges">
-							{#if p.isBot}
-								<span class="chip bot">Бот</span>
-							{/if}
-                            {#if p.isCurrentUser}
-								<span class="chip you">Вы</span>
-							{/if}
-                            {#if p.hasBoost}
-								<span class="chip boost">Буст</span>
-							{/if}
-						</span>
-                    </li>
-                {/each}
-            </ul>
+            {#if room.participants.length === 0}
+                <p class="msg">За столом пока нет реальных участников.</p>
+            {:else}
+                <ul class="list">
+                    {#each room.participants as p (`${p.id}:${p.seatNum ?? "no-seat"}`)}
+                        <li class="row">
+                            <span class="name">{p.name}</span>
+                            <span class="badges">
+                                {#if p.isCurrentUser}
+                                    <span class="chip you">Вы</span>
+                                {/if}
+                                {#if p.hasBoost}
+                                    <span class="chip boost">Буст</span>
+                                {/if}
+                            </span>
+                        </li>
+                    {/each}
+                </ul>
+            {/if}
         </div>
     </div>
 </section>

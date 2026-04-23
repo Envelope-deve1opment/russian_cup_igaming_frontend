@@ -13,6 +13,7 @@ export function mapLobbyItemToRoom(dto: LobbyItemDto): Room {
         boostCost: dto.boostCost,
         seatsTaken: dto.waitingPlayersCount,
         participants: [],
+        seatDecorations: [],
         status: RoomStatus.Waiting
     };
 }

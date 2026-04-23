@@ -1,116 +1,175 @@
 <script lang="ts">
-    import {ROOM_STATUS_LABEL, type RoomStatus} from "$lib/constants/roomStatus";
-    import {roomsStore} from "$lib/stores/roomsStore";
-    import type {Room} from "$lib/types";
-    import {lobbyService} from "$lib/api/lobbyService";
+    import {goto} from "$app/navigation";
+    import {APIError} from "$lib/api/baseAPI";
+    import type {LobbyItemDto} from "$lib/api/dto";
+    import {roomService} from "$lib/api/roomService";
+    import {lobbyStore} from "$lib/stores/lobbyStore";
 
     let minPrice: number = $state(0);
     let maxPrice: number = $state(50_000);
     let minSeats: number = $state(2);
     let onlyBoost: boolean = $state(false);
+    let pendingTemplateId: string | null = $state(null);
+    let pendingMode: "manual" | "fast" | null = $state(null);
+    let joinError: string = $state("");
 
-    function matchesFilters(room: Room): boolean {
-        if (room.entryPrice < minPrice || room.entryPrice > maxPrice) return false;
-        if (room.maxSeats < minSeats) return false;
+    function matchesFilters(room: LobbyItemDto): boolean {
+        if (room.entryFee < minPrice || room.entryFee > maxPrice) return false;
+        if (room.participantsCount < minSeats) return false;
 
         return !(onlyBoost && !room.boostEnabled);
     }
 
-    let filteredRooms: Room[] = $derived.by(() => {
-        const list: Room[] = $roomsStore.filter(matchesFilters);
+    let filteredRooms: LobbyItemDto[] = $derived.by(() => {
+        const list: LobbyItemDto[] = $lobbyStore.filter(matchesFilters);
 
         return [...list].sort((a, b) => {
-            const ta = a.timerEndsAt ?? Number.POSITIVE_INFINITY;
-            const tb = b.timerEndsAt ?? Number.POSITIVE_INFINITY;
-            return ta - tb;
+            if (b.joinableRoomsCount !== a.joinableRoomsCount) {
+                return b.joinableRoomsCount - a.joinableRoomsCount;
+            }
+
+            return a.templateName.localeCompare(b.templateName);
         });
     });
 
-    function formatEta(room: Room): string {
-        const end: number | undefined = room.timerEndsAt;
+    const filteredOpenRooms = $derived(filteredRooms.reduce((total, room) => total + room.joinableRoomsCount, 0));
+    const filteredBoostRooms = $derived(filteredRooms.filter((room) => room.boostEnabled).length);
 
-        if (end == null) return "—";
+    async function joinTemplate(templateId: string, mode: "manual" | "fast"): Promise<void> {
+        if (pendingTemplateId != null) return;
 
-        const s: number = Math.max(0, Math.ceil((end - Date.now()) / 1000));
-        const m: number = Math.floor(s / 60);
-        const r: number = s % 60;
+        pendingTemplateId = templateId;
+        pendingMode = mode;
+        joinError = "";
 
-        return m > 0 ? `${m}м ${r}с` : `${r}с`;
-    }
-
-    function statusLabel(status: RoomStatus): string {
-        return ROOM_STATUS_LABEL[status] ?? String(status);
+        try {
+            const room = mode === "fast"
+                ? await roomService.fastJoin(templateId)
+                : await roomService.manualJoin(templateId);
+            await goto(`/room/${room.id}`);
+        } catch (error) {
+            joinError = error instanceof APIError
+                ? error.message
+                : mode === "fast"
+                    ? "Не удалось подобрать быстрый матч."
+                    : "Не удалось открыть комнату.";
+        } finally {
+            pendingTemplateId = null;
+            pendingMode = null;
+        }
     }
 </script>
 
 
-<div class="wrap">
-    <header class="head">
-        <h1 class="title">Лобби комнат</h1>
-        <p class="sub">Быстрые столы на бонусные баллы. Обновления в реальном времени</p>
-    </header>
+<section class="wrap">
+    <div class="toolbar">
+        <div class="toolbarHead">
+            <p class="eyebrow">Room selection</p>
+            <h2 class="title">Доступные шаблоны</h2>
+        </div>
+        <div class="summary">
+            <span class="summaryChip">Открытых: {filteredOpenRooms}</span>
+            <span class="summaryChip">С бустом: {filteredBoostRooms}</span>
+        </div>
+    </div>
 
     <section aria-label="Фильтры" class="filters">
         <label class="field">
-            <span>Цена от</span>
+            <span>от</span>
             <input bind:value={minPrice} min="0" step="50" type="number"/>
         </label>
         <label class="field">
-            <span>Цена до</span>
+            <span>до</span>
             <input bind:value={maxPrice} min="0" step="50" type="number"/>
         </label>
         <label class="field">
-            <span>Мин. мест</span>
+            <span>места</span>
             <input bind:value={minSeats} max="10" min="2" step="1" type="number"/>
         </label>
         <label class="field toggle">
             <input bind:checked={onlyBoost} type="checkbox"/>
-            <span>Только с бустом</span>
+            <span>только буст</span>
         </label>
     </section>
 
+    {#if joinError}
+        <p class="feedback error">{joinError}</p>
+    {/if}
+
     {#if filteredRooms.length === 0}
-        <p class="empty">Нет комнат под выбранные фильтры</p>
+        <p class="feedback empty">Под эти фильтры сейчас нет столов.</p>
     {:else}
         <ul class="grid">
-            {#each filteredRooms as room (room.id)}
+            {#each filteredRooms as room (room.templateId)}
                 <li class="card">
-                    <a class="cardLink" href="/room/{room.id}">
+                    <button
+                            class="cardLink"
+                            disabled={pendingTemplateId === room.templateId}
+                            onclick={() => void joinTemplate(room.templateId, "manual")}
+                            type="button"
+                    >
                         <div class="cardTop">
-                            <h2 class="cardTitle">{room.name}</h2>
-                            <span class="pill" data-status={room.status}>{statusLabel(room.status)}</span>
+                            <div>
+                                <h3 class="cardTitle">{room.templateName}</h3>
+                                <p class="cardSub">{room.joinableRoomsCount > 0 ? "Есть готовые столы" : "Ожидание мест"}</p>
+                            </div>
+                            <span class:closed={room.joinableRoomsCount === 0} class="pill">
+                                {room.joinableRoomsCount > 0 ? "open" : "wait"}
+                            </span>
                         </div>
+
                         <dl class="stats">
                             <div>
-                                <dt>Вход</dt>
-                                <dd>{room.entryPrice.toLocaleString("ru-RU")}</dd>
+                                <dt>вход</dt>
+                                <dd>{room.entryFee.toLocaleString("ru-RU")}</dd>
                             </div>
                             <div>
-                                <dt>Места</dt>
-                                <dd>{room.seatsTaken}/{room.maxSeats}</dd>
+                                <dt>мест</dt>
+                                <dd>{room.participantsCount}</dd>
                             </div>
                             <div>
-                                <dt>Фонд</dt>
-                                <dd>{room.prizeFund.toLocaleString("ru-RU")}</dd>
+                                <dt>фонд</dt>
+                                <dd>{(room.entryFee * room.participantsCount).toLocaleString("ru-RU")}</dd>
                             </div>
                             <div>
-                                <dt>До старта</dt>
-                                <dd class="eta">{formatEta(room)}</dd>
+                                <dt>столов</dt>
+                                <dd>{room.activeRoomsCount}</dd>
                             </div>
                         </dl>
+
                         <div class="cardFoot">
-                            {#if room.boostEnabled}
-                                <span class="boost">Буст · {room.boostCost?.toLocaleString("ru-RU") ?? "—"}</span>
-                            {:else}
-                                <span class="muted">Без буста</span>
-                            {/if}
+                            <span class="meta">
+                                {room.boostEnabled
+                                    ? `Boost ${room.boostCost?.toLocaleString("ru-RU") ?? "—"}`
+                                    : "Без буста"}
+                            </span>
+                            <span class="meta strong">Очередь {room.waitingPlayersCount}</span>
                         </div>
-                    </a>
+                    </button>
+
+                    <div class="actions">
+                        <button
+                                class="actionBtn secondary"
+                                disabled={pendingTemplateId === room.templateId}
+                                onclick={() => void joinTemplate(room.templateId, "manual")}
+                                type="button"
+                        >
+                            {pendingTemplateId === room.templateId && pendingMode === "manual" ? "Открываем..." : "Открыть"}
+                        </button>
+                        <button
+                                class="actionBtn primary"
+                                disabled={pendingTemplateId === room.templateId}
+                                onclick={() => void joinTemplate(room.templateId, "fast")}
+                                type="button"
+                        >
+                            {pendingTemplateId === room.templateId && pendingMode === "fast" ? "Ищем..." : "Fast join"}
+                        </button>
+                    </div>
                 </li>
             {/each}
         </ul>
     {/if}
-</div>
+</section>
 
 
 <style lang="scss">

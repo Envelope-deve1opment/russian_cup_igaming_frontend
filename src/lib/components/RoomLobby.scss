@@ -1,144 +1,154 @@
 @use '../../styles/variables.scss' as *;
 
 .lobby {
-  max-width: 960px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 1.5rem 1.1rem 2.5rem;
-  color: $color-text;
+  padding: 1.5rem 1rem;
 }
 
 .top {
   display: flex;
-  flex-wrap: wrap;
   justify-content: space-between;
+  align-items: flex-start;
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
 
 .title {
-  margin: 0 0 0.35rem;
-  font-family: $font-display;
-  font-size: clamp(1.35rem, 2vw, 1.75rem);
-  color: $color-text;
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem;
 }
 
 .meta {
   margin: 0;
   color: $color-text-muted;
-  line-height: 1.5;
+  font-size: 0.9rem;
 }
 
 .timer {
-  min-width: 140px;
-  padding: 0.75rem 1rem;
-  border-radius: $radius-md;
+  padding: 0.5rem 1rem;
   background: $color-surface;
   border: 1px solid $color-border;
-  box-shadow: $shadow-card;
+  border-radius: $radius-md;
   text-align: right;
 }
 
 .timerLabel {
   display: block;
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-size: 0.7rem;
   color: $color-text-muted;
+  text-transform: uppercase;
 }
 
 .timerValue {
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   font-weight: 700;
-  font-variant-numeric: tabular-nums;
   color: $color-accent;
-  transition: color $transition-fast;
+  font-variant-numeric: tabular-nums;
 }
 
 .layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  grid-template-columns: 1.5fr 1fr;
   gap: 1rem;
 }
 
 .panel {
   background: $color-surface;
   border: 1px solid $color-border;
-  border-radius: $radius-lg;
-  padding: 1.1rem 1.2rem;
-  box-shadow: $shadow-card;
-  transition: border-color $transition-fast,
-  box-shadow $transition-med;
+  border-radius: $radius-md;
+  padding: 1rem;
 }
 
 .h2 {
   margin: 0 0 0.75rem;
-  font-size: 0.95rem;
-  font-weight: 650;
+  font-size: 0.8rem;
+  font-weight: 600;
   color: $color-text-muted;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
+}
+
+.msg {
+  margin: 0 0 0.5rem;
+  font-size: 0.8rem;
+  color: $color-text-muted;
 }
 
 .seats {
   display: grid;
-  grid-template-columns: repeat(var(--cols, 5), minmax(0, 1fr));
+  grid-template-columns: repeat(var(--cols, 5), 1fr);
   gap: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .seat {
-  min-height: 72px;
-  border-radius: $radius-sm;
-  border: 1px dashed $color-border;
-  padding: 0.45rem 0.5rem;
+  min-height: 60px;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
   justify-content: center;
-  align-items: flex-start;
-  background: rgba(255, 255, 255, 0.02);
-  transition: border-color $transition-fast,
-  transform $transition-fast,
-  background $transition-fast;
-}
+  align-items: center;
+  gap: 0.25rem;
+  border: 1px dashed $color-border;
+  border-radius: $radius-sm;
+  background: transparent;
+  transition: border-color $transition-fast, transform $transition-fast;
+  cursor: pointer;
 
-/* Значения совпадают с SeatSlotState ($lib/constants/seatSlotState) */
-.seat[data-state='you'] {
-  border-style: solid;
-  border-color: $color-border-strong;
-  box-shadow: inset 0 0 0 1px $color-accent-soft;
-}
+  &:hover {
+    transform: translateY(-1px);
+  }
 
-.seat[data-state='bot'] {
-  border-color: $color-bot-border;
-}
+  &:disabled {
+    cursor: not-allowed;
+  }
 
-.seat[data-state='human'] {
-  border-style: solid;
-}
+  &:disabled:hover {
+    transform: none;
+  }
 
-.seat:hover {
-  transform: translateY(-1px);
+  &[data-state='you'] {
+    border-style: solid;
+    border-color: $color-accent;
+    background: $color-accent-soft;
+  }
+
+  &[data-state='bot'] {
+    border-color: $color-bot-border;
+    opacity: 0.8;
+  }
+
+  &[data-state='human'] {
+    border-style: solid;
+  }
+
+  &[data-state='human']:disabled {
+    opacity: 0.75;
+  }
 }
 
 .seatName {
-  font-size: 0.82rem;
+  font-size: 0.75rem;
   font-weight: 600;
-  line-height: 1.2;
-  word-break: break-word;
-  color: $color-text;
+}
+
+.seatHint {
+  font-size: 0.65rem;
+  color: $color-text-muted;
 }
 
 .free {
-  font-size: 0.78rem;
+  font-size: 0.7rem;
   color: $color-text-muted;
 }
 
 .botTag,
 .boostTag {
-  font-size: 0.62rem;
-  font-weight: 700;
-  padding: 0.1rem 0.3rem;
+  font-size: 0.6rem;
+  padding: 0.1rem 0.25rem;
   border-radius: 4px;
+  font-weight: 700;
 }
 
 .botTag {
@@ -152,45 +162,37 @@
 }
 
 .boostRow {
-  margin-top: 1rem;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.35rem;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .btn {
-  cursor: pointer;
+  padding: 0.5rem 1rem;
   border-radius: 999px;
   border: 1px solid $color-border;
-  padding: 0.55rem 1.1rem;
-  font-weight: 600;
   background: $color-surface-elevated;
   color: $color-text;
-  transition: background $transition-fast,
-  border-color $transition-fast,
-  transform $transition-fast;
-}
-
-.btn.primary {
-  background: linear-gradient(120deg, $color-accent, $color-accent-highlight);
-  color: $color-on-accent;
-  border-color: transparent;
-}
-
-.btn:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
-.btn:not(:disabled):hover {
-  transform: translateY(-1px);
-}
-
-.msg {
-  margin: 0;
   font-size: 0.85rem;
-  color: $color-text-muted;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color $transition-fast, transform $transition-fast;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  &.primary {
+    background: $color-accent;
+    color: $color-on-accent;
+    border-color: transparent;
+  }
 }
 
 .list {
@@ -199,67 +201,52 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
+  gap: 0.35rem;
 }
 
 .row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.45rem 0.5rem;
+  padding: 0.4rem 0.6rem;
   border-radius: $radius-sm;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid $color-border;
-  transition: border-color $transition-fast;
-}
-
-.row:hover {
-  border-color: $color-border-strong;
+  background: $color-surface-elevated;
 }
 
 .name {
   font-weight: 600;
-  font-size: 0.9rem;
-  color: $color-text;
+  font-size: 0.85rem;
 }
 
 .badges {
   display: flex;
-  flex-wrap: wrap;
   gap: 0.25rem;
-  justify-content: flex-end;
 }
 
 .chip {
   font-size: 0.65rem;
-  padding: 0.12rem 0.35rem;
+  padding: 0.1rem 0.35rem;
   border-radius: 999px;
-  border: 1px solid $color-border;
-  color: $color-text-muted;
-}
+  font-weight: 500;
 
-.chip.bot {
-  color: $color-bot;
-  border-color: $color-bot-border;
-}
-
-.chip.you {
-  color: $color-accent;
-  border-color: $color-border-strong;
-}
-
-.chip.boost {
-  color: $color-success;
-  border-color: $color-success-border;
-}
-
-@media (max-width: 820px) {
-  .layout {
-    grid-template-columns: 1fr;
+  &.bot {
+    background: $color-bot-bg;
+    color: $color-bot;
   }
 
-  .seats {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  &.you {
+    background: $color-accent-soft;
+    color: $color-accent;
+  }
+
+  &.boost {
+    background: $color-success-faint;
+    color: $color-success;
+  }
+}
+
+@media (max-width: 700px) {
+  .layout {
+    grid-template-columns: 1fr;
   }
 }

@@ -11,7 +11,7 @@
 </script>
 
 <div class="wrap">
-    <span class="label" id="theme-label">Тема</span>
+    <span class="label" id="theme-label">Палитра</span>
     <select
             aria-labelledby="theme-label"
             class="select"

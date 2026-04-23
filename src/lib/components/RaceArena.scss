@@ -1,0 +1,445 @@
+@use '../../styles/variables.scss' as *;
+
+.racePage {
+  width: min(1220px, 100%);
+  margin: 0 auto;
+  display: grid;
+  gap: 1.4rem;
+  animation: race-enter 0.7s cubic-bezier(.2, .8, .2, 1);
+}
+
+.raceHero,
+.raceCard {
+  position: relative;
+  overflow: hidden;
+  border-radius: 30px;
+  border: 1px solid $color-border;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--color-surface-elevated) 94%, transparent), color-mix(in srgb, var(--color-surface) 96%, transparent)),
+    radial-gradient(circle at top left, color-mix(in srgb, var(--color-accent) 18%, transparent), transparent 42%);
+  box-shadow: $shadow-card;
+}
+
+.raceHero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.9fr);
+  gap: 1.2rem;
+  padding: 1.7rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.7rem;
+  color: $color-accent;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.heroCopy h1,
+.panelHead h2,
+.trackHeader h2 {
+  margin: 0;
+  font-size: clamp(2rem, 3vw, 3.2rem);
+  line-height: 0.96;
+  letter-spacing: -0.04em;
+}
+
+.heroText {
+  margin: 1rem 0 0;
+  color: $color-text-muted;
+  max-width: 58ch;
+}
+
+.heroStats,
+.statusPanel {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.heroStats {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-self: end;
+}
+
+.heroStats div,
+.statusBox {
+  padding: 1rem;
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--color-border) 82%, transparent);
+  background: color-mix(in srgb, var(--color-surface) 90%, transparent);
+}
+
+.heroStats span,
+.statusBox span {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: $color-text-muted;
+}
+
+.heroStats strong,
+.statusBox strong {
+  font-size: 1.25rem;
+}
+
+.raceLayout {
+  display: grid;
+  grid-template-columns: minmax(310px, 0.94fr) minmax(0, 1.36fr);
+  gap: 1.4rem;
+}
+
+.raceCard {
+  padding: 1.4rem;
+}
+
+.controls {
+  display: grid;
+  align-content: start;
+  gap: 1.1rem;
+}
+
+.panelHead,
+.trackHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.launchBtn,
+.runnerChip {
+  border: 1px solid $color-border;
+  cursor: pointer;
+  transition: transform $transition-fast, border-color $transition-fast, background-color $transition-fast, box-shadow $transition-med;
+}
+
+.launchBtn {
+  min-height: 3.2rem;
+  padding: 0.75rem 1rem;
+  border-radius: 18px;
+  font-weight: 800;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--color-accent) 92%, white 8%), var(--color-accent));
+  color: $color-on-accent;
+  box-shadow: 0 18px 30px color-mix(in srgb, var(--color-accent) 18%, transparent);
+}
+
+.launchBtn:disabled,
+.runnerChip:disabled {
+  cursor: wait;
+  opacity: 0.74;
+}
+
+.runnerGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.runnerChip {
+  min-height: 5.3rem;
+  padding: 0.9rem;
+  border-radius: 20px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--runner-soft) 68%, var(--color-surface-elevated)), color-mix(in srgb, var(--color-surface) 94%, transparent));
+  text-align: left;
+}
+
+.runnerChip:hover:not(:disabled),
+.launchBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.runnerChip.selected {
+  border-color: color-mix(in srgb, var(--runner-accent) 58%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--runner-accent) 18%, transparent), 0 16px 28px color-mix(in srgb, var(--runner-accent) 12%, transparent);
+}
+
+.runnerNumber {
+  display: inline-flex;
+  min-width: 2.4rem;
+  min-height: 2.4rem;
+  border-radius: 999px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.55rem;
+  background: color-mix(in srgb, var(--runner-accent) 78%, black 22%);
+  color: white;
+  font-weight: 800;
+}
+
+.runnerChip strong {
+  display: block;
+  font-size: 1rem;
+}
+
+.trackCard {
+  display: grid;
+  gap: 1rem;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, #071019 76%, var(--color-surface-elevated)), color-mix(in srgb, #0e1524 86%, var(--color-surface))),
+    radial-gradient(circle at top left, color-mix(in srgb, var(--color-accent) 14%, transparent), transparent 42%);
+}
+
+.raceBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 2.75rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid $color-border;
+  background: color-mix(in srgb, var(--color-surface-elevated) 75%, transparent);
+  font-weight: 700;
+}
+
+.liveDot,
+.flag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.liveDot {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: #ff5d8f;
+  box-shadow: 0 0 0 0 rgba(255, 93, 143, 0.55);
+  animation: pulse 1.2s infinite;
+}
+
+.track {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.laneRow {
+  display: grid;
+  grid-template-columns: 170px minmax(0, 1fr);
+  gap: 0.9rem;
+  align-items: center;
+}
+
+.laneMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.lanePlace {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--color-accent) 24%, transparent);
+  color: $color-accent;
+  font-weight: 800;
+}
+
+.laneMeta small {
+  display: block;
+  color: $color-text-muted;
+}
+
+.laneTrack {
+  position: relative;
+  min-height: 4.9rem;
+  padding: 0.55rem 0.8rem;
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--color-border) 82%, transparent);
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 0 18%, transparent 18% 22%, rgba(255, 255, 255, 0.04) 22% 40%, transparent 40% 44%, rgba(255, 255, 255, 0.04) 44% 62%, transparent 62% 66%, rgba(255, 255, 255, 0.04) 66% 84%, transparent 84% 88%, rgba(255, 255, 255, 0.04) 88% 100%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent);
+}
+
+.finishLine {
+  position: absolute;
+  top: 0.35rem;
+  bottom: 0.35rem;
+  right: 4.3rem;
+  width: 0.9rem;
+  background:
+    repeating-linear-gradient(180deg, #ffffff 0 8px, #151515 8px 16px);
+  border-radius: 0.2rem;
+  opacity: 0.8;
+}
+
+.vehicleWrap {
+  position: absolute;
+  left: 0.75rem;
+  right: 5.3rem;
+  top: 50%;
+  height: 2.6rem;
+  transform: translateY(-50%);
+}
+
+.vehicle {
+  position: absolute;
+  left: calc(var(--progress) * (100%));
+  top: 0;
+  width: 5.2rem;
+  height: 2.6rem;
+  transition: left 110ms linear;
+}
+
+.vehicleInner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 140ms ease, filter 150ms ease;
+  filter: drop-shadow(0 10px 16px color-mix(in srgb, var(--runner-accent) 18%, transparent));
+}
+
+.vehicleInner::before {
+  content: '';
+  position: absolute;
+  left: -1.9rem;
+  top: 50%;
+  width: 2.2rem;
+  height: 0.45rem;
+  transform: translateY(-50%);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--runner-accent) 55%, transparent), transparent);
+  filter: blur(3px);
+  opacity: 0.8;
+}
+
+.eventBoost {
+  animation: boost-glow 0.7s ease-in-out infinite alternate;
+}
+
+.eventSlip {
+  opacity: 0.9;
+  transform-origin: center;
+  animation: slip-shake 0.35s ease-in-out infinite alternate;
+}
+
+.carNumber {
+  position: absolute;
+  top: -0.55rem;
+  left: 0.35rem;
+  z-index: 2;
+  min-width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--runner-accent) 85%, black 15%);
+  color: white;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.carBody {
+  position: absolute;
+  inset: 0.5rem 0.4rem 0.35rem;
+  border-radius: 1rem 1.2rem 0.85rem 0.85rem;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--runner-accent) 92%, white 8%), color-mix(in srgb, var(--runner-accent) 74%, black 26%));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.cockpit {
+  position: absolute;
+  left: 1.55rem;
+  top: 0.35rem;
+  width: 1.55rem;
+  height: 0.7rem;
+  border-radius: 0.55rem 0.55rem 0.3rem 0.3rem;
+  background: rgba(243, 250, 255, 0.75);
+}
+
+.wheel {
+  position: absolute;
+  bottom: -0.18rem;
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 50%;
+  background: #111;
+  border: 2px solid rgba(255, 255, 255, 0.18);
+}
+
+.wheel.left {
+  left: 0.75rem;
+}
+
+.wheel.right {
+  right: 0.75rem;
+}
+
+@keyframes race-enter {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 93, 143, 0.55);
+  }
+  100% {
+    box-shadow: 0 0 0 10px rgba(255, 93, 143, 0);
+  }
+}
+
+@keyframes boost-glow {
+  from {
+    filter: drop-shadow(0 10px 16px color-mix(in srgb, var(--runner-accent) 24%, transparent));
+  }
+  to {
+    filter: drop-shadow(0 14px 26px color-mix(in srgb, var(--runner-accent) 40%, transparent));
+  }
+}
+
+@keyframes slip-shake {
+  from {
+    transform: rotate(-1deg) translateY(-1px);
+  }
+  to {
+    transform: rotate(1deg) translateY(1px);
+  }
+}
+
+@media (max-width: 980px) {
+  .raceHero,
+  .raceLayout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .runnerGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .heroStats,
+  .statusPanel,
+  .laneRow {
+    grid-template-columns: 1fr;
+  }
+
+  .laneMeta {
+    padding-bottom: 0.15rem;
+  }
+
+  .raceHero,
+  .raceCard {
+    padding: 1.1rem;
+    border-radius: 24px;
+  }
+
+  .panelHead,
+  .trackHeader {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

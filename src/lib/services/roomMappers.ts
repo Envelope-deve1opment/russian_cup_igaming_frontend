@@ -1,6 +1,6 @@
 import type {RoomDetailsDto, RoomListItemDto, RoomParticipantDto} from "$lib/api/dto";
 import {RoomStatus, type RoomStatus as RoomStatusType} from "$lib/constants/roomStatus";
-import type {Participant, Room} from "$lib/types";
+import type {Participant, Room, RoundResult} from "$lib/types";
 
 function mapStatus(raw: string): RoomStatusType {
     const value = raw.toLowerCase();
@@ -21,14 +21,92 @@ function calcTimerEndsAt(countdownStartedAt?: string, countdownSeconds?: number)
     return startedAt + countdownSeconds * 1000;
 }
 
-export function mapParticipantDto(dto: RoomParticipantDto, currentUserId?: string): Participant {
+function isReleasedSeat(dto: RoomParticipantDto): boolean {
+    const status = dto.status?.toLowerCase() ?? "";
+
+    if (dto.leftAt) {
+        return true;
+    }
+
+    return status.includes("left") || status.includes("leave") || status.includes("release");
+}
+
+function toParticipantName(dto: RoomParticipantDto): string {
+    return dto.bot ? `Bot ${dto.seatNum + 1}` : `Player ${dto.seatNum + 1}`;
+}
+
+function asFiniteNumber(value: unknown): number | undefined {
+    return typeof value === "number" && Number.isFinite(value) ? value : undefined;
+}
+
+function asString(value: unknown): string | undefined {
+    return typeof value === "string" && value.length > 0 ? value : undefined;
+}
+
+function mapResultParticipant(raw: unknown, currentUserId?: string): Participant | null {
+    if (typeof raw !== "object" || raw == null) {
+        return null;
+    }
+
+    const record = raw as Record<string, unknown>;
+    const userId = asString(record.userId) ?? asString(record.id);
+    const seatNum = asFiniteNumber(record.seatNum);
+    const bot = record.bot === true;
+
+    if (!userId) {
+        return null;
+    }
+
+    return {
+        id: userId,
+        name: asString(record.name) ?? toParticipantName({
+            id: userId,
+            roomId: "",
+            userId,
+            bot,
+            seatNum: seatNum ?? 0
+        }),
+        seatNum,
+        isBot: bot,
+        isVisualOnly: false,
+        isCurrentUser: currentUserId != null && userId === currentUserId,
+        hasBoost: false
+    };
+}
+
+function mapRoomResult(dto: RoomDetailsDto, participants: Participant[], currentUserId?: string): RoundResult | undefined {
+    const payload = dto.resultPayloadJson;
+    const payloadWinnerId = payload == null
+        ? undefined
+        : asString(payload.winnerID) ?? asString(payload.winnerId) ?? asString(payload.winnerParticipantId);
+    const winnerID = payloadWinnerId ?? dto.winnerParticipantId;
+
+    if (!winnerID) {
+        return undefined;
+    }
+
+    const payloadParticipants = Array.isArray(payload?.participants)
+        ? payload.participants
+            .map((entry) => mapResultParticipant(entry, currentUserId))
+            .filter((entry): entry is Participant => entry != null)
+        : [];
+
+    return {
+        winnerID,
+        prizeAmount: asFiniteNumber(payload?.prizeAmount) ?? asFiniteNumber(payload?.prizeFund) ?? dto.entryFee * dto.participantsLimit,
+        participants: payloadParticipants.length > 0 ? payloadParticipants : participants
+    };
+}
+
+export function mapParticipantDto(dto: RoomParticipantDto, currentUserId?: string, options?: { visualOnly?: boolean }): Participant {
     const isCurrentUser = currentUserId != null && dto.userId === currentUserId;
     const status = dto.status?.toLowerCase() ?? "";
     return {
         id: dto.userId,
-        name: dto.bot ? `Bot ${dto.seatNum + 1}` : `Player ${dto.seatNum + 1}`,
+        name: toParticipantName(dto),
         seatNum: dto.seatNum,
         isBot: dto.bot,
+        isVisualOnly: options?.visualOnly ?? false,
         isCurrentUser,
         hasBoost: status.includes("boost")
     };
@@ -45,17 +123,24 @@ export function mapRoomListItem(dto: RoomListItemDto): Room {
         boostCost: dto.boostCost,
         seatsTaken: dto.occupiedSeatsCount,
         participants: [],
+        seatDecorations: [],
         status: mapStatus(dto.status),
         timerEndsAt: calcTimerEndsAt(dto.countdownStartedAt, dto.countdownSeconds)
     };
 }
 
 export function mapRoomDetails(dto: RoomDetailsDto, currentUserId?: string): Room {
-    const participants = [...dto.seats]
+    const activeSeats = dto.seats.filter((seat) => !isReleasedSeat(seat));
+    const participants = [...activeSeats]
+        .filter((seat) => !seat.bot)
         .sort((a, b) => a.seatNum - b.seatNum)
         .map((seat) => mapParticipantDto(seat, currentUserId));
+    const seatDecorations = [...activeSeats]
+        .filter((seat) => seat.bot)
+        .sort((a, b) => a.seatNum - b.seatNum)
+        .map((seat) => mapParticipantDto(seat, currentUserId, {visualOnly: true}));
+    const roundResult = mapRoomResult(dto, participants, currentUserId);
 
-    console.log(123, dto)
     return {
         id: dto.id,
         name: dto.templateName,
@@ -66,7 +151,10 @@ export function mapRoomDetails(dto: RoomDetailsDto, currentUserId?: string): Roo
         boostCost: dto.boostCost,
         seatsTaken: dto.occupiedSeatsCount,
         participants,
+        seatDecorations,
         status: mapStatus(dto.status),
-        timerEndsAt: calcTimerEndsAt(dto.countdownStartedAt, dto.countdownSeconds)
+        timerEndsAt: calcTimerEndsAt(dto.countdownStartedAt, dto.countdownSeconds),
+        winnerParticipantId: dto.winnerParticipantId,
+        roundResult
     };
 }

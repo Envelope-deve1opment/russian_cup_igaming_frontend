@@ -28,8 +28,8 @@ $shadow-glow: var(--shadow-glow);
 $topbar-bg: var(--topbar-bg);
 $topbar-shadow: var(--topbar-shadow);
 
-$font-sans: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
-$font-display: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+$font-sans: var(--font-sans);
+$font-display: var(--font-display);
 
 $radius-sm: 8px;
 $radius-md: 16px;

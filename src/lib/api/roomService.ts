@@ -8,6 +8,9 @@ export const roomService = {
     async getDetails(roomId: string): Promise<RoomDetailsDto> {
         return await requestJSON<RoomDetailsDto>(`/room/${roomId}`);
     },
+    async manualJoin(templateId: string): Promise<RoomDto> {
+        return await requestJSON<RoomDto>(`/room/manual?templateId=${encodeURIComponent(templateId)}`, {method: "POST"});
+    },
     async fastJoin(templateId: string): Promise<RoomDto> {
         return await requestJSON<RoomDto>(`/room/fastJoin?templateId=${encodeURIComponent(templateId)}`, {method: "POST"});
     },

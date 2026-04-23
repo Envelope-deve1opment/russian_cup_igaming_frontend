@@ -1,7 +1,7 @@
 <script lang="ts">
     import {goto} from "$app/navigation";
-    import {authStore} from "$lib/stores/authStore";
     import {loginAndStore} from "$lib/services/authApi";
+    import {authStore} from "$lib/stores/authStore";
 
     let token = $state("");
     let submitting = $state(false);
@@ -25,7 +25,7 @@
             await loginAndStore(token);
             await goto("/lobby");
         } catch {
-            /* сообщение уже в authStore */
+            // сообщение об ошибке уже приходит из authStore
         } finally {
             submitting = false;
         }
@@ -33,18 +33,19 @@
 </script>
 
 <svelte:head>
-    <title>Вход — VIP Quick Rooms</title>
+    <title>Вход — Quick Rooms</title>
 </svelte:head>
 
-<div class="page">
-    <h1 class="title">Вход по токену</h1>
-    <p class="lead">
-        Токен отправляется в API, после чего загружается профиль текущего пользователя.
-    </p>
+<section class="page">
+    <div class="intro">
+        <p class="eyebrow">Access</p>
+        <h1 class="title">Подключение к игровому контуру.</h1>
+        <p class="lead">Введите bearer-токен и откройте полный интерфейс комнаты, лобби и визуальных режимов.</p>
+    </div>
 
     <form class="form" onsubmit={onsubmit}>
         <label class="label">
-            <span>Access token (Bearer)</span>
+            <span>Access token</span>
             <input
                     autocomplete="off"
                     bind:value={token}
@@ -61,12 +62,12 @@
 
         <div class="actions">
             <button class="submit" disabled={submitting || $authStore.status === "loading"} type="submit">
-                {submitting || $authStore.status === "loading" ? "Запрос…" : "Войти"}
+                {submitting || $authStore.status === "loading" ? "Подключаем..." : "Войти"}
             </button>
-            <a class="back" href="/lobby">В лобби без входа</a>
+            <a class="back" href="/lobby">Продолжить как гость</a>
         </div>
     </form>
-</div>
+</section>
 
 <style lang="scss">
   @import "./Login.scss";

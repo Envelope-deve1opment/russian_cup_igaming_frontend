@@ -50,8 +50,11 @@ export type RoomParticipantDto = {
     roomId: string;
     userId: string;
     bot: boolean;
+    weightSnapshot?: number;
     status?: string;
     seatNum: number;
+    joinedAt?: string;
+    leftAt?: string;
 };
 
 export type RoomDetailsDto = {
@@ -66,6 +69,8 @@ export type RoomDetailsDto = {
     countdownSeconds?: number;
     boostEnabled?: boolean;
     boostCost?: number;
+    winnerParticipantId?: string;
+    resultPayloadJson?: Record<string, unknown>;
     seats: RoomParticipantDto[];
 };
 

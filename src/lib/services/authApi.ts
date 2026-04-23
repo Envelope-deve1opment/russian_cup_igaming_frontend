@@ -63,7 +63,16 @@ export async function loginWithBearerToken(rawToken: string): Promise<AuthLoginR
         });
         const me = await loadMe(login.token);
 
-        const user = await enrichRole(mapCurrentUser(me));
+        const balanceInfo = await requestJSON<{balance: number}>("/wallets/me", {
+            "method": "GET",
+            withAuth: true,
+            token: login.token
+        })
+
+        const user: User = {
+            ...await enrichRole(mapCurrentUser(me)),
+            bonusBalance: balanceInfo.balance
+        };
         return {
             accessToken: login.token,
             tokenType: "Bearer",

@@ -49,13 +49,17 @@
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
     <link
-            href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@400;500;700;800&display=swap"
             rel="stylesheet"
     />
-    <title>VIP Quick Rooms</title>
+    <title>Quick Rooms</title>
 </svelte:head>
 
 <div class="shell">
+    <div aria-hidden="true" class="ambient ambientA"></div>
+    <div aria-hidden="true" class="ambient ambientB"></div>
+    <div aria-hidden="true" class="gridGlow"></div>
+
     <header class="topbar">
         <div class="topbarInner">
             <div class="topbarMain">
@@ -68,7 +72,7 @@
                     </span>
                     <span class="brandText">
                         <span class="brandTitle">Quick Rooms</span>
-                        <span class="brandTag">VIP</span>
+                        <span class="brandTag">Live</span>
                     </span>
                 </a>
                 <nav aria-label="Основная навигация" class="nav">
@@ -84,6 +88,36 @@
                             data-sveltekit-preload-data="hover"
                             href="/history"
                     >Журнал</a>
+                    <a
+                            aria-current={navActive("/wheel", $page.url.pathname) ? "page" : undefined}
+                            class:active={navActive("/wheel", $page.url.pathname)}
+                            data-sveltekit-preload-data="hover"
+                            href="/wheel"
+                    >Колесо</a>
+                    <a
+                            aria-current={navActive("/races", $page.url.pathname) ? "page" : undefined}
+                            class:active={navActive("/races", $page.url.pathname)}
+                            data-sveltekit-preload-data="hover"
+                            href="/races"
+                    >Гонки</a>
+                    <a
+                            aria-current={navActive("/roulette", $page.url.pathname) ? "page" : undefined}
+                            class:active={navActive("/roulette", $page.url.pathname)}
+                            data-sveltekit-preload-data="hover"
+                            href="/roulette"
+                    >Рулетка</a>
+                    <a
+                            aria-current={navActive("/battle", $page.url.pathname) ? "page" : undefined}
+                            class:active={navActive("/battle", $page.url.pathname)}
+                            data-sveltekit-preload-data="hover"
+                            href="/battle"
+                    >Битва</a>
+                    <a
+                            aria-current={navActive("/dynamite", $page.url.pathname) ? "page" : undefined}
+                            class:active={navActive("/dynamite", $page.url.pathname)}
+                            data-sveltekit-preload-data="hover"
+                            href="/dynamite"
+                    >Динамит</a>
                     {#if $userStore.role === "ADMIN"}
                         <a
                                 aria-current={navActive("/admin", $page.url.pathname) ? "page" : undefined}
@@ -102,7 +136,7 @@
                     {:else if $authStore.status === "authenticated"}
                         <span class="userMeta" title={$userStore.name}>{$userStore.name}</span>
                         <span class="balancePill">
-                            <span class="balanceLabel">бонус</span>
+                            <span class="balanceLabel">банк</span>
                             <span class="userBalance">{$userStore.bonusBalance.toLocaleString("ru-RU")}</span>
                         </span>
                         <button class="logout" onclick={() => clearAuth()} type="button">Выйти</button>
@@ -115,7 +149,9 @@
         </div>
     </header>
     <main class="main">
-        {@render children()}
+        <div class="mainInner">
+            {@render children()}
+        </div>
     </main>
 </div>
 

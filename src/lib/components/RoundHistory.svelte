@@ -22,21 +22,39 @@
             return w.includes(q) || e.roomId.toLowerCase().includes(q) || e.roomName.toLowerCase().includes(q);
         });
     });
+
+    const totalPrize = $derived(rows.reduce((total, entry) => total + entry.result.prizeAmount, 0));
 </script>
 
 
 <section aria-labelledby="hist-title" class="history">
-    <header class="head">
-        <h1 class="title" id="hist-title">Журнал раундов</h1>
+    <header class="hero">
+        <div class="heroCopy">
+            <p class="eyebrow">Archive</p>
+            <h1 class="title" id="hist-title">История завершённых розыгрышей.</h1>
+        </div>
+        <div class="heroStats">
+            <div class="stat">
+                <span>Раундов</span>
+                <strong>{rows.length}</strong>
+            </div>
+            <div class="stat">
+                <span>Сумма призов</span>
+                <strong>{totalPrize.toLocaleString("ru-RU")}</strong>
+            </div>
+        </div>
+    </header>
+
+    <div class="controls">
         <label class="search">
             <span class="srOnly">Фильтр по победителю или комнате</span>
             <input
                     bind:value={query}
-                    placeholder="Победитель, id или название комнаты…"
+                    placeholder="Победитель, id комнаты или название"
                     type="search"
             />
         </label>
-    </header>
+    </div>
 
     <div class="tableWrap">
         <table class="table">
@@ -63,7 +81,7 @@
                 </tr>
             {:else}
                 <tr>
-                    <td colspan="5" class="empty">Пока нет записей. Дождитесь завершения раунда в лобби</td>
+                    <td colspan="5" class="empty">Пока нет завершённых раундов.</td>
                 </tr>
             {/each}
             </tbody>

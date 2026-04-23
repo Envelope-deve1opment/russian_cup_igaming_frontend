@@ -19,3 +19,16 @@ export function updateRoom(id: string, patch: Partial<Room>): void {
         })
     );
 }
+
+export function upsertRoom(room: Room): void {
+    roomsStore.update((list: Room[]): Room[] => {
+        const index = list.findIndex((item) => item.id === room.id);
+        if (index === -1) {
+            return [...list, room];
+        }
+
+        const next = [...list];
+        next[index] = room;
+        return next;
+    });
+}

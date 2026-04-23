@@ -6,6 +6,7 @@ export type Participant = {
     name: string;
     seatNum?: number;
     isBot: boolean;
+    isVisualOnly?: boolean;
     isCurrentUser?: boolean;
     hasBoost?: boolean;
 };
@@ -20,8 +21,11 @@ export type Room = {
     boostCost?: number;
     seatsTaken: number;
     participants: Participant[];
+    seatDecorations: Participant[];
     status: RoomStatus;
     timerEndsAt?: number;
+    winnerParticipantId?: string;
+    roundResult?: RoundResult;
 };
 
 export type User = {

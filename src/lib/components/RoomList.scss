@@ -2,85 +2,99 @@
 
 .wrap {
   width: 100%;
-  max-width: 1120px;
+  max-width: 1180px;
   margin: 0 auto;
+  display: grid;
+  gap: 1rem;
   color: $color-text;
-  box-sizing: border-box;
 }
 
-.head {
-  margin-bottom: 2rem;
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.toolbarHead {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: $color-accent;
 }
 
 .title {
-  font-family: $font-display;
-  font-size: clamp(1.6rem, 2.4vw, 2.1rem);
-  font-weight: 650;
-  letter-spacing: -0.02em;
-  margin: 0 0 0.35rem;
-  background: linear-gradient(120deg, $color-text 0%, $color-accent 120%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  margin: 0;
+  font-size: clamp(1.35rem, 2.5vw, 2rem);
 }
 
-.sub {
-  margin: 0;
+.summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.summaryChip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.45rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--color-border) 88%, transparent);
+  background: color-mix(in srgb, var(--color-surface) 90%, transparent);
   color: $color-text-muted;
-  max-width: 46ch;
-  line-height: 1.5;
+  font-size: 0.8rem;
+  font-weight: 700;
 }
 
 .filters {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem 1rem;
-  align-items: flex-end;
-  padding: 1.15rem 1.2rem;
-  background: $color-surface;
-  border: 1px solid $color-border;
-  border-radius: $radius-lg;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 1rem;
+  border-radius: 28px;
+  border: 1px solid color-mix(in srgb, var(--color-border) 88%, transparent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface-elevated) 92%, transparent), color-mix(in srgb, var(--color-surface) 88%, transparent));
   box-shadow: $shadow-card;
-  margin-bottom: 1.75rem;
-  transition: border-color $transition-fast,
-  box-shadow $transition-med;
 }
 
 .field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  font-size: 0.78rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 2.7rem;
+  padding: 0.35rem 0.4rem 0.35rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--color-border) 84%, transparent);
+  background: color-mix(in srgb, var(--color-surface) 88%, transparent);
   color: $color-text-muted;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
 
   input[type='number'] {
-    min-width: 7rem;
-    padding: 0.45rem 0.55rem;
-    border-radius: $radius-sm;
-    border: 1px solid $color-border;
-    background: $color-surface-elevated;
-    color: $color-text;
-    transition: border-color $transition-fast,
-    box-shadow $transition-fast;
-  }
-
-  input[type='number']:focus {
-    outline: none;
-    border-color: $color-border-strong;
-    box-shadow: 0 0 0 3px $color-accent-soft;
+    width: 92px;
+    padding: 0.55rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.86rem;
+    font-weight: 700;
   }
 }
 
 .toggle {
-  flex-direction: row;
-  align-items: center;
-  text-transform: none;
-  letter-spacing: 0;
+  cursor: pointer;
   color: $color-text;
-  font-size: 0.95rem;
-  gap: 0.5rem;
+  letter-spacing: 0.08em;
 
   input {
     width: 1rem;
@@ -89,38 +103,45 @@
   }
 }
 
+.feedback {
+  margin: 0;
+  padding: 0.95rem 1rem;
+  border-radius: 22px;
+  border: 1px solid color-mix(in srgb, var(--color-border) 84%, transparent);
+  background: color-mix(in srgb, var(--color-surface) 90%, transparent);
+  color: $color-text-muted;
+}
+
+.feedback.error {
+  border-color: $color-danger-border;
+  background: $color-danger-bg;
+  color: $color-danger;
+}
+
+.feedback.empty {
+  text-align: center;
+}
+
 .grid {
   list-style: none;
   margin: 0;
   padding: 0;
-  width: 100%;
   display: grid;
-  /* min(100%, …) даёт несколько колонок на широком экране; без него flex-родитель мог оставлять одну колонку */
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
-  gap: 1.15rem;
-  align-items: stretch;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 1rem;
 }
 
 .card {
-  position: relative;
-  min-width: 0;
-  border-radius: $radius-lg;
+  border-radius: 30px;
+  border: 1px solid color-mix(in srgb, var(--color-border) 88%, transparent);
   overflow: hidden;
-  background: linear-gradient(165deg, $color-surface-elevated 0%, $color-surface 100%);
-  border: 1px solid $color-border;
+  background:
+    radial-gradient(circle at top right, color-mix(in srgb, var(--color-accent) 10%, transparent), transparent 38%),
+    linear-gradient(180deg, color-mix(in srgb, var(--color-surface-elevated) 94%, transparent), color-mix(in srgb, var(--color-surface) 92%, transparent));
   box-shadow: $shadow-card;
   transition: transform $transition-med,
   border-color $transition-fast,
   box-shadow $transition-med;
-}
-
-.card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .card:hover {
@@ -129,106 +150,157 @@
   box-shadow: $shadow-glow;
 }
 
-.card:hover::after {
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
-}
-
 .cardLink {
-  position: relative;
-  z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  padding: 1.15rem 1.2rem 1.05rem;
-  height: 100%;
+  gap: 1rem;
+  width: 100%;
+  padding: 1.25rem 1.2rem 1rem;
+  text-align: left;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.cardLink:disabled {
+  cursor: progress;
 }
 
 .cardTop {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  gap: 0.5rem;
+  gap: 0.75rem;
+  align-items: start;
 }
 
 .cardTitle {
   margin: 0;
   font-size: 1.05rem;
-  font-weight: 650;
-  color: $color-text;
+  letter-spacing: -0.04em;
+}
+
+.cardSub {
+  margin: 0.35rem 0 0;
+  color: $color-text-muted;
+  font-size: 0.86rem;
 }
 
 .pill {
-  font-size: 0.72rem;
-  padding: 0.2rem 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 4.2rem;
+  min-height: 2rem;
+  padding: 0.3rem 0.55rem;
   border-radius: 999px;
-  border: 1px solid $color-border;
-  color: $color-text-muted;
-  white-space: nowrap;
-}
-
-/* Значения совпадают с RoomStatus (см. $lib/constants/roomStatus) */
-.pill[data-status='active'] {
+  background: $color-success-faint;
   color: $color-success;
-  border-color: $color-success-border;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
-.pill[data-status='finished'] {
-  color: $color-accent;
-  border-color: $color-border-strong;
+.pill.closed {
+  background: color-mix(in srgb, var(--color-border) 70%, transparent);
+  color: $color-text-muted;
 }
 
 .stats {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.65rem 0.75rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
   margin: 0;
-  font-size: 0.85rem;
-}
 
-.stats dt {
-  margin: 0;
-  color: $color-text-muted;
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
+  dt {
+    margin: 0 0 0.2rem;
+    color: $color-text-muted;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
 
-.stats dd {
-  margin: 0.15rem 0 0;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  color: $color-text;
-  transition: color $transition-fast;
-}
-
-.eta {
-  color: $color-accent;
+  dd {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
 }
 
 .cardFoot {
-  margin-top: auto;
-  padding-top: 0.35rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+}
+
+.meta {
+  color: $color-text-muted;
   font-size: 0.82rem;
-  color: $color-text-muted;
 }
 
-.boost {
-  color: $color-accent;
-  font-weight: 600;
+.meta.strong {
+  color: $color-text;
+  font-weight: 700;
 }
 
-.muted {
-  color: $color-text-muted;
-  opacity: 0.92;
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
+  padding: 0 1.2rem 1.2rem;
 }
 
-.empty {
-  color: $color-text-muted;
-  padding: 2rem 0;
+.actionBtn {
+  min-height: 3rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--color-border) 88%, transparent);
+  font-size: 0.84rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: transform $transition-fast,
+  border-color $transition-fast,
+  background $transition-fast,
+  box-shadow $transition-fast;
 }
 
-@media (max-width: 520px) {
-  .stats {
+.actionBtn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.actionBtn:disabled {
+  opacity: 0.65;
+  cursor: progress;
+}
+
+.actionBtn.secondary {
+  background: color-mix(in srgb, var(--color-surface) 88%, transparent);
+  color: $color-text;
+}
+
+.actionBtn.primary {
+  border-color: color-mix(in srgb, var(--color-accent) 66%, transparent);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--color-accent-highlight) 18%, var(--color-accent)), var(--color-accent));
+  color: $color-on-accent;
+  box-shadow: 0 12px 26px color-mix(in srgb, var(--color-accent) 18%, transparent);
+}
+
+@media (max-width: 680px) {
+  .filters {
+    border-radius: 24px;
+    padding: 0.85rem;
+  }
+
+  .field {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .actions {
     grid-template-columns: 1fr;
   }
 }

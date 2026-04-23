@@ -1,14 +1,18 @@
 import {browser} from "$app/environment";
 import {roomService} from "$lib/api/roomService";
 import {AUTH_SESSION_TOKEN_KEY} from "$lib/constants/authStorage";
-import {setRooms, updateRoom} from "$lib/stores/roomsStore";
+import {setRooms, upsertRoom} from "$lib/stores/roomsStore";
 import {get} from "svelte/store";
 import {userStore} from "$lib/stores/userStore";
 import {mapRoomDetails, mapRoomListItem} from "$lib/services/roomMappers";
 import {lobbyService} from "$lib/api/lobbyService";
 import {setLobbyItems} from "$lib/stores/lobbyStore";
-import {mapLobbyItemToRoom} from "$lib/services/lobbyMappers";
-import type {LobbyItemDto, RoomDetailsDto} from "$lib/api/dto";
+import type {LobbyItemDto, RoomDetailsDto, RoomListItemDto} from "$lib/api/dto";
+
+async function refreshActiveRooms(): Promise<void> {
+    const rooms = await roomService.getActiveRooms();
+    setRooms(rooms.map(mapRoomListItem));
+}
 
 let lobbyAbortController: AbortController | null = null;
 let roomAbortController: AbortController | null = null;
@@ -107,20 +111,14 @@ function startSseLoop<T>(path: string, setController: (controller: AbortControll
 }
 
 async function refreshLobby(): Promise<void> {
-    const rooms = await roomService.getActiveRooms();
-    setRooms(rooms.map(mapRoomListItem));
-}
-
-async function refreshLobbySse(): Promise<void> {
     const items = await lobbyService.getLobby();
     setLobbyItems(items);
-    setRooms(items.map(mapLobbyItemToRoom));
 }
 
 export async function startRoomsRealtime(): Promise<void> {
     if (!browser) return;
     await refreshLobby();
-    await refreshLobbySse();
+    await refreshActiveRooms();
 
     lobbyAbortController?.abort();
     startSseLoop<LobbyItemDto[]>("/lobby/events", (controller) => {
@@ -128,7 +126,7 @@ export async function startRoomsRealtime(): Promise<void> {
     }, (items) => {
         if (items && Array.isArray(items)) {
             setLobbyItems(items);
-            setRooms(items.map(mapLobbyItemToRoom));
+            void refreshActiveRooms();
         }
     });
 }
@@ -142,7 +140,7 @@ export function stopRoomsRealtime(): void {
 async function refreshRoom(roomId: string): Promise<void> {
     const dto = await roomService.getDetails(roomId);
     const currentUserId = get(userStore).id;
-    updateRoom(roomId, mapRoomDetails(dto, currentUserId));
+    upsertRoom(mapRoomDetails(dto, currentUserId));
 }
 
 export function stopCurrentRoomRealtime(): void {
