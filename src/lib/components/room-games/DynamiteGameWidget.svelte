@@ -49,13 +49,11 @@
 
     function startMatch(): void {
         if (!winnerSlotId || isRunning) {
-            console.log(7576767)
             return;
         }
 
         const winner = slots.find((slot) => slot.id.includes(winnerSlotId));
         if (!winner) {
-            console.log(474356)
             return;
         }
 
@@ -133,7 +131,6 @@
 
     $effect(() => {
         if (startSignal <= 0 || startSignal === lastStartSignal) {
-            console.log(234234)
             return;
         }
 

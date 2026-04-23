@@ -35,7 +35,6 @@
 
     function syncOffset(animate: boolean = false): void {
         if (viewportWidth <= 0) {
-            console.log(3333333333333333)
             return
         };
         const tile = getTileElement(stopIndex);
@@ -53,15 +52,11 @@
 
     function startSpin(): void {
         if (isSpinning || viewportWidth <= 0 || !winnerSlotId) {
-            console.log(isSpinning, viewportWidth, !winnerSlotId)
-            console.log(1111111111111111)
             return;
         }
 
-        console.log(winnerSlotId, slots)
         const winnerIndex = slots.findIndex((slot) => slot.id.includes(winnerSlotId));
         if (winnerIndex === -1) {
-            console.log(2222222222222222)
             return;
         }
 

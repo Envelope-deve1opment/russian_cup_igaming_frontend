@@ -115,7 +115,6 @@
         }
 
         const cost: number | undefined = room.boostCost;
-        console.log(67567567567, room)
         if (cost == null) {
             boostMessage = "Стоимость буста не задана";
             return;
@@ -279,7 +278,6 @@
             </div>
 
             <div class="boostRow">
-                {console.log(room)}
                 <button
                         class="btn primary"
                         disabled={!room.boostEnabled || !currentUserParticipant || !canManageSeats || buyingBoost}

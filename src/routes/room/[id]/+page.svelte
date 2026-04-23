@@ -118,36 +118,27 @@
 
         const logResult = $gameLogStore.find((entry) => entry.roomId === roomId)?.result ?? null;
         if (logResult) {
-            console.log('latestResult from gameLogStore', logResult);
             return logResult;
         }
 
         if (room?.roundResult) {
-            console.log('latestResult from room.roundResult', room.roundResult);
             return room.roundResult;
         }
 
         if (!room) {
-            console.log('latestResult: no room');
             return null;
         }
 
         const winnerID = resolveWinnerID(room.winnerParticipantId, room.seats);
         if (!winnerID) {
-            console.log('latestResult: no winnerID', {
-                winnerParticipantId: room.winnerParticipantId,
-                participants: room.seats.map(p => ({ id: p.id, name: p.username }))
-            });
             return null;
         }
 
-        console.log(room.seats)
         const result = {
             winnerID,
             prizeAmount: room.entryFee * room.participantsLimit,
             participants: room.seats
         };
-        console.log('latestResult created from room data', result);
         return result;
     });
 
@@ -165,15 +156,6 @@
 
     let shouldShowAnimation = $derived.by(() => {
         const result = !!room && !!latestResult && room.status === RoomStatus.FINISHED && latestOutcomeKey !== animationCompletedKey;
-        console.log('shouldShowAnimation', {
-            hasRoom: !!room,
-            hasLatestResult: !!latestResult,
-            latestOutcomeKey,
-            animationCompletedKey,
-            result,
-            roomGameId: room?.gameType,
-            latestResultWinnerID: latestResult?.winnerID
-        });
         return result;
     });
 
@@ -208,7 +190,6 @@
 {:else if !room}
     <p class="state">Комната не найдена или ещё загружается…</p>
 {:else if latestResult}
-    {console.log(4569999, latestResult)}
     <RoomGameStage
             bind:this={stageRef}
             participants={latestResult.participants}

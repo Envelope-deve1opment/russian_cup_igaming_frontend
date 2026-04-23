@@ -21,12 +21,6 @@
 
     const orderedParticipants = $derived.by<RoomParticipantDto[]>(() => {
         const parts = participants.length > 0 ? participants : room.seats;
-        console.log('RoomGameStage orderedParticipants', {
-            participantsLength: participants.length,
-            roomParticipantsLength: room.seats.length,
-            partsLength: parts.length,
-            parts: parts.map(p => ({id: p.id, name: p.username, seatNum: p.seatNum}))
-        });
         return [...parts].sort((left, right) => (left.seatNum ?? Number.MAX_SAFE_INTEGER) - (right.seatNum ?? Number.MAX_SAFE_INTEGER));
     });
 
@@ -65,7 +59,6 @@
             return;
         }
 
-        console.log(66767, widgetRef?.start);
         widgetRef?.start();
     }
 </script>

@@ -37,11 +37,9 @@
 
     function startRace(): void {
         if (!winnerSlotId || isRunning) {
-            console.log(778777)
             return;
         }
 
-        console.log(2222)
         clearFinishTimeout();
         completedWinnerId = null;
         isRunning = true;
@@ -61,7 +59,6 @@
 
     $effect(() => {
         if (startSignal <= 0 || startSignal === lastStartSignal) {
-            console.log(1223452345235)
             return;
         }
 
