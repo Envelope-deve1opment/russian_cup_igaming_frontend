@@ -1,11 +1,11 @@
 <script lang="ts">
     import {onDestroy, tick} from "svelte";
     import {
+        type BattleFaction,
+        type BattleScenario,
         generateBattleScenario,
         getBattleFactions,
-        getBattleViewState,
-        type BattleFaction,
-        type BattleScenario
+        getBattleViewState
     } from "$lib/modules/battle";
 
     type ShotState = {
@@ -189,13 +189,13 @@
             <div class="winnerGrid">
                 {#each factions as faction (faction.id)}
                     <button
-                        aria-pressed={selectedWinner === faction.place}
-                        class:selected={selectedWinner === faction.place}
-                        class="winnerChip"
-                        disabled={isRunning}
-                        onclick={() => selectWinner(faction.place)}
-                        style={`--faction-accent:${faction.accent}; --faction-soft:${faction.accentSoft};`}
-                        type="button"
+                            aria-pressed={selectedWinner === faction.place}
+                            class:selected={selectedWinner === faction.place}
+                            class="winnerChip"
+                            disabled={isRunning}
+                            onclick={() => selectWinner(faction.place)}
+                            style={`--faction-accent:${faction.accent}; --faction-soft:${faction.accentSoft};`}
+                            type="button"
                     >
                         <span class="chipPlace">{faction.place}</span>
                         <strong>{faction.codename}</strong>
@@ -226,7 +226,8 @@
                         {currentEvent.label}
                         {factions.find((faction) => faction.id === currentEvent.targetId)?.title}
                     </strong>
-                    <p>Потери: {currentEvent.kills} · {currentEvent.eliminated ? "отряд уничтожен" : "бой продолжается"}</p>
+                    <p>Потери: {currentEvent.kills}
+                        · {currentEvent.eliminated ? "отряд уничтожен" : "бой продолжается"}</p>
                 {:else}
                     <strong>Ожидание запуска</strong>
                     <p>После старта здесь будет появляться последний удар.</p>
@@ -256,8 +257,8 @@
                 {#if shotState}
                     {#key shotState.key}
                         <div
-                            class="shot"
-                            style={`--shot-x:${shotState.x}px; --shot-y:${shotState.y}px; --shot-length:${shotState.length}px; --shot-angle:${shotState.angle}deg; --shot-accent:${shotState.accent}; --shot-target:${shotState.targetAccent};`}
+                                class="shot"
+                                style={`--shot-x:${shotState.x}px; --shot-y:${shotState.y}px; --shot-length:${shotState.length}px; --shot-angle:${shotState.angle}deg; --shot-accent:${shotState.accent}; --shot-target:${shotState.targetAccent};`}
                         >
                             <span class="beam"></span>
                             <span class="impact"></span>
@@ -270,12 +271,12 @@
                     {@const activeTarget = currentEvent?.targetId === faction.id}
                     {@const eliminated = counts[faction.id] === 0}
                     <article
-                        class:attacking={activeAttack}
-                        class:eliminated={eliminated}
-                        class:targeted={activeTarget}
-                        class="factionCard"
-                        data-faction-id={faction.id}
-                        style={`--faction-accent:${faction.accent}; --faction-soft:${faction.accentSoft};`}
+                            class:attacking={activeAttack}
+                            class:eliminated={eliminated}
+                            class:targeted={activeTarget}
+                            class="factionCard"
+                            data-faction-id={faction.id}
+                            style={`--faction-accent:${faction.accent}; --faction-soft:${faction.accentSoft};`}
                     >
                         <div class="factionTop">
                             <div>

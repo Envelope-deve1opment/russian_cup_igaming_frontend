@@ -18,11 +18,10 @@
   font-family: $font-sans;
   line-height: 1.55;
   letter-spacing: 0.005em;
-  background:
-    radial-gradient(circle at 18% 18%, color-mix(in srgb, var(--color-gradient-hero) 95%, transparent), transparent 32%),
-    radial-gradient(circle at 82% 0%, color-mix(in srgb, var(--color-bot) 12%, transparent), transparent 26%),
-    radial-gradient(circle at 50% 120%, color-mix(in srgb, var(--color-accent) 8%, transparent), transparent 38%),
-    linear-gradient(165deg, $color-bg-deep 0%, $color-bg 46%, $color-bg-end 100%);
+  background: radial-gradient(circle at 18% 18%, color-mix(in srgb, var(--color-gradient-hero) 95%, transparent), transparent 32%),
+  radial-gradient(circle at 82% 0%, color-mix(in srgb, var(--color-bot) 12%, transparent), transparent 26%),
+  radial-gradient(circle at 50% 120%, color-mix(in srgb, var(--color-accent) 8%, transparent), transparent 38%),
+  linear-gradient(165deg, $color-bg-deep 0%, $color-bg 46%, $color-bg-end 100%);
   background-attachment: fixed;
   color: $color-text;
   -webkit-font-smoothing: antialiased;
@@ -43,17 +42,15 @@
 
 :global(body)::before {
   opacity: 0.34;
-  background:
-    linear-gradient(transparent 0 32px, color-mix(in srgb, var(--color-border) 35%, transparent) 32px 33px),
-    linear-gradient(90deg, transparent 0 32px, color-mix(in srgb, var(--color-border) 35%, transparent) 32px 33px);
+  background: linear-gradient(transparent 0 32px, color-mix(in srgb, var(--color-border) 35%, transparent) 32px 33px),
+  linear-gradient(90deg, transparent 0 32px, color-mix(in srgb, var(--color-border) 35%, transparent) 32px 33px);
   background-size: 33px 33px;
   mask-image: radial-gradient(circle at center, black 18%, transparent 78%);
 }
 
 :global(body)::after {
-  background:
-    radial-gradient(circle at center, transparent 54%, rgba(0, 0, 0, 0.35) 100%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 24%, transparent 78%, rgba(0, 0, 0, 0.14));
+  background: radial-gradient(circle at center, transparent 54%, rgba(0, 0, 0, 0.35) 100%),
+  linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 24%, transparent 78%, rgba(0, 0, 0, 0.14));
 }
 
 :global(a) {

@@ -4,8 +4,8 @@
         buildFlatRouletteStrip,
         calculateNextStopIndex,
         FLAT_ROULETTE_INITIAL_INDEX,
-        getFlatRouletteItems,
-        type FlatRouletteItem
+        type FlatRouletteItem,
+        getFlatRouletteItems
     } from "$lib/modules/roulette";
 
     const items: FlatRouletteItem[] = getFlatRouletteItems();
@@ -118,8 +118,8 @@
             </div>
 
             <div bind:this={viewportElement} class="stripViewport">
-                <div class="centerGlow" aria-hidden="true"></div>
-                <div class="marker" aria-hidden="true"></div>
+                <div aria-hidden="true" class="centerGlow"></div>
+                <div aria-hidden="true" class="marker"></div>
                 <div bind:this={trackElement} class="stripTrack" ontransitionend={finishSpin} style={trackStyle}>
                     {#each stripItems as item, index (`${item.value}-${index}`)}
                         <div class={`stripTile ${colorClass(item.color)}`} data-flat-index={index}>
@@ -162,12 +162,12 @@
             <div class="numberGrid">
                 {#each items as item (item.value)}
                     <button
-                        aria-pressed={selectedWinner === item.value}
-                        class:selected={selectedWinner === item.value}
-                        class={`numberBtn ${colorClass(item.color)}`}
-                        disabled={isSpinning}
-                        onclick={() => (selectedWinner = item.value)}
-                        type="button"
+                            aria-pressed={selectedWinner === item.value}
+                            class:selected={selectedWinner === item.value}
+                            class={`numberBtn ${colorClass(item.color)}`}
+                            disabled={isSpinning}
+                            onclick={() => (selectedWinner = item.value)}
+                            type="button"
                     >
                         <span>Место</span>
                         <strong>{item.value}</strong>

@@ -1,9 +1,9 @@
 <script lang="ts">
     import {ROOM_GAME_LABEL} from "$lib/constants";
-    import type {Participant, Room} from "$lib/types";
     import {getRoomGameAccent} from "./room-games/palette";
     import RoomGameWidget from "./room-games/RoomGameWidget.svelte";
     import type {RoomGameSlot} from "./room-games/types";
+    import type {RoomDetailsDto, RoomParticipantDto} from "$lib/api/dto";
 
     let {
         room,
@@ -11,45 +11,52 @@
         winnerID,
         onComplete
     }: {
-        room: Room;
-        participants?: Participant[];
+        room: RoomDetailsDto;
+        participants?: RoomParticipantDto[];
         winnerID: string;
         onComplete?: () => void;
     } = $props();
 
     let widgetRef: { start: () => void } | null = $state(null);
 
-    const orderedParticipants = $derived.by<Participant[]>(() =>
-        [...(participants.length > 0 ? participants : room.participants)]
-            .sort((left, right) => (left.seatNum ?? Number.MAX_SAFE_INTEGER) - (right.seatNum ?? Number.MAX_SAFE_INTEGER))
-    );
+    const orderedParticipants = $derived.by<RoomParticipantDto[]>(() => {
+        const parts = participants.length > 0 ? participants : room.seats;
+        console.log('RoomGameStage orderedParticipants', {
+            participantsLength: participants.length,
+            roomParticipantsLength: room.seats.length,
+            partsLength: parts.length,
+            parts: parts.map(p => ({id: p.id, name: p.username, seatNum: p.seatNum}))
+        });
+        return [...parts].sort((left, right) => (left.seatNum ?? Number.MAX_SAFE_INTEGER) - (right.seatNum ?? Number.MAX_SAFE_INTEGER));
+    });
 
-    const slots = $derived.by<RoomGameSlot[]>(() =>
-        orderedParticipants.map((participant, index) => {
-            const accent = getRoomGameAccent(index);
-            const place = participant.seatNum != null ? participant.seatNum + 1 : index + 1;
+    const slots = $derived.by<RoomGameSlot[]>(() => {
+            return orderedParticipants.map((participant, index) => {
+                const accent = getRoomGameAccent(index);
+                const place = participant.seatNum != null ? participant.seatNum + 1 : index + 1;
 
-            return {
-                id: `${participant.id}-${participant.participantId ?? index}`,
-                label: participant.name,
-                subtitle: `Место ${place}`,
-                place,
-                weight: Math.max(0.25, participant.weight ?? 1),
-                accent: accent.accent,
-                accentSoft: accent.accentSoft
-            };
-        })
+                return {
+                    id: `${participant.id}-${participant.userId ?? index}`,
+                    label: participant.username,
+                    subtitle: `Место ${place}`,
+                    place,
+                    weight: Math.max(0.25, participant.weightSnapshot ?? 1),
+                    accent: accent.accent,
+                    accentSoft: accent.accentSoft
+                };
+            })
+        }
     );
 
     const winnerSlotId = $derived.by(() => {
-        const index = orderedParticipants.findIndex((entry) => entry.id === winnerID || entry.participantId === winnerID);
+        const index = orderedParticipants.findIndex((entry) => entry.id === winnerID);
         if (index === -1) return null;
         const participant = orderedParticipants[index];
-        return `${participant.id}-${participant.participantId ?? index}`;
+        return participant.id;
     });
 
     const winnerName = $derived.by(() => {
-        return orderedParticipants.find((participant) => participant.id === winnerID || participant.participantId === winnerID)?.name ?? winnerID;
+        return orderedParticipants.find((participant) => participant.id === winnerID || participant.id === winnerID)?.username ?? "Bot";
     });
 
     export function start(): void {
@@ -58,6 +65,7 @@
             return;
         }
 
+        console.log(66767, widgetRef?.start);
         widgetRef?.start();
     }
 </script>
@@ -65,9 +73,9 @@
 <section aria-labelledby="room-game-title" class="roomGameStage">
     <div class="stageHero">
         <div>
-            <p class="eyebrow">{ROOM_GAME_LABEL[room.gameId]}</p>
+            <p class="eyebrow">{ROOM_GAME_LABEL[room.gameType] || 'Неизвестная игра'}</p>
             <h1 id="room-game-title">Розыгрыш комнаты</h1>
-            <p class="subtitle">Исход получен от сервера. Запускаем сцену на реальных участниках комнаты.</p>
+            <p class="subtitle">Исход получен от сервера. Запускаем сцену на реальных участниках комнаты</p>
         </div>
         <div class="winnerBox">
             <span>Победитель</span>
@@ -76,15 +84,15 @@
     </div>
 
     <div class="stagePanel">
-        <RoomGameWidget bind:this={widgetRef} gameId={room.gameId} {slots} {winnerSlotId} {onComplete}/>
+        <RoomGameWidget bind:this={widgetRef} gameId={room.gameType} {onComplete} {slots} {winnerSlotId}/>
     </div>
 
     <div class="participants">
         {#each slots as slot (slot.id)}
             <div
-                class:activeWinner={slot.id === winnerSlotId}
-                class="participantCard"
-                style={`--slot-accent:${slot.accent}; --slot-soft:${slot.accentSoft};`}
+                    class:activeWinner={slot.id === winnerSlotId}
+                    class="participantCard"
+                    style={`--slot-accent:${slot.accent}; --slot-soft:${slot.accentSoft};`}
             >
                 <span>{slot.subtitle}</span>
                 <strong>{slot.label}</strong>
@@ -107,9 +115,8 @@
   .participantCard {
     border-radius: 30px;
     border: 1px solid color-mix(in srgb, var(--color-border) 86%, transparent);
-    background:
-      radial-gradient(circle at top right, color-mix(in srgb, var(--color-accent) 10%, transparent), transparent 38%),
-      linear-gradient(180deg, color-mix(in srgb, var(--color-surface-elevated) 94%, transparent), color-mix(in srgb, var(--color-surface) 90%, transparent));
+    background: radial-gradient(circle at top right, color-mix(in srgb, var(--color-accent) 10%, transparent), transparent 38%),
+    linear-gradient(180deg, color-mix(in srgb, var(--color-surface-elevated) 94%, transparent), color-mix(in srgb, var(--color-surface) 90%, transparent));
     box-shadow: 0 22px 46px rgba(0, 0, 0, 0.18);
   }
 
@@ -175,9 +182,8 @@
 
   .participantCard {
     padding: 0.9rem 1rem;
-    background:
-      radial-gradient(circle at top right, color-mix(in srgb, var(--slot-accent) 14%, transparent), transparent 32%),
-      linear-gradient(180deg, color-mix(in srgb, var(--slot-soft) 44%, rgba(16, 18, 25, 0.84)), rgba(16, 18, 25, 0.9));
+    background: radial-gradient(circle at top right, color-mix(in srgb, var(--slot-accent) 14%, transparent), transparent 32%),
+    linear-gradient(180deg, color-mix(in srgb, var(--slot-soft) 44%, rgba(16, 18, 25, 0.84)), rgba(16, 18, 25, 0.9));
   }
 
   .participantCard.activeWinner {

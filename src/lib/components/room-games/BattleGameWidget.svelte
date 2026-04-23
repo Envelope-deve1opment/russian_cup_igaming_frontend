@@ -95,11 +95,11 @@
         {@const activeAttack = currentEvent?.attackerId === slot.id}
         {@const activeTarget = currentEvent?.targetId === slot.id}
         <article
-            class:attacking={activeAttack}
-            class:targeted={activeTarget}
-            class:winner={completedWinnerId === slot.id}
-            class="card"
-            style={`--slot-accent:${slot.accent}; --slot-soft:${slot.accentSoft};`}
+                class:attacking={activeAttack}
+                class:targeted={activeTarget}
+                class:winner={completedWinnerId === slot.id}
+                class="card"
+                style={`--slot-accent:${slot.accent}; --slot-soft:${slot.accentSoft};`}
         >
             <div class="cardTop">
                 <span>Место {slot.place}</span>
@@ -126,9 +126,8 @@
     padding: 1rem;
     border-radius: 24px;
     border: 1px solid color-mix(in srgb, var(--slot-accent) 32%, transparent);
-    background:
-      radial-gradient(circle at top right, color-mix(in srgb, var(--slot-accent) 14%, transparent), transparent 36%),
-      linear-gradient(180deg, color-mix(in srgb, var(--slot-soft) 40%, rgba(16, 18, 25, 0.84)), rgba(16, 18, 25, 0.9));
+    background: radial-gradient(circle at top right, color-mix(in srgb, var(--slot-accent) 14%, transparent), transparent 36%),
+    linear-gradient(180deg, color-mix(in srgb, var(--slot-soft) 40%, rgba(16, 18, 25, 0.84)), rgba(16, 18, 25, 0.9));
     transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease;
   }
 

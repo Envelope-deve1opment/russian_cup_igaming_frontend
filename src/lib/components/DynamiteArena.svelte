@@ -1,12 +1,12 @@
 <script lang="ts">
     import {onDestroy, tick} from "svelte";
     import {
-        generateDynamiteScenario,
-        getDynamiteFactions,
-        getDynamiteViewState,
         type ActiveBombState,
         type DynamiteFaction,
         type DynamiteScenario,
+        generateDynamiteScenario,
+        getDynamiteFactions,
+        getDynamiteViewState,
         type RecentExplosionState
     } from "$lib/modules/dynamite";
 
@@ -79,7 +79,7 @@
         return Array.from({length: scenario.initialSlots}, (_, index) => index < current ? 1 : 0);
     }
 
-    function factionCenter(factionId: string): {x: number; y: number} | null {
+    function factionCenter(factionId: string): { x: number; y: number } | null {
         const arena = arenaElement;
         if (!arena) return null;
         const card = arena.querySelector<HTMLElement>(`[data-faction-id="${factionId}"]`);
@@ -178,13 +178,13 @@
             <div class="winnerGrid">
                 {#each factions as faction (faction.id)}
                     <button
-                        aria-pressed={selectedWinner === faction.place}
-                        class:selected={selectedWinner === faction.place}
-                        class="winnerChip"
-                        disabled={isRunning}
-                        onclick={() => selectWinner(faction.place)}
-                        style={`--faction-accent:${faction.accent}; --faction-soft:${faction.accentSoft};`}
-                        type="button"
+                            aria-pressed={selectedWinner === faction.place}
+                            class:selected={selectedWinner === faction.place}
+                            class="winnerChip"
+                            disabled={isRunning}
+                            onclick={() => selectWinner(faction.place)}
+                            style={`--faction-accent:${faction.accent}; --faction-soft:${faction.accentSoft};`}
+                            type="button"
                     >
                         <span class="chipPlace">{faction.place}</span>
                         <strong>{faction.codename}</strong>
@@ -213,7 +213,8 @@
                     <strong>{activeBombs.length} активных динамитов в воздухе и на таймерах</strong>
                     <p>Ближайший таймер: {countdownLabel(Math.min(...activeBombs.map((bomb) => bomb.countdownMs)))}</p>
                 {:else if viewState.lastExplosion}
-                    <strong>Последний взрыв у места {factions.find((faction) => faction.id === viewState.lastExplosion?.targetId)?.place}</strong>
+                    <strong>Последний взрыв у
+                        места {factions.find((faction) => faction.id === viewState.lastExplosion?.targetId)?.place}</strong>
                     <p>Осталось слотов: {viewState.lastExplosion.remainingSlots}</p>
                 {:else}
                     <strong>Ожидание запуска</strong>
@@ -243,9 +244,9 @@
             <div bind:this={arenaElement} class="battlefield">
                 {#each activeBombs as bomb (bomb.id)}
                     <div
-                        class:armed={bomb.mode === "armed"}
-                        class="bombSprite"
-                        style={`${bombStyle(bomb)} --bomb-accent:${bomb.accent}; --bomb-soft:${bomb.accentSoft};`}
+                            class:armed={bomb.mode === "armed"}
+                            class="bombSprite"
+                            style={`${bombStyle(bomb)} --bomb-accent:${bomb.accent}; --bomb-soft:${bomb.accentSoft};`}
                     >
                         <div class="bombBody">
                             <span class="bombFuse"></span>
@@ -266,11 +267,11 @@
                     {@const eliminated = (counts[faction.id] ?? 0) === 0}
                     {@const hasBomb = activeBombs.some((bomb) => bomb.holderId === faction.id)}
                     <article
-                        class:eliminated
-                        class:danger={hasBomb}
-                        class="factionCard"
-                        data-faction-id={faction.id}
-                        style={`--faction-accent:${faction.accent}; --faction-soft:${faction.accentSoft};`}
+                            class:eliminated
+                            class:danger={hasBomb}
+                            class="factionCard"
+                            data-faction-id={faction.id}
+                            style={`--faction-accent:${faction.accent}; --faction-soft:${faction.accentSoft};`}
                     >
                         <div class="factionTop">
                             <div>

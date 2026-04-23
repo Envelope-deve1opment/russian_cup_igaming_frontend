@@ -14,58 +14,22 @@
 
 
 <div class="lobbyPage">
-    <section class="heroPanel">
-        <div class="heroCopy">
-            <p class="eyebrow">Realtime lobby</p>
-            <h1 class="heroTitle">Живые комнаты для быстрого входа и точного контроля темпа.</h1>
-            <p class="heroText">
-                Выбирайте стол вручную или отдавайте подбор системе. Визуальный розыгрыш теперь вшит прямо в комнату и стартует по серверному исходу.
-            </p>
-            <div class="heroActions">
-                <a class="cta primary" href="#rooms">Открытые комнаты</a>
-                <a class="cta secondary" href="/history">История раундов</a>
-            </div>
+    <section class="heroCompact">
+        <div class="heroLeft">
+            <h1 class="heroTitle">Лобби <span class="heroAccent">{joinableRooms}</span></h1>
+            <p class="heroSubtitle">{waitingPlayers} в очереди · средний вход {averageEntry.toLocaleString("ru-RU")}</p>
         </div>
-
-        <div class="heroMetrics">
-            <div class="metricCard">
-                <span class="metricLabel">Шаблоны</span>
-                <strong class="metricValue">{templatesCount}</strong>
-            </div>
-            <div class="metricCard">
-                <span class="metricLabel">Открытые столы</span>
-                <strong class="metricValue">{joinableRooms}</strong>
-            </div>
-            <div class="metricCard">
-                <span class="metricLabel">В очереди</span>
-                <strong class="metricValue">{waitingPlayers}</strong>
-            </div>
-            <div class="metricCard">
-                <span class="metricLabel">Средний вход</span>
-                <strong class="metricValue">{averageEntry.toLocaleString("ru-RU")}</strong>
-            </div>
+        <div class="heroActions">
+            <a class="heroLink" href="/history">
+                <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="16">
+                    <path d="M3 3v18h18"/>
+                    <path d="m19 9-5 5-4-4-3 3"/>
+                </svg>
+                История
+            </a>
         </div>
     </section>
 
-    <section aria-label="Режимы" class="featureStrip">
-        <article class="featureCard">
-            <span class="featureTag">fast</span>
-            <h2>Быстрый матч</h2>
-            <p>Система находит готовую комнату под выбранный шаблон.</p>
-        </article>
-        <article class="featureCard">
-            <span class="featureTag">manual</span>
-            <h2>Ручной вход</h2>
-            <p>Открываете стол и сами выбираете место в комнате.</p>
-        </article>
-        <article class="featureCard">
-            <span class="featureTag">flow</span>
-            <h2>Сценарии розыгрыша</h2>
-            <p>Колесо, гонки, рулетка и другие сцены запускаются внутри комнаты после countdown.</p>
-        </article>
-    </section>
-
-    <div id="rooms"></div>
     <RoomList/>
 </div>
 

@@ -15,7 +15,7 @@
         prizeAmount: number;
     } = $props();
 
-    let winnerName: string = $derived(participants.find((p) => p.id === winnerID)?.name ?? winnerID);
+    let winnerName: string = $derived(participants.find((p) => p.id === winnerID)?.username ?? "bot");
 
     function pickSimilarRoom(): string | null {
         const list: Room[] = $roomsStore.filter((r) => r.id !== roomId);
@@ -48,7 +48,7 @@
         return riskier.reduce((a, b) => (a.entryPrice >= b.entryPrice ? a : b)).id;
     }
 
-    function goSimilar(): void {
+    function goAgain(): void {
         const ID: string | null = pickSimilarRoom();
 
         if (ID) {
@@ -76,8 +76,8 @@
     <p class="prize">Приз: {prizeAmount.toLocaleString("ru-RU")} бонусов</p>
 
     <div class="cta">
-        <button class="btn primary" onclick={() => goto("/lobby")} type="button">Играть снова</button>
-        <button class="btn" onclick={goSimilar} type="button">Похожая комната</button>
+        <button class="btn primary" onclick={() => goto("/lobby")} type="button">В лобби</button>
+        <button class="btn" onclick={goAgain} type="button">Играть снова</button>
         <button class="btn danger" onclick={goRisk} type="button">В лобби</button>
     </div>
 </section>

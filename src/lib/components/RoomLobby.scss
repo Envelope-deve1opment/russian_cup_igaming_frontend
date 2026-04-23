@@ -11,9 +11,8 @@
 .panel {
   border-radius: 30px;
   border: 1px solid color-mix(in srgb, var(--color-border) 88%, transparent);
-  background:
-    radial-gradient(circle at top right, color-mix(in srgb, var(--color-accent) 10%, transparent), transparent 38%),
-    linear-gradient(180deg, color-mix(in srgb, var(--color-surface-elevated) 94%, transparent), color-mix(in srgb, var(--color-surface) 90%, transparent));
+  background: radial-gradient(circle at top right, color-mix(in srgb, var(--color-accent) 10%, transparent), transparent 38%),
+  linear-gradient(180deg, color-mix(in srgb, var(--color-surface-elevated) 94%, transparent), color-mix(in srgb, var(--color-surface) 90%, transparent));
   box-shadow: $shadow-card;
 }
 

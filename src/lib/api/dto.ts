@@ -30,6 +30,7 @@ export type RoomTemplateDto = {
     active?: boolean;
     boostEnabled?: boolean;
     boostCost?: number;
+    boostMultiplier?: number;
     countdownSeconds?: number;
     createdAt?: string;
     updatedAt?: string;
@@ -53,9 +54,9 @@ export type RoomListItemDto = {
     templateId: string;
     templateName: string;
     entryFee: number;
-    gameType: RoomGameId;
     participantsLimit: number;
     occupiedSeatsCount: number;
+    gameType: RoomGameId
     status: string;
     countdownStartedAt?: string;
     countdownSeconds?: number;
@@ -68,6 +69,7 @@ export type RoomParticipantDto = {
     roomId: string;
     userId: string;
     bot: boolean;
+    username: string;
     weightSnapshot?: number;
     status?: string;
     seatNum: number;
@@ -84,10 +86,12 @@ export type RoomDetailsDto = {
     occupiedSeatsCount: number;
     status: string;
     gameType: RoomGameId;
-    countdownStartedAt?: string;
-    countdownSeconds?: number;
-    boostEnabled?: boolean;
-    boostCost?: number;
+    createdAt: string;
+    roundStartedAt: string;
+    countdownStartedAt: string;
+    timerEndsAt: number;
+    seed: number;
+    countdownSeconds: number;
     winnerParticipantId?: string;
     resultPayloadJson?: Record<string, unknown>;
     seats: RoomParticipantDto[];
@@ -99,6 +103,8 @@ export type RoomDto = {
     participantsLimit: number;
     activeParticipants: number;
     status: string;
+    commission?: number;
+    gameType?: RoomGameId;
 };
 
 export type BoostStateDto = {

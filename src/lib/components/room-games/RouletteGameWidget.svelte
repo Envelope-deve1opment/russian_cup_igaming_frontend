@@ -34,7 +34,10 @@
     }
 
     function syncOffset(animate: boolean = false): void {
-        if (viewportWidth <= 0) return;
+        if (viewportWidth <= 0) {
+            console.log(3333333333333333)
+            return
+        };
         const tile = getTileElement(stopIndex);
         if (!tile) return;
 
@@ -50,11 +53,15 @@
 
     function startSpin(): void {
         if (isSpinning || viewportWidth <= 0 || !winnerSlotId) {
+            console.log(isSpinning, viewportWidth, !winnerSlotId)
+            console.log(1111111111111111)
             return;
         }
 
-        const winnerIndex = slots.findIndex((slot) => slot.id === winnerSlotId);
+        console.log(winnerSlotId, slots)
+        const winnerIndex = slots.findIndex((slot) => slot.id.includes(winnerSlotId));
         if (winnerIndex === -1) {
+            console.log(2222222222222222)
             return;
         }
 
@@ -109,11 +116,12 @@
 
 <div class="widget roulette">
     <div bind:this={viewportElement} class="viewport">
-        <div class="centerGlow" aria-hidden="true"></div>
-        <div class="marker" aria-hidden="true"></div>
+        <div aria-hidden="true" class="centerGlow"></div>
+        <div aria-hidden="true" class="marker"></div>
         <div bind:this={trackElement} class="track" ontransitionend={finishSpin} style={trackStyle}>
             {#each stripItems as slot, index (`${slot.id}-${index}`)}
-                <div class="tile" data-flat-index={index} style={`--slot-accent:${slot.accent}; --slot-soft:${slot.accentSoft};`}>
+                <div class="tile" data-flat-index={index}
+                     style={`--slot-accent:${slot.accent}; --slot-soft:${slot.accentSoft};`}>
                     <small>Место {slot.place}</small>
                     <strong>{slot.label}</strong>
                 </div>
@@ -124,7 +132,7 @@
 
 <style lang="scss">
   .widget.roulette {
-    min-height: 280px;
+    min-height: 320px;
     display: grid;
     align-content: center;
   }
@@ -132,7 +140,7 @@
   .viewport {
     position: relative;
     overflow: hidden;
-    min-height: 220px;
+    min-height: 180px;
     border-radius: 28px;
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(0, 0, 0, 0.08));
     border: 1px solid rgba(255, 255, 255, 0.06);
@@ -178,9 +186,8 @@
     padding: 1rem 0.9rem;
     border-radius: 26px;
     border: 1px solid color-mix(in srgb, var(--slot-accent) 35%, transparent);
-    background:
-      radial-gradient(circle at top right, color-mix(in srgb, var(--slot-accent) 18%, transparent), transparent 35%),
-      linear-gradient(180deg, color-mix(in srgb, var(--slot-soft) 55%, rgba(16, 18, 25, 0.82)), rgba(16, 18, 25, 0.9));
+    background: radial-gradient(circle at top right, color-mix(in srgb, var(--slot-accent) 18%, transparent), transparent 35%),
+    linear-gradient(180deg, color-mix(in srgb, var(--slot-soft) 55%, rgba(16, 18, 25, 0.82)), rgba(16, 18, 25, 0.9));
     display: grid;
     align-content: end;
     gap: 0.35rem;

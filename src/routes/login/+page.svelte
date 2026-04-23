@@ -1,6 +1,6 @@
 <script lang="ts">
     import {goto} from "$app/navigation";
-    import {loginAndStore} from "$lib/services/authApi";
+    import {loginAndStore} from "$lib/api/authApi";
     import {authStore} from "$lib/stores/authStore";
 
     let token = $state("");

@@ -1,4 +1,4 @@
-import type {RoomStatus} from "$lib/constants/roomStatus";
+import type {RoomStatusType} from "$lib/constants/roomStatusType";
 import type {RoomGameId} from "$lib/constants/roomGame";
 
 // ПРЕДВАРИТЕЛЬНЫЕ ТИПЫ, ВРЕМЕННЫЕ ЗАГЛУШКИ (РЕАЛЬНЫХ DTO ЕЩЁ НЕТ)
@@ -19,6 +19,7 @@ export type Room = {
     gameId: RoomGameId;
     name: string;
     entryPrice: number;
+    commission?: number;
     maxSeats: number;
     prizeFund: number;
     boostEnabled: boolean;
@@ -26,7 +27,7 @@ export type Room = {
     seatsTaken: number;
     participants: Participant[];
     seatDecorations: Participant[];
-    status: RoomStatus;
+    status: RoomStatusType;
     timerEndsAt?: number;
     winnerParticipantId?: string;
     roundResult?: RoundResult;

@@ -4,9 +4,9 @@
     import {onDestroy, onMount} from "svelte";
     import favicon from "$lib/assets/favicon.svg";
     import ThemeSwitcher from "$lib/components/ThemeSwitcher.svelte";
-    import {clearAuth, restoreSession} from "$lib/services/authApi";
-    import {startRoomsRealtime, stopRoomsRealtime} from "$lib/services/roomsRealtime";
-    import {startBalanceRefresh, stopBalanceRefresh} from "$lib/services/balanceService";
+    import {clearAuth, restoreSession} from "$lib/api/authApi";
+    import {startRoomsRealtime, stopRoomsRealtime} from "$lib/api/roomsRealtime";
+    import {startBalanceRefresh, stopBalanceRefresh} from "$lib/api/balanceService";
     import {authStore} from "$lib/stores/authStore";
     import {THEME_STORAGE_KEY, themeStore} from "$lib/stores/themeStore";
     import {userStore} from "$lib/stores/userStore";
@@ -107,19 +107,45 @@
                     {#if $authStore.status === "loading"}
                         <span class="userMeta">...</span>
                     {:else if $authStore.status === "authenticated"}
-                        <span class="userMeta" title={$userStore.name}>{$userStore.name}</span>
-                        <span class="balancePill">
-                            <span class="balanceLabel">банк</span>
-                            <span class="userBalance">{$userStore.bonusBalance.toLocaleString("ru-RU")}</span>
-                        </span>
-                        <span class="balancePill">
-                            <span class="balanceLabel">зарезервировано</span>
-                            <span class="userBalance">{$userStore.reservedAmount.toLocaleString("ru-RU")}</span>
-                        </span>
-                        <button class="logout" onclick={() => clearAuth()} type="button">Выйти</button>
+                        <div class="balanceGroup">
+                            <span class="balanceItem">
+                                <svg class="balanceIcon" fill="none" height="14" stroke="currentColor" stroke-width="2"
+                                     viewBox="0 0 24 24" width="14">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="m8 12 3 3 5-6"/>
+                                </svg>
+                                <span class="userBalance">{$userStore.bonusBalance.toLocaleString("ru-RU")}</span>
+                            </span>
+                            {#if $userStore.reservedAmount > 0}
+                                <span class="balanceDivider"></span>
+                                <span class="balanceItem muted" title="Зарезервировано">
+                                    <svg class="balanceIcon" fill="none" height="14" stroke="currentColor"
+                                         stroke-width="2" viewBox="0 0 24 24" width="14">
+                                        <rect height="14" rx="2" width="20" x="2" y="5"/>
+                                        <path d="M2 10h20"/>
+                                    </svg>
+                                    <span class="userBalance">{$userStore.reservedAmount.toLocaleString("ru-RU")}</span>
+                                </span>
+                            {/if}
+                        </div>
+                        <button class="logout" onclick={() => clearAuth()} type="button" title="Выйти">
+                            <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                                 width="16">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                                <polyline points="16 17 21 12 16 7"/>
+                                <line x1="21" x2="9" y1="12" y2="12"/>
+                            </svg>
+                        </button>
                     {:else}
-                        <span class="userMeta">{$userStore.name}</span>
-                        <a class="loginLink" data-sveltekit-preload-data="hover" href="/login">Войти</a>
+                        <a class="loginLink" data-sveltekit-preload-data="hover" href="/login">
+                            <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                                 width="16">
+                                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                                <polyline points="10,17 15,12 10,7"/>
+                                <line x1="15" x2="3" y1="12" y2="12"/>
+                            </svg>
+                            Войти
+                        </a>
                     {/if}
                 </div>
             </div>

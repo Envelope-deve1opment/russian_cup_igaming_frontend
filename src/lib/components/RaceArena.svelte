@@ -98,10 +98,10 @@
     <div class="raceHero">
         <div class="heroCopy">
             <p class="eyebrow">Детерминированные гонки</p>
-            <h1>Выбираете победителя, а трасса всё равно живёт своей жизнью.</h1>
+            <h1>Выбираете победителя, а трасса всё равно живёт своей жизнью</h1>
             <p class="heroText">
                 У машин есть бусты, просадки и смены темпа. По ходу заезда лидер может меняться, но финишный порядок
-                просчитывается так, чтобы первым пришёл выбранный болид.
+                просчитывается так, чтобы первым пришёл выбранный болид
             </p>
         </div>
         <div class="heroStats">
@@ -135,13 +135,13 @@
             <div class="runnerGrid">
                 {#each runners as runner (runner.id)}
                     <button
-                        aria-pressed={selectedWinnerId === runner.id}
-                        class:selected={selectedWinnerId === runner.id}
-                        class="runnerChip"
-                        disabled={isRunning}
-                        onclick={() => selectWinner(runner.id)}
-                        style={`--runner-accent: ${runner.accent}; --runner-soft: ${runner.accentSoft};`}
-                        type="button"
+                            aria-pressed={selectedWinnerId === runner.id}
+                            class:selected={selectedWinnerId === runner.id}
+                            class="runnerChip"
+                            disabled={isRunning}
+                            onclick={() => selectWinner(runner.id)}
+                            style={`--runner-accent: ${runner.accent}; --runner-soft: ${runner.accentSoft};`}
+                            type="button"
                     >
                         <span class="runnerNumber">#{runner.number}</span>
                         <strong>{runner.name}</strong>
@@ -197,11 +197,12 @@
                         <div class="laneTrack">
                             <div class="finishLine" aria-hidden="true"></div>
                             <div
-                                class="vehicleWrap"
-                                style={`--progress:${laneState.progress}; --runner-accent:${laneState.lane.runner.accent}; --runner-soft:${laneState.lane.runner.accentSoft};`}
+                                    class="vehicleWrap"
+                                    style={`--progress:${laneState.progress}; --runner-accent:${laneState.lane.runner.accent}; --runner-soft:${laneState.lane.runner.accentSoft};`}
                             >
                                 <div class="vehicle">
-                                    <div class:eventBoost={laneState.event?.kind === "boost"} class:eventSlip={laneState.event?.kind === "slip"} class="vehicleInner">
+                                    <div class:eventBoost={laneState.event?.kind === "boost"}
+                                         class:eventSlip={laneState.event?.kind === "slip"} class="vehicleInner">
                                         <span class="carNumber">{laneState.lane.runner.number}</span>
                                         <div class="carBody">
                                             <span class="cockpit"></span>

@@ -14,9 +14,8 @@
   overflow: hidden;
   border-radius: 30px;
   border: 1px solid $color-border;
-  background:
-    radial-gradient(circle at top left, color-mix(in srgb, var(--color-accent) 18%, transparent), transparent 42%),
-    linear-gradient(180deg, color-mix(in srgb, var(--color-surface-elevated) 94%, transparent), color-mix(in srgb, var(--color-surface) 96%, transparent));
+  background: radial-gradient(circle at top left, color-mix(in srgb, var(--color-accent) 18%, transparent), transparent 42%),
+  linear-gradient(180deg, color-mix(in srgb, var(--color-surface-elevated) 94%, transparent), color-mix(in srgb, var(--color-surface) 96%, transparent));
   box-shadow: $shadow-card;
 }
 
@@ -114,10 +113,9 @@
   min-height: 210px;
   border-radius: 24px;
   border: 1px solid color-mix(in srgb, var(--color-border) 82%, transparent);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0 12%, transparent 12% 24%, rgba(255, 255, 255, 0.03) 24% 36%, transparent 36% 48%, rgba(255, 255, 255, 0.03) 48% 60%, transparent 60% 72%, rgba(255, 255, 255, 0.03) 72% 84%, transparent 84% 100%),
-    linear-gradient(180deg, color-mix(in srgb, #0f1724 82%, var(--color-surface-elevated)), color-mix(in srgb, #111826 90%, var(--color-surface)));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent),
+  linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0 12%, transparent 12% 24%, rgba(255, 255, 255, 0.03) 24% 36%, transparent 36% 48%, rgba(255, 255, 255, 0.03) 48% 60%, transparent 60% 72%, rgba(255, 255, 255, 0.03) 72% 84%, transparent 84% 100%),
+  linear-gradient(180deg, color-mix(in srgb, #0f1724 82%, var(--color-surface-elevated)), color-mix(in srgb, #111826 90%, var(--color-surface)));
 }
 
 .centerGlow {

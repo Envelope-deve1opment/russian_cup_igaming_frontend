@@ -3,11 +3,10 @@
         buildWheelGradient,
         buildWheelSegments,
         calculateWheelSpin,
-        DEFAULT_WHEEL_SLOTS,
-        MIN_WHEEL_WEIGHT,
-        WHEEL_START_ANGLE,
         clampWheelWeight,
         createWeightedSlots,
+        DEFAULT_WHEEL_SLOTS,
+        MIN_WHEEL_WEIGHT,
         type WheelSegment,
         type WheelSlot
     } from "$lib/modules/wheel";
@@ -88,14 +87,14 @@
 
     <div class="wheelLayout">
         <div class="wheelCard stage">
-            <div class="pointer" aria-hidden="true"></div>
+            <div aria-hidden="true" class="pointer"></div>
             <div
-                aria-label={`Колесо с выбранным победителем ${selectedWinner}`}
-                class:spinning={isSpinning}
-                class="wheel"
-                role="img"
-                style={wheelStyle}
-                ontransitionend={handleTransitionEnd}
+                    aria-label={`Колесо с выбранным победителем ${selectedWinner}`}
+                    class="wheel"
+                    class:spinning={isSpinning}
+                    ontransitionend={handleTransitionEnd}
+                    role="img"
+                    style={wheelStyle}
             >
                 {#each segments as segment, index (segment.slot.value)}
                     <div class="segmentLabel" style={labelStyle(segment)}>
@@ -109,7 +108,7 @@
                     <span>SPIN</span>
                 </div>
             </div>
-            <div class="motionTrail" aria-hidden="true"></div>
+            <div aria-hidden="true" class="motionTrail"></div>
         </div>
 
         <div class="wheelCard controls">
@@ -125,12 +124,12 @@
             <div class="slotPicker" role="list">
                 {#each slots as slot (slot.value)}
                     <button
-                        aria-pressed={selectedWinner === slot.value}
-                        class:selected={selectedWinner === slot.value}
-                        class="slotBtn"
-                        disabled={isSpinning}
-                        onclick={() => (selectedWinner = slot.value)}
-                        type="button"
+                            aria-pressed={selectedWinner === slot.value}
+                            class:selected={selectedWinner === slot.value}
+                            class="slotBtn"
+                            disabled={isSpinning}
+                            onclick={() => (selectedWinner = slot.value)}
+                            type="button"
                     >
                         {slot.label}
                     </button>
@@ -140,7 +139,8 @@
             <div class="weightsPanel">
                 <div class="weightsHead">
                     <span>Вес сектора</span>
-                    <button class="resetBtn" disabled={isSpinning} onclick={resetWeights} type="button">Сбросить</button>
+                    <button class="resetBtn" disabled={isSpinning} onclick={resetWeights} type="button">Сбросить
+                    </button>
                 </div>
 
                 <div class="weightsList">
@@ -151,12 +151,12 @@
                                 <small>{(segment.normalizedWeight * 100).toFixed(1)}%</small>
                             </span>
                             <input
-                                bind:value={weights[index]}
-                                disabled={isSpinning}
-                                min={MIN_WHEEL_WEIGHT}
-                                oninput={(event) => setWeight(index, (event.currentTarget as HTMLInputElement).value)}
-                                step="0.01"
-                                type="number"
+                                    bind:value={weights[index]}
+                                    disabled={isSpinning}
+                                    min={MIN_WHEEL_WEIGHT}
+                                    oninput={(event) => setWeight(index, (event.currentTarget as HTMLInputElement).value)}
+                                    step="0.01"
+                                    type="number"
                             />
                         </label>
                     {/each}

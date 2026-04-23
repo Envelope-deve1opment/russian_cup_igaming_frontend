@@ -71,7 +71,12 @@ function buildEvents(rng: SeededRng, steps: number, winner: boolean): RaceEvent[
     return [
         {kind: "boost", label: "нитро", startStep: earlyStart, endStep: earlyStart + randomInt(rng, 2, 4)},
         {kind: "drift", label: "занос", startStep: driftStart, endStep: driftStart + randomInt(rng, 2, 4)},
-        {kind: winner ? "boost" : "slip", label: winner ? "рывок" : "потеря темпа", startStep: lateStart, endStep: lateStart + randomInt(rng, 2, 4)}
+        {
+            kind: winner ? "boost" : "slip",
+            label: winner ? "рывок" : "потеря темпа",
+            startStep: lateStart,
+            endStep: lateStart + randomInt(rng, 2, 4)
+        }
     ];
 }
 

@@ -1,16 +1,18 @@
 <script lang="ts">
     import {goto} from "$app/navigation";
     import {SeatSlotState} from "$lib/constants/seatSlotState";
-    import {RoomStatus} from "$lib/constants/roomStatus";
+    import {RoomStatus} from "$lib/constants";
     import {onDestroy, onMount} from "svelte";
     import type {Participant, Room} from "$lib/types";
     import {roomService} from "$lib/api/roomService";
     import {roomParticipantService} from "$lib/api/roomParticipantService";
-    import {refreshCurrentRoom, stopCurrentRoomRealtime} from "$lib/services/roomsRealtime";
-    import {refreshBalance} from "$lib/services/balanceService";
+    import {refreshCurrentRoom, stopCurrentRoomRealtime} from "$lib/api/roomsRealtime";
+    import {refreshBalance} from "$lib/api/balanceService";
     import {setCurrentRoomId} from "$lib/stores/currentRoomStore";
+    import type {RoomDetailsDto, RoomParticipantDto} from "$lib/api/dto";
+    import {userStore} from "$lib/stores/userStore";
 
-    let {room}: { room: Room } = $props();
+    let {room}: { room: RoomDetailsDto } = $props();
 
     let now: number = $state(Date.now());
     let boostMessage: string | null = $state<string | null>(null);
@@ -31,22 +33,31 @@
         if (handle) clearInterval(handle);
     });
 
-    let secondsLeft = $derived(
-        Math.max(0, Math.ceil(((room.timerEndsAt ?? now) - now) / 1000))
+    let secondsLeft = $derived.by(() => {
+        if (room.timerEndsAt == null) return null;
+        const remaining = Math.ceil((room.timerEndsAt - now) / 1000);
+        return Math.max(0, remaining);
+    });
+    let hasCountdown = $derived(room.timerEndsAt != null);
+
+    let canManageSeats = $derived(
+        room.status === RoomStatus.WAITING || room.status === RoomStatus.STARTING || room.status === RoomStatus.COUNTDOWN
     );
+    let currentUserParticipant = $derived(room.seats.find(isCurrentUser));
 
-    let canManageSeats = $derived(room.status === RoomStatus.Waiting || room.status === RoomStatus.Starting);
-    let currentUserParticipant = $derived(room.participants.find((p) => p.isCurrentUser));
-
-    function occupiedSeat(index: number): Participant | null {
-        return room.participants.find((participant) => participant.seatNum === index) ?? null;
+    function isCurrentUser(seat: RoomParticipantDto): boolean {
+        return seat.username == $userStore.name;
     }
 
-    function visualSeat(index: number): Participant | null {
-        return room.seatDecorations.find((participant) => participant.seatNum === index) ?? null;
+    function occupiedSeat(index: number): RoomParticipantDto | null {
+        return room.seats.find((participant) => participant.seatNum === index) ?? null;
     }
 
-    function displayedSeat(index: number): Participant | null {
+    function visualSeat(index: number): RoomParticipantDto | null {
+        return room.seats.find((participant) => participant.seatNum === index) ?? null;
+    }
+
+    function displayedSeat(index: number): RoomParticipantDto | null {
         return occupiedSeat(index) ?? visualSeat(index);
     }
 
@@ -55,12 +66,13 @@
         if (!seat) {
             return visualSeat(index) ? SeatSlotState.Bot : SeatSlotState.Free;
         }
-        if (seat.isCurrentUser) return SeatSlotState.You;
+        if (isCurrentUser(seat)) return SeatSlotState.You;
         return SeatSlotState.Human;
     }
 
     function seatTitle(index: number): string {
         const seat = occupiedSeat(index);
+
         if (!canManageSeats) {
             return "Рассадка закрыта для текущей стадии комнаты";
         }
@@ -70,7 +82,7 @@
             }
             return "Нажмите, чтобы занять место";
         }
-        if (seat.isCurrentUser) {
+        if (isCurrentUser(seat)) {
             return "Нажмите, чтобы освободить место";
         }
         return "Место занято другим участником";
@@ -82,7 +94,12 @@
         }
 
         const seat = occupiedSeat(index);
-        return seat != null && !seat.isCurrentUser;
+
+        if (seat?.bot) {
+            return false;
+        }
+
+        return seat != null && !isCurrentUser(seat);
     }
 
     async function buyBoost(): Promise<void> {
@@ -98,6 +115,7 @@
         }
 
         const cost: number | undefined = room.boostCost;
+        console.log(67567567567, room)
         if (cost == null) {
             boostMessage = "Стоимость буста не задана";
             return;
@@ -135,7 +153,7 @@
         try {
             pendingSeatIndex = index;
 
-            if (seat == null) {
+            if (seat == null || seat.bot) {
                 await roomParticipantService.occupySeat(room.id, index);
                 await refreshCurrentRoom(room.id);
                 await refreshBalance();
@@ -165,7 +183,7 @@
             await roomParticipantService.leaveRoom(room.id);
             await refreshBalance();
             boostMessage = "Вы вышли из комнаты";
-            setCurrentRoomId(null);
+            await setCurrentRoomId(null);
             stopCurrentRoomRealtime();
             await goto("/lobby");
         } catch {
@@ -193,7 +211,7 @@
             await roomParticipantService.releaseSeat(room.id, currentUserParticipant.seatNum);
             await refreshCurrentRoom(room.id);
             await refreshBalance();
-            boostMessage = `Билет возвращён. +${room.entryPrice.toLocaleString("ru-RU")}`;
+            boostMessage = `Билет возвращён. +${room.entryFee.toLocaleString("ru-RU")}`;
         } catch {
             boostMessage = "Не удалось вернуть билет";
         } finally {
@@ -206,16 +224,21 @@
 <section aria-labelledby="lobby-title" class="lobby">
     <div class="top">
         <div>
-            <h1 class="title" id="lobby-title">{room.name}</h1>
+            <h1 class="title" id="lobby-title">{room.templateName}</h1>
             <p class="meta">
-                Вход <strong>{room.entryPrice.toLocaleString("ru-RU")}</strong> · Фонд
-                <strong>{room.prizeFund.toLocaleString("ru-RU")}</strong> · Мест <strong>{room.seatsTaken}/{room.maxSeats}</strong>
+                Вход <strong>{room.entryFee.toLocaleString("ru-RU")}</strong> · Фонд
+                <strong>{(room.entryFee * room.participantsLimit).toLocaleString("ru-RU")}</strong> · Комиссия
+                <strong>
+                    {room.commission ?? 0}%</strong> · Мест <strong>{room.seats.filter((s) => !s.bot).length}/{room.participantsLimit}
+            </strong>
             </p>
         </div>
-        <div aria-live="polite" class="timer" role="timer">
-            <span class="timerLabel">До события</span>
-            <span class="timerValue">{secondsLeft}s</span>
-        </div>
+        {#if hasCountdown && secondsLeft != null}
+            <div aria-live="polite" class="timer" role="timer">
+                <span class="timerLabel">До события</span>
+                <span class="timerValue">{secondsLeft}с</span>
+            </div>
+        {/if}
     </div>
 
     <div class="layout">
@@ -224,8 +247,8 @@
             <p class="msg" role="status">
                 Слоты с AI декоративные. Реально заняты только места живых игроков
             </p>
-            <div class="seats" style:--cols={Math.min(room.maxSeats, 5)}>
-                {#each Array(room.maxSeats) as _, i (i)}
+            <div class="seats" style:--cols={Math.min(room.participantsLimit, 5)}>
+                {#each Array(room.participantsLimit) as _, i (i)}
                     {@const actualSeat = occupiedSeat(i)}
                     {@const shownSeat = displayedSeat(i)}
                     <button
@@ -238,8 +261,8 @@
                             type="button"
                     >
                         {#if shownSeat}
-                            <span class="seatName">{shownSeat.name}</span>
-                            {#if shownSeat.isBot}
+                            <span class="seatName">{shownSeat.username}</span>
+                            {#if shownSeat.bot}
                                 <span class="botTag" title="Бот">AI</span>
                             {/if}
                             {#if actualSeat?.hasBoost}
@@ -256,6 +279,7 @@
             </div>
 
             <div class="boostRow">
+                {console.log(room)}
                 <button
                         class="btn primary"
                         disabled={!room.boostEnabled || !currentUserParticipant || !canManageSeats || buyingBoost}
@@ -270,7 +294,7 @@
                         onclick={sellSeat}
                         type="button"
                 >
-                    Вернуть билет (+{room.entryPrice.toLocaleString("ru-RU")})
+                    Вернуть билет (+{room.entryFee.toLocaleString("ru-RU")})
                 </button>
                 <button
                         class="btn"
@@ -288,15 +312,15 @@
 
         <div class="panel">
             <h2 class="h2">Участники</h2>
-            {#if room.participants.length === 0}
-                <p class="msg">Стол свободен. Первый игрок задаёт темп комнаты.</p>
+            {#if room.seats.length === 0}
+                <p class="msg">Стол свободен. Первый игрок задаёт темп комнаты</p>
             {:else}
                 <ul class="list">
-                    {#each room.participants as p (`${p.id}:${p.seatNum ?? "no-seat"}`)}
+                    {#each room.seats as p (`${p.id}:${p.seatNum ?? "no-seat"}`)}
                         <li class="row">
-                            <span class="name">{p.name}</span>
+                            <span class="name">{p.username}</span>
                             <span class="badges">
-                                {#if p.isCurrentUser}
+                                {#if isCurrentUser(p)}
                                     <span class="chip you">Вы</span>
                                 {/if}
                                 {#if p.hasBoost}

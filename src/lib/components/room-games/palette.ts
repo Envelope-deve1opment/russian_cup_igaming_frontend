@@ -11,6 +11,6 @@ const ACCENTS = [
     {accent: "#d2ff7d", accentSoft: "rgba(210,255,125,0.2)"}
 ] as const;
 
-export function getRoomGameAccent(index: number): {accent: string; accentSoft: string} {
+export function getRoomGameAccent(index: number): { accent: string; accentSoft: string } {
     return ACCENTS[index % ACCENTS.length];
 }

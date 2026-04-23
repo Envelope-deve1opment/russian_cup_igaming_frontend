@@ -2,91 +2,93 @@
 
 .wrap {
   width: 100%;
-  max-width: 1180px;
+  max-width: 1200px;
   margin: 0 auto;
+  flex-direction: column;
   display: grid;
-  gap: 1rem;
+  gap: 0.75rem;
   color: $color-text;
 }
 
 .toolbar {
   display: flex;
   justify-content: space-between;
-  align-items: end;
-  gap: 1rem;
+  align-items: center;
   flex-wrap: wrap;
+  gap: 1rem;
+  padding: 0.25rem 0;
 }
 
 .toolbarHead {
   display: grid;
-  gap: 0.35rem;
+  gap: 0.2rem;
 }
 
 .eyebrow {
   margin: 0;
-  font-size: 0.68rem;
+  font-size: 0.65rem;
   font-weight: 800;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
   color: $color-accent;
 }
 
 .title {
   margin: 0;
-  font-size: clamp(1.35rem, 2.5vw, 2rem);
+  font-size: clamp(1.2rem, 2vw, 1.6rem);
+  font-weight: 700;
 }
 
 .summary {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.55rem;
+  gap: 0.4rem;
 }
 
 .summaryChip {
   display: inline-flex;
   align-items: center;
-  min-height: 2.45rem;
-  padding: 0.45rem 0.8rem;
+  min-height: 2rem;
+  padding: 0.35rem 0.7rem;
   border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--color-border) 88%, transparent);
-  background: color-mix(in srgb, var(--color-surface) 90%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
   color: $color-text-muted;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 700;
 }
 
 .filters {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 0.5rem;
   align-items: center;
-  padding: 1rem;
-  border-radius: 28px;
-  border: 1px solid color-mix(in srgb, var(--color-border) 88%, transparent);
-  background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface-elevated) 92%, transparent), color-mix(in srgb, var(--color-surface) 88%, transparent));
-  box-shadow: $shadow-card;
+  padding: 0.6rem 0.75rem;
+  border-radius: 20px;
+  border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  background: color-mix(in srgb, var(--color-surface-elevated) 95%, transparent);
 }
 
 .field {
   display: inline-flex;
   align-items: center;
-  gap: 0.55rem;
-  min-height: 2.7rem;
-  padding: 0.35rem 0.4rem 0.35rem 0.7rem;
+  gap: 0.4rem;
+  min-height: 2.2rem;
+  padding: 0.25rem 0.35rem 0.25rem 0.6rem;
   border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--color-border) 84%, transparent);
-  background: color-mix(in srgb, var(--color-surface) 88%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-border) 75%, transparent);
+  background: color-mix(in srgb, var(--color-surface) 90%, transparent);
   color: $color-text-muted;
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 
   input[type='number'] {
-    width: 92px;
-    padding: 0.55rem 0.7rem;
+    width: 70px;
+    padding: 0.4rem 0.5rem;
     border-radius: 999px;
-    font-size: 0.86rem;
+    font-size: 0.8rem;
     font-weight: 700;
   }
 }
@@ -94,21 +96,21 @@
 .toggle {
   cursor: pointer;
   color: $color-text;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
 
   input {
-    width: 1rem;
-    height: 1rem;
+    width: 0.9rem;
+    height: 0.9rem;
     accent-color: $color-accent;
   }
 }
 
 .feedback {
   margin: 0;
-  padding: 0.95rem 1rem;
-  border-radius: 22px;
-  border: 1px solid color-mix(in srgb, var(--color-border) 84%, transparent);
-  background: color-mix(in srgb, var(--color-surface) 90%, transparent);
+  padding: 0.8rem 1rem;
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
   color: $color-text-muted;
 }
 
@@ -124,38 +126,51 @@
 
 .grid {
   list-style: none;
-  margin: 0;
+  margin: 0.5rem 0 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  width: 100%;
+  min-width: 0;
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 .card {
-  border-radius: 30px;
-  border: 1px solid color-mix(in srgb, var(--color-border) 88%, transparent);
+  border-radius: 20px;
+  border: 1px solid color-mix(in srgb, var(--color-border) 78%, transparent);
   overflow: hidden;
-  background:
-    radial-gradient(circle at top right, color-mix(in srgb, var(--color-accent) 10%, transparent), transparent 38%),
-    linear-gradient(180deg, color-mix(in srgb, var(--color-surface-elevated) 94%, transparent), color-mix(in srgb, var(--color-surface) 92%, transparent));
-  box-shadow: $shadow-card;
-  transition: transform $transition-med,
-  border-color $transition-fast,
-  box-shadow $transition-med;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface-elevated) 96%, transparent), color-mix(in srgb, var(--color-surface) 94%, transparent));
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all $transition-fast;
+  display: flex;
+  flex-direction: column;
 }
 
 .card:hover {
-  transform: translateY(-4px);
-  border-color: $color-border-strong;
-  box-shadow: $shadow-glow;
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--color-accent) 35%, transparent);
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--color-accent) 10%, transparent);
 }
 
 .cardLink {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.75rem;
   width: 100%;
-  padding: 1.25rem 1.2rem 1rem;
+  flex: 1;
+  padding: 1rem;
   text-align: left;
   border: none;
   background: transparent;
@@ -164,108 +179,132 @@
 
 .cardLink:disabled {
   cursor: progress;
+  opacity: 0.7;
 }
 
 .cardTop {
   display: flex;
   justify-content: space-between;
-  gap: 0.75rem;
-  align-items: start;
+  gap: 0.5rem;
+  align-items: flex-start;
 }
 
 .cardTitle {
   margin: 0;
-  font-size: 1.05rem;
-  letter-spacing: -0.04em;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
 }
 
 .cardSub {
-  margin: 0.35rem 0 0;
+  margin: 0.25rem 0 0;
   color: $color-text-muted;
-  font-size: 0.86rem;
+  font-size: 0.8rem;
 }
 
 .pill {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 4.2rem;
-  min-height: 2rem;
-  padding: 0.3rem 0.55rem;
+  min-width: 3.2rem;
+  min-height: 1.6rem;
+  padding: 0.2rem 0.45rem;
   border-radius: 999px;
-  background: $color-success-faint;
+  background: linear-gradient(135deg, $color-success-faint, color-mix(in srgb, var(--color-success) 12%, transparent));
   color: $color-success;
-  font-size: 0.66rem;
+  font-size: 0.6rem;
   font-weight: 800;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
+  flex-shrink: 0;
 }
 
 .pill.closed {
-  background: color-mix(in srgb, var(--color-border) 70%, transparent);
+  background: color-mix(in srgb, var(--color-border) 65%, transparent);
   color: $color-text-muted;
 }
 
-.stats {
+.statsCompact {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.8rem;
-  margin: 0;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  padding: 0.6rem;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--color-surface) 70%, transparent);
+}
 
-  dt {
-    margin: 0 0 0.2rem;
-    color: $color-text-muted;
-    font-size: 0.68rem;
-    font-weight: 800;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.4rem 0.5rem;
+  text-align: center;
+}
 
-  dd {
-    margin: 0;
-    font-size: 1rem;
-    font-weight: 800;
-    font-variant-numeric: tabular-nums;
-  }
+.statValue {
+  font-size: 0.95rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: $color-text;
+}
+
+.stat.accent .statValue {
+  color: $color-accent;
+}
+
+.statLabel {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: $color-text-muted;
 }
 
 .cardFoot {
   display: flex;
   justify-content: space-between;
-  gap: 0.75rem;
-  padding-top: 0.9rem;
-  border-top: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding-top: 0.6rem;
+  border-top: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
 }
 
 .meta {
-  color: $color-text-muted;
-  font-size: 0.82rem;
+  color: $color-accent;
+  font-size: 0.7rem;
+  font-weight: 700;
 }
 
-.meta.strong {
-  color: $color-text;
-  font-weight: 700;
+.status {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $color-text-muted;
+}
+
+.status.open {
+  color: $color-success;
 }
 
 .actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.65rem;
-  padding: 0 1.2rem 1.2rem;
+  gap: 0.4rem;
+  padding: 0 1rem 1rem;
 }
 
 .actionBtn {
-  min-height: 3rem;
+  min-height: 2.4rem;
   border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--color-border) 88%, transparent);
-  font-size: 0.84rem;
+  border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  font-size: 0.75rem;
   font-weight: 800;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
   cursor: pointer;
-  transition: transform $transition-fast,
-  border-color $transition-fast,
-  background $transition-fast,
-  box-shadow $transition-fast;
+  transition: all $transition-fast;
 }
 
 .actionBtn:hover:not(:disabled) {
@@ -273,26 +312,40 @@
 }
 
 .actionBtn:disabled {
-  opacity: 0.65;
+  opacity: 0.6;
   cursor: progress;
 }
 
 .actionBtn.secondary {
-  background: color-mix(in srgb, var(--color-surface) 88%, transparent);
+  background: color-mix(in srgb, var(--color-surface) 85%, transparent);
   color: $color-text;
 }
 
+.actionBtn.secondary:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--color-surface-elevated) 80%, transparent);
+}
+
 .actionBtn.primary {
-  border-color: color-mix(in srgb, var(--color-accent) 66%, transparent);
-  background: linear-gradient(135deg, color-mix(in srgb, var(--color-accent-highlight) 18%, var(--color-accent)), var(--color-accent));
+  border-color: color-mix(in srgb, var(--color-accent) 55%, transparent);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--color-accent-highlight) 20%, var(--color-accent)), var(--color-accent));
   color: $color-on-accent;
-  box-shadow: 0 12px 26px color-mix(in srgb, var(--color-accent) 18%, transparent);
+  box-shadow: 0 6px 14px color-mix(in srgb, var(--color-accent) 15%, transparent);
+}
+
+.actionBtn.primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px color-mix(in srgb, var(--color-accent) 20%, transparent);
 }
 
 @media (max-width: 680px) {
+  .toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
   .filters {
-    border-radius: 24px;
-    padding: 0.85rem;
+    border-radius: 18px;
+    padding: 0.5rem;
   }
 
   .field {
@@ -300,7 +353,12 @@
     justify-content: space-between;
   }
 
+  .field input[type='number'] {
+    width: 80px;
+  }
+
   .actions {
     grid-template-columns: 1fr;
+    gap: 0.35rem;
   }
 }

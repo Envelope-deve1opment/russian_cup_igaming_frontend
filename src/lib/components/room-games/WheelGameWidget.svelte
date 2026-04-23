@@ -1,5 +1,11 @@
 <script lang="ts">
-    import {buildWheelGradient, buildWheelSegments, calculateWheelSpin, type WheelSegment, type WheelSlot} from "$lib/modules/wheel";
+    import {
+        buildWheelGradient,
+        buildWheelSegments,
+        calculateWheelSpin,
+        type WheelSegment,
+        type WheelSlot
+    } from "$lib/modules/wheel";
     import type {RoomGameSlot} from "./types";
 
     let {
@@ -43,7 +49,7 @@
             return;
         }
 
-        const winner = slots.find((slot) => slot.id === winnerSlotId);
+        const winner = slots.find((slot) => slot.id.includes(winnerSlotId));
         if (!winner) {
             return;
         }
@@ -73,8 +79,8 @@
 </script>
 
 <div class="widget wheel">
-    <div class="pointer" aria-hidden="true"></div>
-    <div class:spinning={isSpinning} class="wheelSurface" ontransitionend={handleTransitionEnd} style={wheelStyle}>
+    <div aria-hidden="true" class="pointer"></div>
+    <div class="wheelSurface" class:spinning={isSpinning} ontransitionend={handleTransitionEnd} style={wheelStyle}>
         {#each segments as segment (segment.slot.value)}
             <div class="segmentLabel" style={labelStyle(segment)}>
                 <span>{segment.slot.label}</span>

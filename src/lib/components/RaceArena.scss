@@ -14,9 +14,8 @@
   overflow: hidden;
   border-radius: 30px;
   border: 1px solid $color-border;
-  background:
-    linear-gradient(180deg, color-mix(in srgb, var(--color-surface-elevated) 94%, transparent), color-mix(in srgb, var(--color-surface) 96%, transparent)),
-    radial-gradient(circle at top left, color-mix(in srgb, var(--color-accent) 18%, transparent), transparent 42%);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface-elevated) 94%, transparent), color-mix(in srgb, var(--color-surface) 96%, transparent)),
+  radial-gradient(circle at top left, color-mix(in srgb, var(--color-accent) 18%, transparent), transparent 42%);
   box-shadow: $shadow-card;
 }
 
@@ -177,9 +176,8 @@
 .trackCard {
   display: grid;
   gap: 1rem;
-  background:
-    linear-gradient(180deg, color-mix(in srgb, #071019 76%, var(--color-surface-elevated)), color-mix(in srgb, #0e1524 86%, var(--color-surface))),
-    radial-gradient(circle at top left, color-mix(in srgb, var(--color-accent) 14%, transparent), transparent 42%);
+  background: linear-gradient(180deg, color-mix(in srgb, #071019 76%, var(--color-surface-elevated)), color-mix(in srgb, #0e1524 86%, var(--color-surface))),
+  radial-gradient(circle at top left, color-mix(in srgb, var(--color-accent) 14%, transparent), transparent 42%);
 }
 
 .raceBadge {
@@ -252,9 +250,8 @@
   overflow: hidden;
   border-radius: 18px;
   border: 1px solid color-mix(in srgb, var(--color-border) 82%, transparent);
-  background:
-    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 0 18%, transparent 18% 22%, rgba(255, 255, 255, 0.04) 22% 40%, transparent 40% 44%, rgba(255, 255, 255, 0.04) 44% 62%, transparent 62% 66%, rgba(255, 255, 255, 0.04) 66% 84%, transparent 84% 88%, rgba(255, 255, 255, 0.04) 88% 100%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent);
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.04) 0 18%, transparent 18% 22%, rgba(255, 255, 255, 0.04) 22% 40%, transparent 40% 44%, rgba(255, 255, 255, 0.04) 44% 62%, transparent 62% 66%, rgba(255, 255, 255, 0.04) 66% 84%, transparent 84% 88%, rgba(255, 255, 255, 0.04) 88% 100%),
+  linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent);
 }
 
 .finishLine {
@@ -263,8 +260,7 @@
   bottom: 0.35rem;
   right: 4.3rem;
   width: 0.9rem;
-  background:
-    repeating-linear-gradient(180deg, #ffffff 0 8px, #151515 8px 16px);
+  background: repeating-linear-gradient(180deg, #ffffff 0 8px, #151515 8px 16px);
   border-radius: 0.2rem;
   opacity: 0.8;
 }

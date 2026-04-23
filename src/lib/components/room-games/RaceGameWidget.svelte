@@ -31,15 +31,17 @@
             return 100;
         }
 
-        const penalty = 8 + index * 2 + Math.max(0, 1 - slot.weight) * 8;
+        const penalty = index * 2 + Math.max(0, 1 - slot.weight) * 8;
         return Math.max(62, 100 - penalty);
     }
 
     function startRace(): void {
         if (!winnerSlotId || isRunning) {
+            console.log(778777)
             return;
         }
 
+        console.log(2222)
         clearFinishTimeout();
         completedWinnerId = null;
         isRunning = true;
@@ -59,6 +61,7 @@
 
     $effect(() => {
         if (startSignal <= 0 || startSignal === lastStartSignal) {
+            console.log(1223452345235)
             return;
         }
 
@@ -69,7 +72,8 @@
 
 <div class="widget race">
     {#each slots as slot (slot.id)}
-        <div class:winner={completedWinnerId === slot.id} class="lane" style={`--slot-accent:${slot.accent}; --slot-soft:${slot.accentSoft};`}>
+        <div class:winner={completedWinnerId === slot.id} class="lane"
+             style={`--slot-accent:${slot.accent}; --slot-soft:${slot.accentSoft};`}>
             <div class="laneMeta">
                 <strong>{slot.label}</strong>
                 <span>{slot.place}</span>

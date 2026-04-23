@@ -16,6 +16,7 @@
         active: boolean;
         boostEnabled: boolean;
         boostCost: number;
+        boostMultiplier: number;
         countdownSeconds: number;
         createdAt?: string;
         updatedAt?: string;
@@ -48,6 +49,7 @@
             active: dto.active ?? true,
             boostEnabled: dto.boostEnabled ?? false,
             boostCost: dto.boostCost ?? 0,
+            boostMultiplier: dto.boostMultiplier ?? 15,
             countdownSeconds: dto.countdownSeconds ?? DEFAULT_COUNTDOWN_SECONDS,
             createdAt: dto.createdAt,
             updatedAt: dto.updatedAt
@@ -65,6 +67,7 @@
             active: form.active,
             boostEnabled: form.boostEnabled,
             boostCost: form.boostEnabled ? form.boostCost : 0,
+            boostMultiplier: form.boostEnabled ? form.boostMultiplier : 15,
             countdownSeconds: form.countdownSeconds,
             createdAt: form.createdAt,
             updatedAt: form.updatedAt
@@ -102,7 +105,7 @@
     let form: TemplateForm | null = $state(null);
     let savedSnapshot: string = $state("");
     let createName: string = $state("");
-    let feedback: {tone: "error" | "success"; text: string} | null = $state(null);
+    let feedback: { tone: "error" | "success"; text: string } | null = $state(null);
     let loading: boolean = $state(true);
     let createPending: boolean = $state(false);
     let savePending: boolean = $state(false);
@@ -286,8 +289,8 @@
     <header class="hero">
         <div class="heroCopy">
             <p class="eyebrow">Templates</p>
-            <h1 class="title" id="admin-title">Управление шаблонами комнат.</h1>
-            <p class="sub">Создание идёт по имени, затем полный набор параметров сохраняется отдельным обновлением.</p>
+            <h1 class="title" id="admin-title">Управление шаблонами комнат</h1>
+            <p class="sub">Создание идёт по имени, затем полный набор параметров сохраняется отдельным обновлением</p>
         </div>
 
         <div class="heroStats">
@@ -326,7 +329,8 @@
                             placeholder="Например, VIP Turbo x6"
                             type="text"
                     />
-                    <button class="primaryBtn" disabled={createPending || !createName.trim()} onclick={createTemplate} type="button">
+                    <button class="primaryBtn" disabled={createPending || !createName.trim()} onclick={createTemplate}
+                            type="button">
                         {createPending ? "Создаём..." : "Создать"}
                     </button>
                 </div>
@@ -383,10 +387,12 @@
                         <h2>{form.templateName || "Без названия"}</h2>
                     </div>
                     <div class="editorActions">
-                        <button class="ghostBtn" disabled={deletePending || savePending} onclick={deleteTemplate} type="button">
+                        <button class="ghostBtn" disabled={deletePending || savePending} onclick={deleteTemplate}
+                                type="button">
                             {deletePending ? "Удаляем..." : "Удалить"}
                         </button>
-                        <button class="primaryBtn" disabled={savePending || warnings.length > 0 || !isDirty} onclick={saveTemplate} type="button">
+                        <button class="primaryBtn" disabled={savePending || warnings.length > 0 || !isDirty}
+                                onclick={saveTemplate} type="button">
                             {savePending ? "Сохраняем..." : "Сохранить"}
                         </button>
                     </div>
@@ -479,6 +485,20 @@
                         />
                     </label>
 
+                    <label class="field">
+                        <span>Сила бустера</span>
+                        <input
+                                class="textInput"
+                                disabled={!form.boostEnabled}
+                                min="1"
+                                max="50"
+                                oninput={(event) => updateForm("boostMultiplier", Number((event.currentTarget as HTMLInputElement).value))}
+                                step="1"
+                                type="number"
+                                value={form.boostMultiplier}
+                        />
+                    </label>
+
                     <label class="toggleField">
                         <input
                                 checked={form.active}
@@ -509,7 +529,8 @@
                         <span>Оценка конфигурации</span>
                         <span class="meterVal">{attractiveness.score}%</span>
                     </div>
-                    <div aria-valuemax="100" aria-valuemin="0" aria-valuenow={attractiveness.score} class="bar" role="progressbar">
+                    <div aria-valuemax="100" aria-valuemin="0" aria-valuenow={attractiveness.score} class="bar"
+                         role="progressbar">
                         <div class="barFill" style={`width:${attractiveness.score}%`}></div>
                     </div>
                     <ul class="checks">

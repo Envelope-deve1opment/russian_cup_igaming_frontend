@@ -49,11 +49,13 @@
 
     function startMatch(): void {
         if (!winnerSlotId || isRunning) {
+            console.log(7576767)
             return;
         }
 
-        const winner = slots.find((slot) => slot.id === winnerSlotId);
+        const winner = slots.find((slot) => slot.id.includes(winnerSlotId));
         if (!winner) {
+            console.log(474356)
             return;
         }
 
@@ -131,6 +133,7 @@
 
     $effect(() => {
         if (startSignal <= 0 || startSignal === lastStartSignal) {
+            console.log(234234)
             return;
         }
 
@@ -150,12 +153,12 @@
         {@const exploded = explodedId === slot.id}
         {@const winner = completedWinnerId === slot.id}
         <article
-            class:aimed
-            class:exploded
-            class:holding
-            class:winner
-            class="card"
-            style={`--slot-accent:${slot.accent}; --slot-soft:${slot.accentSoft};`}
+                class:aimed
+                class:exploded
+                class:holding
+                class:winner
+                class="card"
+                style={`--slot-accent:${slot.accent}; --slot-soft:${slot.accentSoft};`}
         >
             <div class="cardTop">
                 <span>Место {slot.place}</span>
@@ -200,9 +203,8 @@
     padding: 1rem;
     border-radius: 24px;
     border: 1px solid color-mix(in srgb, var(--slot-accent) 30%, transparent);
-    background:
-      radial-gradient(circle at top right, color-mix(in srgb, var(--slot-accent) 14%, transparent), transparent 36%),
-      linear-gradient(180deg, color-mix(in srgb, var(--slot-soft) 42%, rgba(16, 18, 25, 0.84)), rgba(16, 18, 25, 0.92));
+    background: radial-gradient(circle at top right, color-mix(in srgb, var(--slot-accent) 14%, transparent), transparent 36%),
+    linear-gradient(180deg, color-mix(in srgb, var(--slot-soft) 42%, rgba(16, 18, 25, 0.84)), rgba(16, 18, 25, 0.92));
     transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease, opacity 0.24s ease;
     overflow: hidden;
   }

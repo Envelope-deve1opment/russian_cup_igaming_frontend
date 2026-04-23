@@ -1,7 +1,6 @@
 <script lang="ts">
     import {goto} from "$app/navigation";
-    import {tick} from "svelte";
-    import {onDestroy} from "svelte";
+    import {onDestroy, tick} from "svelte";
     import {page} from "$app/stores";
     import RoomLobby from "$lib/components/RoomLobby.svelte";
     import GameRound from "$lib/components/GameRound.svelte";
@@ -11,10 +10,12 @@
     import {roomsStore} from "$lib/stores/roomsStore";
     import {roomService} from "$lib/api/roomService";
     import {lobbyStore} from "$lib/stores/lobbyStore";
-    import {stopCurrentRoomRealtime, watchCurrentRoom} from "$lib/services/roomsRealtime";
+    import {stopCurrentRoomRealtime, watchCurrentRoom} from "$lib/api/roomsRealtime";
     import {setAnimationPlaying} from "$lib/stores/gameAnimationStore";
     import {get} from "svelte/store";
     import type {Participant, RoundResult} from "$lib/types";
+    import {RoomStatus} from "$lib/constants/roomStatusType";
+    import type {RoomParticipantDto} from "$lib/api/dto";
 
     let routeId: string = $derived($page.params.id ?? "");
     let roomId: string = $state("");
@@ -46,7 +47,7 @@
             roomId = "";
             resolveError = "";
             resolvingRoom = false;
-            setCurrentRoomId(null);
+            void setCurrentRoomId(null);
             return;
         }
 
@@ -60,7 +61,7 @@
                 if (cancelled) return;
 
                 roomId = resolvedRoomId;
-                setCurrentRoomId(resolvedRoomId);
+                await setCurrentRoomId(resolvedRoomId);
                 await watchCurrentRoom(resolvedRoomId);
 
                 if (routeId === id && resolvedRoomId !== id) {
@@ -70,7 +71,7 @@
                 if (cancelled) return;
 
                 roomId = id;
-                setCurrentRoomId(id);
+                await setCurrentRoomId(id);
                 resolveError = error instanceof Error ? error.message : "Не удалось открыть комнату.";
             } finally {
                 if (!cancelled) {
@@ -91,19 +92,19 @@
         stageRef = null;
     });
 
-    onDestroy(() => {
-        setCurrentRoomId(null);
+    onDestroy(async () => {
+        await setCurrentRoomId(null);
         stopCurrentRoomRealtime();
     });
 
     let room = $derived($currentRoomStore);
 
-    function resolveWinnerID(fallbackWinnerId: string | undefined, participants: Participant[]): string | null {
+    function resolveWinnerID(fallbackWinnerId: string | undefined, participants: RoomParticipantDto[]): string | null {
         if (!fallbackWinnerId) {
             return null;
         }
 
-        const byParticipantId = participants.find((participant) => participant.participantId === fallbackWinnerId);
+        const byParticipantId = participants.find((participant) => participant.id === fallbackWinnerId);
         if (byParticipantId) {
             return byParticipantId.id;
         }
@@ -117,27 +118,37 @@
 
         const logResult = $gameLogStore.find((entry) => entry.roomId === roomId)?.result ?? null;
         if (logResult) {
+            console.log('latestResult from gameLogStore', logResult);
             return logResult;
         }
 
         if (room?.roundResult) {
+            console.log('latestResult from room.roundResult', room.roundResult);
             return room.roundResult;
         }
 
         if (!room) {
+            console.log('latestResult: no room');
             return null;
         }
 
-        const winnerID = resolveWinnerID(room.winnerParticipantId, room.participants);
+        const winnerID = resolveWinnerID(room.winnerParticipantId, room.seats);
         if (!winnerID) {
+            console.log('latestResult: no winnerID', {
+                winnerParticipantId: room.winnerParticipantId,
+                participants: room.seats.map(p => ({ id: p.id, name: p.username }))
+            });
             return null;
         }
 
-        return {
+        console.log(room.seats)
+        const result = {
             winnerID,
-            prizeAmount: room.prizeFund,
-            participants: room.participants
+            prizeAmount: room.entryFee * room.participantsLimit,
+            participants: room.seats
         };
+        console.log('latestResult created from room data', result);
+        return result;
     });
 
     let latestOutcomeKey = $derived.by(() => {
@@ -149,10 +160,22 @@
             .map((participant) => `${participant.id}:${participant.weight ?? 1}`)
             .join("|");
 
-        return `${room.id}:${room.gameId}:${room.timerEndsAt ?? "no-timer"}:${latestResult.winnerID}:${participantKey}:${latestResult.prizeAmount}`;
+        return `${room.id}:${room.gameType}:${room.countdownSeconds ?? "no-timer"}:${latestResult.winnerID}:${participantKey}:${latestResult.prizeAmount}`;
     });
 
-    let shouldShowAnimation = $derived(!!room && !!latestResult && latestOutcomeKey !== animationCompletedKey);
+    let shouldShowAnimation = $derived.by(() => {
+        const result = !!room && !!latestResult && room.status === RoomStatus.FINISHED && latestOutcomeKey !== animationCompletedKey;
+        console.log('shouldShowAnimation', {
+            hasRoom: !!room,
+            hasLatestResult: !!latestResult,
+            latestOutcomeKey,
+            animationCompletedKey,
+            result,
+            roomGameId: room?.gameType,
+            latestResultWinnerID: latestResult?.winnerID
+        });
+        return result;
+    });
 
     $effect(() => {
         setAnimationPlaying(shouldShowAnimation);
@@ -184,7 +207,8 @@
     <p class="state">Подключаем к комнате…</p>
 {:else if !room}
     <p class="state">Комната не найдена или ещё загружается…</p>
-{:else if shouldShowAnimation && latestResult}
+{:else if latestResult}
+    {console.log(4569999, latestResult)}
     <RoomGameStage
             bind:this={stageRef}
             participants={latestResult.participants}
@@ -196,13 +220,14 @@
                 }
             }}
     />
-{:else if latestResult}
-    <GameRound
-            roomId={room.id}
-            winnerID={latestResult.winnerID}
-            participants={latestResult.participants}
-            prizeAmount={latestResult.prizeAmount}
-    />
+<!--{:else if latestResult}-->
+<!--    {console.log(5656666)}-->
+<!--    <GameRound-->
+<!--            roomId={room.id}-->
+<!--            winnerID={latestResult.winnerID}-->
+<!--            participants={latestResult.participants}-->
+<!--            prizeAmount={latestResult.prizeAmount}-->
+<!--    />-->
 {:else}
     <RoomLobby {room}/>
 {/if}

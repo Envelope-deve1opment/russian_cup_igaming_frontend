@@ -1,8 +1,9 @@
-import {get, writable} from "svelte/store";
-import type {Room} from "$lib/types";
+import {writable} from "svelte/store";
 import {roomsStore} from "./roomsStore";
+import type {RoomDetailsDto} from "$lib/api/dto";
+import {roomService} from "$lib/api/roomService";
 
-export const currentRoomStore = writable<Room | null>(null);
+export const currentRoomStore = writable<RoomDetailsDto | null>(null);
 
 // Выбранный id комнаты для синхронизации с roomsStore (null — не следим)
 let subscribedId: string | null = null;
@@ -14,9 +15,12 @@ function attachSync(roomId: string): void {
     detachSync();
     subscribedId = roomId;
 
-    unsub = roomsStore.subscribe((list) => {
-        const found = list.find((r) => r.id === roomId) ?? null;
-        currentRoomStore.set(found);
+    unsub = roomsStore.subscribe(async () => {
+        try {
+            currentRoomStore.set(await roomService.getDetails(roomId));
+        } catch (e) {
+            currentRoomStore.set(null);
+        }
     });
 }
 
@@ -27,7 +31,7 @@ function detachSync(): void {
 }
 
 // Установить текущую комнату по id и подписаться на обновления списка
-export function setCurrentRoomId(id: string | null): void {
+export async function setCurrentRoomId(id: string | null): Promise<void> {
     if (id == null) {
         detachSync();
         currentRoomStore.set(null);
@@ -35,6 +39,6 @@ export function setCurrentRoomId(id: string | null): void {
     }
 
     attachSync(id);
-    const list: Room[] = get(roomsStore);
-    currentRoomStore.set(list.find((r) => r.id === id) ?? null);
+
+    currentRoomStore.set(await roomService.getDetails(id));
 }

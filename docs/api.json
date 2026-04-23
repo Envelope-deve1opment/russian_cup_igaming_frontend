@@ -310,6 +310,35 @@
             }
           }
         }
+      },
+      "delete": {
+        "tags": [
+          "room-controller"
+        ],
+        "operationId": "releaseBoost",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/BoostStateDto"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/room/manual": {
@@ -335,7 +364,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/RoomDto"
+                  "$ref": "#/components/schemas/RoomDetailsDto"
                 }
               }
             }
@@ -437,6 +466,26 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/me/currentRoom": {
+      "get": {
+        "tags": [
+          "current-user-controller"
+        ],
+        "operationId": "currentRoom",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoomDetailsDto"
                 }
               }
             }
@@ -953,6 +1002,69 @@
           }
         }
       },
+      "RoomDetailsDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "templateId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "templateName": {
+            "type": "string"
+          },
+          "entryFee": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "participantsLimit": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "occupiedSeatsCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "status": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "roundStartedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "countdownStartedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "seed": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "winnerParticipantId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "resultPayloadJson": {
+            "type": "object",
+            "additionalProperties": {
+
+            }
+          },
+          "seats": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RoomParticipantDto"
+            }
+          }
+        }
+      },
       "RoomDto": {
         "type": "object",
         "properties": {
@@ -1016,69 +1128,6 @@
         "properties": {
           "token": {
             "type": "string"
-          }
-        }
-      },
-      "RoomDetailsDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "templateId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "templateName": {
-            "type": "string"
-          },
-          "entryFee": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "participantsLimit": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "occupiedSeatsCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "status": {
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "roundStartedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "countdownStartedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "seed": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "winnerParticipantId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "resultPayloadJson": {
-            "type": "object",
-            "additionalProperties": {
-
-            }
-          },
-          "seats": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RoomParticipantDto"
-            }
           }
         }
       },

@@ -118,32 +118,32 @@
                             </span>
                         </div>
 
-                        <dl class="stats">
-                            <div>
-                                <dt>вход</dt>
-                                <dd>{room.entryFee.toLocaleString("ru-RU")}</dd>
+                        <div class="statsCompact">
+                            <div class="stat">
+                                <span class="statValue">{room.entryFee.toLocaleString("ru-RU")}</span>
+                                <span class="statLabel">вход</span>
                             </div>
-                            <div>
-                                <dt>мест</dt>
-                                <dd>{room.participantsCount}</dd>
+                            <div class="stat">
+                                <span class="statValue">{room.participantsCount}</span>
+                                <span class="statLabel">мест</span>
                             </div>
-                            <div>
-                                <dt>фонд</dt>
-                                <dd>{(room.entryFee * room.participantsCount).toLocaleString("ru-RU")}</dd>
+                            <div class="stat accent">
+                                <span class="statValue">{(room.entryFee * room.participantsCount).toLocaleString("ru-RU")}</span>
+                                <span class="statLabel">фонд</span>
                             </div>
-                            <div>
-                                <dt>столов</dt>
-                                <dd>{room.activeRoomsCount}</dd>
+                            <div class="stat">
+                                <span class="statValue">{room.waitingPlayersCount}</span>
+                                <span class="statLabel">игроков</span>
                             </div>
-                        </dl>
+                        </div>
 
                         <div class="cardFoot">
                             <span class="meta">
                                 {room.boostEnabled
-                                    ? `Boost ${room.boostCost?.toLocaleString("ru-RU") ?? "—"}`
-                                    : "Без буста"}
+                                    ? `+Boost ${room.boostCost?.toLocaleString("ru-RU") ?? ""}`
+                                    : ""}
                             </span>
-                            <span class="meta strong">Очередь {room.waitingPlayersCount}</span>
+                            <span class:open={room.joinableRoomsCount > 0} class="status">{room.joinableRoomsCount > 0 ? "Открыт" : "Ожидание"}</span>
                         </div>
                     </button>
 
