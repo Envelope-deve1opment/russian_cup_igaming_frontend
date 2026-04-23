@@ -220,14 +220,13 @@
                 }
             }}
     />
-<!--{:else if latestResult}-->
-<!--    {console.log(5656666)}-->
-<!--    <GameRound-->
-<!--            roomId={room.id}-->
-<!--            winnerID={latestResult.winnerID}-->
-<!--            participants={latestResult.participants}-->
-<!--            prizeAmount={latestResult.prizeAmount}-->
-<!--    />-->
+{:else if latestResult}
+    <GameRound
+            roomId={room.id}
+            winnerID={latestResult.winnerID}
+            participants={latestResult.participants}
+            prizeAmount={latestResult.prizeAmount}
+    />
 {:else}
     <RoomLobby {room}/>
 {/if}

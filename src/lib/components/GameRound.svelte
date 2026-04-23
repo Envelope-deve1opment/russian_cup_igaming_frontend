@@ -15,7 +15,7 @@
         prizeAmount: number;
     } = $props();
 
-    let winnerName: string = $derived(participants.find((p) => p.id === winnerID)?.username ?? "bot");
+    let winnerName: string = $derived(participants.find((p) => p.id === winnerID)?.username ?? "Bot");
 
     function pickSimilarRoom(): string | null {
         const list: Room[] = $roomsStore.filter((r) => r.id !== roomId);

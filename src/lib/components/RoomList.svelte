@@ -64,7 +64,7 @@
 <section class="wrap">
     <div class="toolbar">
         <div class="toolbarHead">
-            <p class="eyebrow">Room selection</p>
+            <p class="eyebrow">Выбор комнаты</p>
             <h2 class="title">Доступные шаблоны</h2>
         </div>
         <div class="summary">
@@ -162,7 +162,7 @@
                                 onclick={() => void joinTemplate(room.templateId, "fast")}
                                 type="button"
                         >
-                            {pendingTemplateId === room.templateId && pendingMode === "fast" ? "Ищем..." : "Fast join"}
+                            {pendingTemplateId === room.templateId && pendingMode === "fast" ? "Ищем..." : "Быстрая игра"}
                         </button>
                     </div>
                 </li>

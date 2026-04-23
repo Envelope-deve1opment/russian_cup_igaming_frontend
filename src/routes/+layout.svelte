@@ -98,6 +98,12 @@
                                 data-sveltekit-preload-data="hover"
                                 href="/admin"
                         >Админ</a>
+                        <a
+                                aria-current={navActive("/statistics", $page.url.pathname) ? "page" : undefined}
+                                class:active={navActive("/statistics", $page.url.pathname)}
+                                data-sveltekit-preload-data="hover"
+                                href="/statistics"
+                        >Статистика</a>
                     {/if}
                 </nav>
             </div>

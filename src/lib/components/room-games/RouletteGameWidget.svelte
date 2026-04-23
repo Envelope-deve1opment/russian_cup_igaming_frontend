@@ -132,7 +132,8 @@
 
 <style lang="scss">
   .widget.roulette {
-    min-height: 320px;
+    min-height: 240px;
+    padding: 2rem 0;
     display: grid;
     align-content: center;
   }
@@ -140,7 +141,7 @@
   .viewport {
     position: relative;
     overflow: hidden;
-    min-height: 180px;
+    min-height: 280px;
     border-radius: 28px;
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(0, 0, 0, 0.08));
     border: 1px solid rgba(255, 255, 255, 0.06);
@@ -173,7 +174,7 @@
     display: inline-flex;
     align-items: stretch;
     gap: 0.7rem;
-    padding: 1.6rem 1rem;
+    padding: 0 1rem;
     height: 100%;
     transition-property: transform;
     transition-timing-function: cubic-bezier(.11, .84, .17, 1);

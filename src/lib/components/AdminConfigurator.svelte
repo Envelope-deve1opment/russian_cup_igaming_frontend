@@ -422,6 +422,15 @@
                     </label>
 
                     <label class="field">
+                        <span>Стоимость входа для ботов</span>
+                        <input
+                                class="textInput"
+                                type="number"
+                                value="500"
+                        />
+                    </label>
+
+                    <label class="field">
                         <span>Комиссия, %</span>
                         <input
                                 class="textInput"
